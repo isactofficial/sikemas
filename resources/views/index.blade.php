@@ -25,7 +25,6 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            /* Tentukan tinggi navbar agar dropdown mobile pas */
             height: 80px; 
             display: flex;
             align-items: center;
@@ -37,7 +36,7 @@
             max-width: 1400px;
             margin: 0 auto;
             gap: 2rem;
-            width: 100%; /* Pastikan container mengisi navbar */
+            width: 100%;
         }
 
         .navbar-right {
@@ -50,7 +49,7 @@
         .navbar-logo img {
             height: 50px;
             width: auto;
-            display: block; /* Menghilangkan spasi ekstra di bawah gambar */
+            display: block;
         }
 
         .navbar-menu {
@@ -77,11 +76,12 @@
             align-items: center;
         }
 
+        /* --- PERUBAHAN CSS UNTUK IKON PROFIL (LINE ART) --- */
         .profile-icon {
-            width: 28px;
-            height: 28px;
-            border: 2px solid #2c6b6d;
-            border-radius: 50%;
+            width: 32px; /* Ukuran ikon disesuaikan */
+            height: 32px; /* Ukuran ikon disesuaikan */
+            border: none; /* HAPUS BORDER, lingkaran sudah bagian dari SVG */
+            border-radius: 50%; /* Tetap ada untuk background hover */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -90,27 +90,30 @@
         }
 
         .profile-icon:hover {
-            background-color: #2c6b6d;
+            background-color: #2c6b6d; /* Latar belakang berubah saat hover */
         }
 
         .profile-icon svg {
-            width: 16px;
-            height: 16px;
-            fill: #2c6b6d;
+            width: 100%; 
+            height: 100%;
+            fill: none; /* PENTING: Tidak ada warna isi */
+            stroke: #2c6b6d; /* PENTING: Atur warna GARIS */
+            stroke-width: 1.5; /* Atur ketebalan garis (bisa 1.5 atau 2) */
+            transition: stroke 0.3s ease;
         }
 
         .profile-icon:hover svg {
-            fill: white;
+            stroke: white; /* Saat hover, GARIS-nya menjadi putih */
         }
+        /* --- AKHIR PERUBAHAN CSS --- */
 
-        /* --- TAMBAHAN CSS: GAYA HAMBURGER --- */
         .navbar-toggle {
-            display: none; /* Sembunyi di desktop */
+            display: none; 
             background: none;
             border: none;
             cursor: pointer;
             padding: 0;
-            margin-left: auto; /* Posisikan di kanan */
+            margin-left: auto; 
             z-index: 1001;
         }
 
@@ -130,8 +133,6 @@
             border-radius: 2px;
             transition: all 0.3s ease;
         }
-        /* --- AKHIR TAMBAHAN CSS --- */
-
 
         /* Hero Section */
         .hero-section {
@@ -212,31 +213,29 @@
                 padding: 1rem 1.5rem;
             }
 
-            /* --- PERUBAHAN CSS UNTUK MOBILE --- */
             .navbar-toggle {
-                display: flex; /* Tampilkan hamburger */
+                display: flex;
             }
 
             .navbar-right {
-                display: none; /* Sembunyikan menu desktop */
+                display: none; 
                 position: absolute;
-                top: 80px; /* Tepat di bawah navbar */
+                top: 80px; 
                 left: 0;
                 width: 100%;
                 background-color: #ffffff;
                 flex-direction: column;
-                align-items: stretch; /* Buat item menu jadi full-width */
+                align-items: stretch; 
                 gap: 0;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             }
 
-            /* Kelas .active ini akan di-toggle oleh JavaScript */
             .navbar-right.active {
                 display: flex;
             }
 
             .navbar-menu {
-                flex-direction: column; /* Susun link secara vertikal */
+                flex-direction: column; 
                 gap: 0;
                 width: 100%;
             }
@@ -247,16 +246,15 @@
             }
 
             .navbar-menu li a {
-                display: block; /* Buat link mengisi semua area 'li' */
+                display: block; 
                 padding: 1rem;
                 border-bottom: 1px solid #f0f0f0;
             }
 
             .navbar-profile {
                 padding: 1rem;
-                justify-content: center; /* Pusatkan ikon profil */
+                justify-content: center; 
             }
-            /* --- AKHIR PERUBAHAN CSS --- */
 
             .hero-content h1 {
                 font-size: 2.5rem;
@@ -273,8 +271,6 @@
         }
 
         @media (max-width: 480px) {
-            /* Hapus .navbar-menu { display: none; } dari sini karena sudah diatur di 768px */
-
             .hero-content h1 {
                 font-size: 2rem;
             }
@@ -306,7 +302,7 @@
                 <div class="navbar-profile">
                     <div class="profile-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                 </div>

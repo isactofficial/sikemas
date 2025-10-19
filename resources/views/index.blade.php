@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIKEMAS - Protect Your Value</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,7 +15,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Besley', serif;
             background-color: #f5f5f5;
         }
 
@@ -61,14 +64,14 @@
 
         .navbar-menu li a {
             text-decoration: none;
-            color: #2c6b6d;
+            color: #074159;
             font-weight: 500;
             font-size: 1rem;
             transition: color 0.3s ease;
         }
 
         .navbar-menu li a:hover {
-            color: #1a4a4c;
+            color: #053244;
         }
 
         .navbar-profile {
@@ -76,12 +79,12 @@
             align-items: center;
         }
 
-        /* --- PERUBAHAN CSS UNTUK IKON PROFIL (LINE ART) --- */
+        /* Profile Icon Styles */
         .profile-icon {
-            width: 32px; /* Ukuran ikon disesuaikan */
-            height: 32px; /* Ukuran ikon disesuaikan */
-            border: none; /* HAPUS BORDER, lingkaran sudah bagian dari SVG */
-            border-radius: 50%; /* Tetap ada untuk background hover */
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -90,22 +93,21 @@
         }
 
         .profile-icon:hover {
-            background-color: #2c6b6d; /* Latar belakang berubah saat hover */
+            background-color: #074159;
         }
 
         .profile-icon svg {
             width: 100%; 
             height: 100%;
-            fill: none; /* PENTING: Tidak ada warna isi */
-            stroke: #2c6b6d; /* PENTING: Atur warna GARIS */
-            stroke-width: 1.5; /* Atur ketebalan garis (bisa 1.5 atau 2) */
+            fill: none;
+            stroke: #074159;
+            stroke-width: 1.5;
             transition: stroke 0.3s ease;
         }
 
         .profile-icon:hover svg {
-            stroke: white; /* Saat hover, GARIS-nya menjadi putih */
+            stroke: white;
         }
-        /* --- AKHIR PERUBAHAN CSS --- */
 
         .navbar-toggle {
             display: none; 
@@ -129,7 +131,7 @@
         .hamburger-icon .bar {
             height: 3px;
             width: 100%;
-            background-color: #2c6b6d;
+            background-color: #074159;
             border-radius: 2px;
             transition: all 0.3s ease;
         }
@@ -207,6 +209,108 @@
             box-shadow: 0 6px 12px rgba(255, 87, 34, 0.4);
         }
 
+        /* Products Section */
+        .products-section {
+            background-color: #F4F7F6;
+            padding: 5rem 2rem;
+        }
+
+        .products-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #074159;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #ff5722;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-content {
+            padding: 2rem;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            color: #074159;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .product-button {
+            display: inline-block;
+            background-color: #ff5722;
+            color: white;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            align-self: center;
+        }
+
+        .product-button:hover {
+            background-color: #e64a19;
+            transform: scale(1.05);
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
@@ -268,6 +372,19 @@
                 padding: 0.875rem 2rem;
                 font-size: 1rem;
             }
+
+            .products-section {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -326,6 +443,41 @@
             <h1>Protect Your Value</h1>
             <p>Menjadi partner sejarah pertumbuhan bisnis anda dengan menyediakan proteksi yang dapat menciptakan ekosistem bisnis yang berkelanjutan</p>
             <a href="{{ url('/produk') }}" class="cta-button">Lihat Produk Kami</a>
+        </div>
+    </section>
+
+    <section class="products-section">
+        <div class="products-container">
+            <h2 class="section-title">Produk Unggulan Kami</h2>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Kotak Kemasan Khusus</h3>
+                        <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
+                        <a href="#" class="product-button">Pesan Sekarang</a>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Karton Bergelombang</h3>
+                        <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan penyimpanan yang aman.</p>
+                        <a href="#" class="product-button">Pesan Sekarang</a>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan" class="product-image">
+                    <div class="product-content">
+                        <h3 class="product-title">Kemasan Ramah Lingkungan</h3>
+                        <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur ulang dan dapat didaur ulang.</p>
+                        <a href="#" class="product-button">Pesan Sekarang</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

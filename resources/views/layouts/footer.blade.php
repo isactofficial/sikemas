@@ -58,7 +58,7 @@
     </div>
 
     <style>
-    .skm-footer { background: #074159; color: #FFFFFF; margin-top: 40px; }
+    .skm-footer { background: #074159; color: #FFFFFF; margin-top: 0; }
     .skm-footer-container { max-width: 1200px; margin: 0 auto; padding: 32px 16px 18px; display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 24px; align-items: start; }
     /* Match navbar logo size on desktop */
     .skm-footer-logo { height: 48px; width: auto; margin-bottom: 10px; display: block; }
@@ -68,11 +68,11 @@
     .skm-socials svg { width: 18px; height: 18px; }
     .skm-socials a:hover svg { opacity: 0.9; }
 
-        .skm-col-title { font-size: 16px; font-weight: 700; margin: 4px 0 10px; color: #FFFFFF; }
-        .skm-links, .skm-contacts { list-style: none; padding: 0; margin: 0; }
-        .skm-links li, .skm-contacts li { margin: 8px 0; }
-        .skm-links a, .skm-contacts a { color: #D9E8ED; text-decoration: none; }
-        .skm-links a:hover, .skm-contacts a:hover { color: #FFFFFF; text-decoration: underline; }
+    .skm-col-title { font-size: 16px; font-weight: 700; margin: 4px 0 10px; color: #FFFFFF; }
+    .skm-footer .skm-links, .skm-footer .skm-contacts { list-style: none; padding: 0; margin: 0; }
+    .skm-footer .skm-links li, .skm-footer .skm-contacts li { margin: 8px 0; }
+    .skm-footer .skm-links a, .skm-footer .skm-contacts a { color: #D9E8ED; text-decoration: none; }
+    .skm-footer .skm-links a:hover, .skm-footer .skm-contacts a:hover { color: #FFFFFF; text-decoration: underline; }
 
     .skm-footer-bottom { padding: 12px 16px 18px; text-align: center; color: #D9E8ED; font-size: 14px; border-top: 0; }
 
@@ -88,8 +88,8 @@
             /* Keep the same visual style as desktop (no extra separators) */
             .skm-footer-col:not(.skm-brand) { border-top: 0; padding-top: 0; }
             .skm-col-title { margin: 6px 0 10px; }
-            .skm-links li, .skm-contacts li { margin: 10px 0; }
-            .skm-links a, .skm-contacts a { display: inline-block; }
+            .skm-footer .skm-links li, .skm-footer .skm-contacts li { margin: 10px 0; }
+            .skm-footer .skm-links a, .skm-footer .skm-contacts a { display: inline-block; }
 
             .skm-footer-bottom { text-align: center; padding: 14px 16px; font-size: 13px; }
         }

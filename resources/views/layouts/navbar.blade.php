@@ -58,19 +58,19 @@
             /* Brand & links */
             --skm-teal: #1F6D72;         /* accent line color */
             --skm-teal-dark: #15565A;    /* hover/alt */
-            --skm-link: #0F2D3A;         /* menu text */
-            --skm-link-hover: #0B2430;   /* menu hover */
+            --skm-link: #074159;         /* menu text (Tarawera tone) */
+            --skm-link-hover: #053244;   /* menu hover - slightly darker */
         }
         /* Sticky white bar with teal accent line like in the reference image */
-        .skm-navbar { position: sticky; top: 0; z-index: 50; background: #ffffff; border-bottom: 3px solid var(--skm-teal); }
+    .skm-navbar { position: sticky; top: 0; z-index: 50; background: #ffffff; border-bottom: 0; }
         .skm-container { max-width: 1200px; margin: 0 auto; padding: 10px 16px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; }
         .skm-logo img { height: 48px; width: auto; display: block; }
 
     /* Menu aligned closer to the right (near profile icon) */
     .skm-menu { justify-self: end; margin-right: 12px; }
-    .skm-links { list-style: none; display: flex; align-items: center; gap: 28px; margin: 0; padding: 0; }
-        .skm-links a { text-decoration: none; color: var(--skm-link); font-weight: 600; font-size: 14px; letter-spacing: 0.2px; }
-        .skm-links a:hover, .skm-links a.active { color: var(--skm-link-hover); }
+    .skm-navbar .skm-links { list-style: none; display: flex; align-items: center; gap: 28px; margin: 0; padding: 0; }
+        .skm-navbar .skm-links a { text-decoration: none; color: var(--skm-link); font-weight: 600; font-size: 14px; letter-spacing: 0.2px; }
+        .skm-navbar .skm-links a:hover, .skm-navbar .skm-links a.active { color: var(--skm-link-hover); }
 
         /* Right icon */
         .skm-user { color: var(--skm-link); display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 9999px; }
@@ -93,10 +93,10 @@
             /* Drop the menu right under the bar regardless of bar height */
             .skm-menu { position: absolute; left: 0; right: 0; top: 100%; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-top: 1px solid rgba(0,0,0,0.06); justify-self: stretch; }
             /* Stack items full width with centered text and separators like the mock */
-            .skm-links { flex-direction: column; align-items: stretch; gap: 0; }
-            .skm-links li { width: 100%; }
-            .skm-links a { display: block; width: 100%; padding: 16px 20px; text-align: center; border-bottom: 1px solid #E6EEF0; }
-            .skm-links li:last-child a { border-bottom: 0; }
+            .skm-navbar .skm-links { flex-direction: column; align-items: stretch; gap: 0; }
+            .skm-navbar .skm-links li { width: 100%; }
+            .skm-navbar .skm-links a { display: block; width: 100%; padding: 16px 20px; text-align: center; border-bottom: 1px solid #E6EEF0; }
+            .skm-navbar .skm-links li:last-child a { border-bottom: 0; }
             /* Hide top-right user icon on mobile and replace with centered one inside menu */
             .skm-user { display: none; }
             .skm-mobile-user { display: flex; justify-content: center; align-items: center; padding: 14px 0 18px; }

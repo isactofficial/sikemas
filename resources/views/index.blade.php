@@ -311,6 +311,55 @@
             transform: scale(1.05);
         }
 
+        /* Start Project CTA Section */
+        .start-project {
+            margin-top: 56px;
+            background: linear-gradient(180deg, #2CBABA 0%, #074159 70%);
+            color: #FFFFFF;
+            text-align: center;
+            padding: 64px 16px;
+        }
+        .start-project .sp-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 12px;
+        }
+        .start-project h2 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        .start-project p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.9);
+            max-width: 760px;
+            margin: 0 auto 22px;
+        }
+        .start-project .sp-button {
+            display: inline-block;
+            background-color: #ff5722;
+            color: #ffffff;
+            padding: 12px 22px;
+            font-weight: 700;
+            border-radius: 6px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.35);
+            transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+        }
+        .start-project .sp-button:hover {
+            background-color: #e64a19;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(255, 87, 34, 0.45);
+        }
+
+        @media (max-width: 768px) {
+            .start-project { padding: 48px 14px; margin-top: 44px; }
+            .start-project h2 { font-size: 26px; margin-bottom: 10px; }
+            .start-project p { font-size: 14px; margin-bottom: 18px; }
+            .start-project .sp-button { padding: 10px 18px; }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
@@ -437,7 +486,7 @@
     </nav>
 
     <section class="hero-section">
-        <img src="{{ asset('assets/img/section.png') }}" alt="Background" class="hero-background">
+    <img src="{{ asset('assets/img/Section.png') }}" alt="Background" class="hero-background">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>Protect Your Value</h1>
@@ -478,6 +527,119 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+        <section class="skm-articles" aria-labelledby="articles-title">
+        <div class="skm-a-wrap">
+            <h2 id="articles-title">Artikel &amp; Berita</h2>
+
+            <div class="skm-a-grid">
+                <article class="skm-a-card">
+                    <div class="thumb">
+                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Trend Kemasan Ramah Lingkungan">
+                    </div>
+                    <div class="body">
+                        <h3 class="title">Trend Kemasan Ramah Lingkungan</h3>
+                        <p class="excerpt">Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.</p>
+                        <a class="more" href="#" aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
+                    </div>
+                </article>
+
+                <article class="skm-a-card">
+                    <div class="thumb">
+                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Pentingnya Kemasan yang Tepat">
+                    </div>
+                    <div class="body">
+                        <h3 class="title">Pentingnya Kemasan yang Tepat</h3>
+                        <p class="excerpt">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.</p>
+                        <a class="more" href="#" aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
+                    </div>
+                </article>
+
+                <article class="skm-a-card">
+                    <div class="thumb">
+                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Proses Produksi Kami">
+                    </div>
+                    <div class="body">
+                        <h3 class="title">Proses Produksi Kami</h3>
+                        <p class="excerpt">Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.</p>
+                        <a class="more" href="#" aria-label="Baca selengkapnya Proses Produksi Kami">Baca Selengkapnya</a>
+                    </div>
+                </article>
+            </div>
+
+            
+        </div>
+
+        <style>
+            .skm-articles { background: #F4F7F6; padding: 56px 16px 70px; font-family: 'Besley', serif; }
+            .skm-a-wrap { max-width: 980px; margin: 0 auto; }
+            .skm-articles h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
+            .skm-articles h2::after { content: ""; display: block; width: 56px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
+
+            .skm-a-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 26px; }
+            @media (max-width: 900px) { .skm-a-grid { grid-template-columns: repeat(2, 1fr); } }
+            @media (max-width: 600px) { .skm-a-grid { grid-template-columns: 1fr; } }
+
+            .skm-a-card { background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden; }
+            .skm-a-card .thumb { height: 160px; overflow: hidden; }
+            .skm-a-card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+            .skm-a-card .body { padding: 14px 16px 16px; }
+            .skm-a-card .title { color: #074159; font-size: 18px; font-weight: 800; line-height: 1.35; margin: 0 0 8px; }
+            .skm-a-card .excerpt { color: #425B66; font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
+            .skm-a-card .more { color: #ff5722; font-weight: 800; text-decoration: none; }
+            .skm-a-card .more:hover { text-decoration: underline; }
+
+            
+
+            @media (max-width: 640px) {
+                .skm-articles h2 { font-size: 28px; }
+                .skm-a-card .title { font-size: 16px; }
+                .skm-a-card .excerpt { font-size: 14px; }
+            }
+        </style>
+    </section>
+
+    <section class="skm-testimonials" aria-labelledby="testi-title">
+        <div class="skm-t-wrap">
+            <h2 id="testi-title">Apa Kata Klien Kami</h2>
+
+            <div class="skm-t-single">
+                <blockquote class="quote">
+                    “Sikemas selalu memberikan kemasan yang kokoh dan tepat waktu. Hasilnya tidak pernah mengecewakan.”
+                </blockquote>
+                <p class="credit">— John Doe, <strong>CEO Perusahaan Makanan</strong></p>
+            </div>
+        </div>
+
+        <style>
+            .skm-testimonials { background: #FFFFFF; padding: 60px 16px 70px; font-family: 'Besley', serif; }
+            .skm-t-wrap { max-width: 1100px; margin: 0 auto; }
+            .skm-testimonials h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
+            .skm-testimonials h2::after { content: ""; display: block; width: 66px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
+
+            .skm-t-single { max-width: 820px; margin: 0 auto; background: #F6FAFA; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 22px 24px; text-align: center; }
+            .skm-t-single .quote { color: #074159; font-size: 17px; line-height: 1.65; margin: 0 0 6px; font-style: normal; letter-spacing: 0.2px; }
+            .skm-t-single .credit { color: #074159; margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 0.2px; }
+            .skm-t-single .credit strong { font-weight: 800; }
+
+            @media (max-width: 640px) {
+                .skm-testimonials h2 { font-size: 28px; }
+                .skm-t-single { padding: 18px; }
+                .skm-t-single .quote { font-size: 16px; }
+                .skm-t-single .credit { font-size: 15px; }
+            }
+        </style>
+    </section>
+
+    @include('sections.faq')
+
+    <section class="start-project" aria-labelledby="sp-title">
+        <div class="sp-container">
+            <h2 id="sp-title">Siap memulai proyek Anda?</h2>
+            <p>Hubungi kami hari ini untuk konsultasi gratis dan wujudkan kemasan impian Anda.</p>
+            <a href="#" class="sp-button" aria-label="Hubungi Kami">Hubungi Kami</a>
         </div>
     </section>
 

@@ -463,7 +463,7 @@
                     <li><a href="{{ url('/artikel') }}">Artikel</a></li>
                     <li><a href="{{ url('/portofolio') }}">Portofolio</a></li>
                     <li><a href="{{ url('/about') }}">About Us</a></li>
-                    <li><a href="{{ url('/profile') }}">Profile</a></li>
+                    <li><a href="{{ url('/login') }}">Profile</a></li>
                 </ul>
                 <div class="navbar-profile">
                     <div class="profile-icon">

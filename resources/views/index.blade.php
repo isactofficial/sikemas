@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Besley', serif;
-            background-color: #f5f5f5;
+            background-color: #f5f5ff; /* Sesuai file asli Anda */
         }
 
         /* Navbar Styles */
@@ -79,7 +79,7 @@
             align-items: center;
         }
 
-        /* Profile Icon Styles */
+        /* Profile Icon Styles (dari kode Anda) */
         .profile-icon {
             width: 32px;
             height: 32px;
@@ -90,15 +90,17 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            background-color: transparent;
+            padding: 0;
         }
 
         .profile-icon:hover {
-            background-color: #074159;
+            background-color: #f0f0f0;
         }
 
         .profile-icon svg {
-            width: 100%; 
-            height: 100%;
+            width: 24px;
+            height: 24px;
             fill: none;
             stroke: #074159;
             stroke-width: 1.5;
@@ -106,7 +108,7 @@
         }
 
         .profile-icon:hover svg {
-            stroke: white;
+            stroke: #053244;
         }
 
         .navbar-toggle {
@@ -135,6 +137,94 @@
             border-radius: 2px;
             transition: all 0.3s ease;
         }
+        
+        /* =========================================== */
+        /* === CSS BARU DITAMBAHKAN MULAI DARI SINI === */
+        /* =========================================== */
+
+        /* CSS UNTUK PROFIL DROPDOWN (Guest & Logged In) */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .profile-dropdown-menu {
+            display: none; /* Sembunyikan secara default */
+            position: absolute;
+            right: 0;
+            top: 100%; /* <-- UBAH INI (dari 140%) */
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-width: 220px;
+            z-index: 1001;
+            overflow: hidden;
+            padding-top: 1rem; /* <-- UBAH INI (dari 0.5rem) */
+            padding-bottom: 0.5rem;
+        }
+
+        .profile-dropdown:hover .profile-dropdown-menu {
+            display: block;
+        }
+
+        /* Header khusus untuk user yang sudah login */
+        .profile-dropdown-menu .dropdown-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 0.5rem;
+        }
+        .profile-dropdown-menu .dropdown-header span {
+            display: block;
+            font-weight: 700;
+            color: #074159;
+            white-space: nowrap;
+        }
+        .profile-dropdown-menu .dropdown-header small {
+            color: #666;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .profile-dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .profile-dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #074159;
+        }
+        
+        .profile-dropdown-menu .dropdown-divider {
+            height: 1px;
+            background-color: #f0f0f0;
+            margin: 0.5rem 0;
+        }
+
+        /* Tombol "Daftar" di dropdown */
+        .profile-dropdown-menu a.dropdown-button-primary {
+            margin: 0.5rem 1rem 0;
+            padding: 0.75rem 1rem;
+            background-color: #ff5722;
+            color: white;
+            text-align: center;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .profile-dropdown-menu a.dropdown-button-primary:hover {
+            background-color: #e64a19;
+            color: white;
+        }
+        
+        /* ========================================= */
+        /* === CSS BARU BERAKHIR DI SINI === */
+        /* ========================================= */
+
 
         /* Hero Section */
         .hero-section {
@@ -146,7 +236,7 @@
             justify-content: center;
             overflow: hidden;
         }
-
+        /* ... (sisa CSS Anda untuk .hero-section, .products-section, dll. tetap sama) ... */
         .hero-background {
             position: absolute;
             top: 0;
@@ -405,8 +495,10 @@
             }
 
             .navbar-profile {
-                padding: 1rem;
                 justify-content: center; 
+                width: 100%;
+                padding: 1rem; /* Beri padding untuk ikon di mobile */
+                border-bottom: 1px solid #f0f0f0;
             }
 
             .hero-content h1 {
@@ -434,6 +526,69 @@
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
+
+            /* --- CSS RESPONSIVE BARU UNTUK DROPDOWN --- */
+            
+            .profile-dropdown {
+                width: 100%;
+            }
+            .profile-dropdown-toggle {
+                /* Tombol ikon di mobile */
+                text-align: center;
+                width: 100%;
+                border-radius: 0;
+                display: flex;
+                justify-content: center;
+            }
+            .profile-dropdown-toggle:hover {
+                background-color: #f5f5f5;
+            }
+            .profile-dropdown-toggle svg {
+                margin: 0 auto; /* Pusatkan ikon */
+            }
+            
+            /* Menu dropdown di mobile */
+            .profile-dropdown-menu {
+                position: static;
+                display: block;
+                box-shadow: none;
+                border-radius: 0;
+                min-width: 0;
+                width: 100%;
+                background: none;
+                border-top: 1px solid #f0f0f0;
+                padding: 0;
+            }
+            .profile-dropdown:hover .profile-dropdown-menu {
+                display: block;
+            }
+            .profile-dropdown-menu .dropdown-header {
+                 display: none;
+            }
+            .profile-dropdown-menu a {
+                text-align: center;
+                padding: 1rem;
+                border-bottom: 1px solid #f0f0f0;
+                color: #074159;
+            }
+            .profile-dropdown-menu a:hover {
+                background: #f5f5f5;
+            }
+            .profile-dropdown-menu .dropdown-divider {
+                display: none;
+            }
+             /* Tombol "Daftar" di mobile */
+            .profile-dropdown-menu a.dropdown-button-primary {
+                margin: 0;
+                border-radius: 0;
+                color: white;
+                background-color: #ff5722;
+            }
+            .profile-dropdown-menu a.dropdown-button-primary:hover {
+                background-color: #e64a19;
+            }
+            /* --- AKHIR CSS RESPONSIVE BARU --- */
+
         }
 
         @media (max-width: 480px) {
@@ -444,6 +599,44 @@
             .hero-content p {
                 font-size: 0.9rem;
             }
+        }
+        
+        /* CSS Untuk Artikel Section dari file Anda */
+        .skm-articles { background: #F4F7F6; padding: 56px 16px 70px; font-family: 'Besley', serif; }
+        .skm-a-wrap { max-width: 980px; margin: 0 auto; }
+        .skm-articles h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
+        .skm-articles h2::after { content: ""; display: block; width: 56px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
+        .skm-a-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 26px; }
+        @media (max-width: 900px) { .skm-a-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .skm-a-grid { grid-template-columns: 1fr; } }
+        .skm-a-card { background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden; }
+        .skm-a-card .thumb { height: 160px; overflow: hidden; }
+        .skm-a-card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .skm-a-card .body { padding: 14px 16px 16px; }
+        .skm-a-card .title { color: #074159; font-size: 18px; font-weight: 800; line-height: 1.35; margin: 0 0 8px; }
+        .skm-a-card .excerpt { color: #425B66; font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
+        .skm-a-card .more { color: #ff5722; font-weight: 800; text-decoration: none; }
+        .skm-a-card .more:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            .skm-articles h2 { font-size: 28px; }
+            .skm-a-card .title { font-size: 16px; }
+            .skm-a-card .excerpt { font-size: 14px; }
+        }
+
+        /* CSS Untuk Testimoni Section dari file Anda */
+        .skm-testimonials { background: #FFFFFF; padding: 60px 16px 70px; font-family: 'Besley', serif; }
+        .skm-t-wrap { max-width: 1100px; margin: 0 auto; }
+        .skm-testimonials h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
+        .skm-testimonials h2::after { content: ""; display: block; width: 66px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
+        .skm-t-single { max-width: 820px; margin: 0 auto; background: #F6FAFA; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 22px 24px; text-align: center; }
+        .skm-t-single .quote { color: #074159; font-size: 17px; line-height: 1.65; margin: 0 0 6px; font-style: normal; letter-spacing: 0.2px; }
+        .skm-t-single .credit { color: #074159; margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 0.2px; }
+        .skm-t-single .credit strong { font-weight: 800; }
+        @media (max-width: 640px) {
+            .skm-testimonials h2 { font-size: 28px; }
+            .skm-t-single { padding: 18px; }
+            .skm-t-single .quote { font-size: 16px; }
+            .skm-t-single .credit { font-size: 15px; }
         }
     </style>
 </head>
@@ -463,17 +656,45 @@
                     <li><a href="{{ url('/artikel') }}">Artikel</a></li>
                     <li><a href="{{ url('/portofolio') }}">Portofolio</a></li>
                     <li><a href="{{ url('/about') }}">About Us</a></li>
-                    <li><a href="{{ url('/login') }}">Profile</a></li>
+
+                    @guest
+                        <li><a href="{{ route('login') }}">Profile</a></li>
+                    @endguest
                 </ul>
+
                 <div class="navbar-profile">
-                    <div class="profile-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                    <div class="profile-dropdown">
+                        
+                        <button class="profile-icon profile-dropdown-toggle" aria-label="User Menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </button>
+                        
+                        <div class="profile-dropdown-menu">
+                            @auth
+                                <div class="dropdown-header">
+                                    <span>{{ Auth::user()->name }}</span>
+                                    <small>{{ Auth::user()->email }}</small>
+                                </div>
+                                <a href="#">Profil Saya</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}">Login</a>
+                                <a href="{{ route('register') }}" class="dropdown-button-primary">Daftar</a>
+                            @endauth
+                        </div>
                     </div>
                 </div>
             </div>
-
             <button class="navbar-toggle" id="navbar-hamburger" aria-label="Toggle menu">
                 <div class="hamburger-icon">
                     <span class="bar"></span>
@@ -530,10 +751,9 @@
         </div>
     </section>
 
-        <section class="skm-articles" aria-labelledby="articles-title">
+    <section class="skm-articles" aria-labelledby="articles-title">
         <div class="skm-a-wrap">
             <h2 id="articles-title">Artikel &amp; Berita</h2>
-
             <div class="skm-a-grid">
                 <article class="skm-a-card">
                     <div class="thumb">
@@ -545,7 +765,6 @@
                         <a class="more" href="#" aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
                     </div>
                 </article>
-
                 <article class="skm-a-card">
                     <div class="thumb">
                         <img src="{{ asset('assets/img/Article-image.png') }}" alt="Pentingnya Kemasan yang Tepat">
@@ -556,7 +775,6 @@
                         <a class="more" href="#" aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
                     </div>
                 </article>
-
                 <article class="skm-a-card">
                     <div class="thumb">
                         <img src="{{ asset('assets/img/Article-image.png') }}" alt="Proses Produksi Kami">
@@ -568,43 +786,12 @@
                     </div>
                 </article>
             </div>
-
-            
         </div>
-
-        <style>
-            .skm-articles { background: #F4F7F6; padding: 56px 16px 70px; font-family: 'Besley', serif; }
-            .skm-a-wrap { max-width: 980px; margin: 0 auto; }
-            .skm-articles h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
-            .skm-articles h2::after { content: ""; display: block; width: 56px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
-
-            .skm-a-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 26px; }
-            @media (max-width: 900px) { .skm-a-grid { grid-template-columns: repeat(2, 1fr); } }
-            @media (max-width: 600px) { .skm-a-grid { grid-template-columns: 1fr; } }
-
-            .skm-a-card { background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden; }
-            .skm-a-card .thumb { height: 160px; overflow: hidden; }
-            .skm-a-card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-            .skm-a-card .body { padding: 14px 16px 16px; }
-            .skm-a-card .title { color: #074159; font-size: 18px; font-weight: 800; line-height: 1.35; margin: 0 0 8px; }
-            .skm-a-card .excerpt { color: #425B66; font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
-            .skm-a-card .more { color: #ff5722; font-weight: 800; text-decoration: none; }
-            .skm-a-card .more:hover { text-decoration: underline; }
-
-            
-
-            @media (max-width: 640px) {
-                .skm-articles h2 { font-size: 28px; }
-                .skm-a-card .title { font-size: 16px; }
-                .skm-a-card .excerpt { font-size: 14px; }
-            }
-        </style>
     </section>
 
     <section class="skm-testimonials" aria-labelledby="testi-title">
         <div class="skm-t-wrap">
             <h2 id="testi-title">Apa Kata Klien Kami</h2>
-
             <div class="skm-t-single">
                 <blockquote class="quote">
                     “Sikemas selalu memberikan kemasan yang kokoh dan tepat waktu. Hasilnya tidak pernah mengecewakan.”
@@ -612,25 +799,6 @@
                 <p class="credit">— John Doe, <strong>CEO Perusahaan Makanan</strong></p>
             </div>
         </div>
-
-        <style>
-            .skm-testimonials { background: #FFFFFF; padding: 60px 16px 70px; font-family: 'Besley', serif; }
-            .skm-t-wrap { max-width: 1100px; margin: 0 auto; }
-            .skm-testimonials h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
-            .skm-testimonials h2::after { content: ""; display: block; width: 66px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
-
-            .skm-t-single { max-width: 820px; margin: 0 auto; background: #F6FAFA; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 22px 24px; text-align: center; }
-            .skm-t-single .quote { color: #074159; font-size: 17px; line-height: 1.65; margin: 0 0 6px; font-style: normal; letter-spacing: 0.2px; }
-            .skm-t-single .credit { color: #074159; margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 0.2px; }
-            .skm-t-single .credit strong { font-weight: 800; }
-
-            @media (max-width: 640px) {
-                .skm-testimonials h2 { font-size: 28px; }
-                .skm-t-single { padding: 18px; }
-                .skm-t-single .quote { font-size: 16px; }
-                .skm-t-single .credit { font-size: 15px; }
-            }
-        </style>
     </section>
 
     @include('sections.faq')

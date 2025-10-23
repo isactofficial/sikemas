@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Besley', serif;
-            background-color: #f5f5ff; /* Sesuai file asli Anda */
+            background-color: #f5f5ff;
         }
 
         /* Navbar Styles */
@@ -28,7 +28,7 @@
             width: 100%;
             top: 0;
             z-index: 1000;
-            height: 80px; 
+            height: 80px;
             display: flex;
             align-items: center;
         }
@@ -79,7 +79,7 @@
             align-items: center;
         }
 
-        /* Profile Icon Styles (dari kode Anda) */
+        /* Profile Icon Styles */
         .profile-icon {
             width: 32px;
             height: 32px;
@@ -112,12 +112,12 @@
         }
 
         .navbar-toggle {
-            display: none; 
+            display: none;
             background: none;
             border: none;
             cursor: pointer;
             padding: 0;
-            margin-left: auto; 
+            margin-left: auto;
             z-index: 1001;
         }
 
@@ -137,7 +137,7 @@
             border-radius: 2px;
             transition: all 0.3s ease;
         }
-        
+
         /* =========================================== */
         /* === CSS BARU DITAMBAHKAN MULAI DARI SINI === */
         /* =========================================== */
@@ -147,7 +147,7 @@
             position: relative;
             display: inline-block;
         }
-        
+
         .profile-dropdown-menu {
             display: none; /* Sembunyikan secara default */
             position: absolute;
@@ -199,7 +199,7 @@
             background-color: #f5f5f5;
             color: #074159;
         }
-        
+
         .profile-dropdown-menu .dropdown-divider {
             height: 1px;
             background-color: #f0f0f0;
@@ -220,10 +220,88 @@
             background-color: #e64a19;
             color: white;
         }
-        
+
         /* ========================================= */
         /* === CSS BARU BERAKHIR DI SINI === */
         /* ========================================= */
+
+        /* WHY US */
+        .why-us-section {
+            background-color: #ffffff;
+            padding: 6rem 2rem;
+        }
+
+        .why-us-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title-why-us {
+            text-align: center;
+            color: #074159;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .section-title-why-us::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #ff5722;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .why-us-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .why-us-card {
+            background-color: #F6FAFA;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .why-us-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .why-us-icon {
+            margin-bottom: 1.5rem;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .why-us-icon img {
+            height: 48px;
+            width: auto;
+        }
+
+        .why-us-title {
+            color: #074159;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+
+        .why-us-description {
+            color: #425B66;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+        }
 
 
         /* Hero Section */
@@ -236,7 +314,7 @@
             justify-content: center;
             overflow: hidden;
         }
-        /* ... (sisa CSS Anda untuk .hero-section, .products-section, dll. tetap sama) ... */
+
         .hero-background {
             position: absolute;
             top: 0;
@@ -450,6 +528,109 @@
             .start-project .sp-button { padding: 10px 18px; }
         }
 
+        /* KOMITMEN */
+        .commitment-section {
+            position: relative;
+            padding: 6rem 2rem;
+            background-image: url('{{ asset('assets/img/ekspansibisnisS.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            text-align: center;
+            overflow: hidden;
+        }
+        .commitment-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 65, 89, 0.9);
+            z-index: 1;
+        }
+        .commitment-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 3;
+        }
+        .section-title-commitment {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .section-title-commitment::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #ff5722;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        .section-description-commitment {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 760px;
+            margin: 2rem auto 3rem;
+        }
+        .commitment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .commitment-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .commitment-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .commitment-icon {
+            margin-bottom: 1.5rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .commitment-icon img {
+            height: 64px;
+            width: auto;
+        }
+
+        .commitment-icon.icon-efisiensi {
+            height: 90px;
+            margin-bottom: 0.35rem;
+        }
+        .commitment-icon.icon-efisiensi img {
+            height: 80px;
+        }
+
+        .commitment-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+        }
+        .commitment-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
@@ -461,14 +642,14 @@
             }
 
             .navbar-right {
-                display: none; 
+                display: none;
                 position: absolute;
-                top: 80px; 
+                top: 80px;
                 left: 0;
                 width: 100%;
                 background-color: #ffffff;
                 flex-direction: column;
-                align-items: stretch; 
+                align-items: stretch;
                 gap: 0;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             }
@@ -478,7 +659,7 @@
             }
 
             .navbar-menu {
-                flex-direction: column; 
+                flex-direction: column;
                 gap: 0;
                 width: 100%;
             }
@@ -489,13 +670,13 @@
             }
 
             .navbar-menu li a {
-                display: block; 
+                display: block;
                 padding: 1rem;
                 border-bottom: 1px solid #f0f0f0;
             }
 
             .navbar-profile {
-                justify-content: center; 
+                justify-content: center;
                 width: 100%;
                 padding: 1rem; /* Beri padding untuk ikon di mobile */
                 border-bottom: 1px solid #f0f0f0;
@@ -527,8 +708,41 @@
                 gap: 1.5rem;
             }
 
+
+            .why-us-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .section-title-why-us {
+                font-size: 28px;
+            }
+
+            .why-us-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-top: 3rem;
+            }
+
+            .commitment-section {
+                padding: 4rem 1.5rem;
+                background-attachment: scroll;
+            }
+            .section-title-commitment {
+                font-size: 28px;
+            }
+            .section-description-commitment {
+                font-size: 14px;
+                margin-bottom: 2rem;
+                margin-top: 1.5rem; /* Menyesuaikan margin-top untuk mobile */
+            }
+            .commitment-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+
             /* --- CSS RESPONSIVE BARU UNTUK DROPDOWN --- */
-            
+
             .profile-dropdown {
                 width: 100%;
             }
@@ -546,7 +760,7 @@
             .profile-dropdown-toggle svg {
                 margin: 0 auto; /* Pusatkan ikon */
             }
-            
+
             /* Menu dropdown di mobile */
             .profile-dropdown-menu {
                 position: static;
@@ -600,7 +814,7 @@
                 font-size: 0.9rem;
             }
         }
-        
+
         /* CSS Untuk Artikel Section dari file Anda */
         .skm-articles { background: #F4F7F6; padding: 56px 16px 70px; font-family: 'Besley', serif; }
         .skm-a-wrap { max-width: 980px; margin: 0 auto; }
@@ -664,13 +878,13 @@
 
                 <div class="navbar-profile">
                     <div class="profile-dropdown">
-                        
+
                         <button class="profile-icon profile-dropdown-toggle" aria-label="User Menu">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </button>
-                        
+
                         <div class="profile-dropdown-menu">
                             @auth
                                 <div class="dropdown-header">
@@ -716,10 +930,43 @@
         </div>
     </section>
 
+    <section class="why-us-section" aria-labelledby="why-us-title">
+        <div class="why-us-container">
+            <h2 class="section-title-why-us" id="why-us-title">Mengapa Memilih Sikemas?</h2>
+            <div class="why-us-grid">
+
+                <div class="why-us-card">
+                    <div class="why-us-icon">
+                        <img src="{{ asset('assets/img/Symbol13.svg') }}" alt="">
+                    </div>
+                    <h3 class="why-us-title">Kustomisasi Tanpa Batas</h3>
+                    <p class="why-us-description">Kami wujudkan ide desain Anda menjadi kemasan yang unik dan personal.</p>
+                </div>
+
+                <div class="why-us-card">
+                    <div class="why-us-icon">
+                        <img src="{{ asset('assets/img/Symbol14.svg') }}" alt="">
+                    </div>
+                    <h3 class="why-us-title">Konsultasi Ahli</h3>
+                    <p class="why-us-description">Tim profesional kami siap membantu Anda dari ide awal hingga produk jadi.</p>
+                </div>
+
+                <div class="why-us-card">
+                    <div class="why-us-icon">
+                        <img src="{{ asset('assets/img/Container5.svg') }}" alt="">
+                    </div>
+                    <h3 class="why-us-title">Layanan Cepat & Andal</h3>
+                    <p class="why-us-description">Proses produksi dan pengiriman kami dirancang untuk efisiensi dan ketepatan waktu.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <section class="products-section">
         <div class="products-container">
             <h2 class="section-title">Produk Unggulan Kami</h2>
-            
+
             <div class="products-grid">
                 <div class="product-card">
                     <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
@@ -751,6 +998,44 @@
         </div>
     </section>
 
+    <section class="commitment-section" aria-labelledby="commitment-title-id">
+        <div class="commitment-overlay"></div>
+        <div class="commitment-container">
+            <h2 class="section-title-commitment" id="commitment-title-id">Komitmen Terhadap Bisnis Berkelanjutan</h2>
+            <p class="section-description-commitment">
+                Kami percaya bahwa kemasan yang baik tidak hanya melindungi produk, tetapi juga planet kita.
+                Sikemas berkomitmen untuk menggunakan bahan baku yang bertanggung jawab dan proses produksi
+                yang efisien untuk mengurangi dampak lingkungan.
+            </p>
+            <div class="commitment-grid">
+
+                <div class="commitment-card">
+                    <div class="commitment-icon">
+                        <img src="{{ asset('assets/img/ContainerR.png') }}" alt="Bahan Berkualitas">
+                    </div>
+                    <h3 class="commitment-title">Bahan Berkualitas</h3>
+                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo non condimentum efficitur.</p>
+                </div>
+
+                <div class="commitment-card">
+                    <div class="commitment-icon">
+                        <img src="{{ asset('assets/img/ContainerT.png') }}" alt="Bisnis Berkelanjutan">
+                    </div>
+                    <h3 class="commitment-title">Bisnis Berkelanjutan</h3>
+                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo non condimentum efficitur.</p>
+                </div>
+
+                <div class="commitment-card">
+                    <div class="commitment-icon icon-efisiensi">
+                        <img src="{{ asset('assets/img/icon.png') }}" alt="Efisiensi Biaya">
+                    </div>
+                    <h3 class="commitment-title">Efisiensi Biaya</h3>
+                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo non condimentum efficitur.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
     <section class="skm-articles" aria-labelledby="articles-title">
         <div class="skm-a-wrap">
             <h2 id="articles-title">Artikel &amp; Berita</h2>

@@ -69,6 +69,13 @@ Route::get('/artikel', function () {
     return view('artikel');
 })->name('artikel');
 
+// Detail artikel (sementara statis, hanya tampilan)
+Route::get('/artikel/{id}', function ($id) {
+    // Nanti data artikel akan diambil dari database berdasarkan $id/slug.
+    // Untuk sekarang, cukup kirimkan ID untuk ditampilkan secara informatif.
+    return view('detail_artikel', ['id' => $id]);
+})->name('detail_artikel');
+
 Route::get('/portofolio', function () {
     return view('portofolio');
 })->name('portofolio');

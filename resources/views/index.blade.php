@@ -138,10 +138,6 @@
             transition: all 0.3s ease;
         }
 
-        /* =========================================== */
-        /* === CSS BARU DITAMBAHKAN MULAI DARI SINI === */
-        /* =========================================== */
-
         /* CSS UNTUK PROFIL DROPDOWN (Guest & Logged In) */
         .profile-dropdown {
             position: relative;
@@ -220,10 +216,6 @@
             background-color: #e64a19;
             color: white;
         }
-
-        /* ========================================= */
-        /* === CSS BARU BERAKHIR DI SINI === */
-        /* ========================================= */
 
         /* WHY US */
         .why-us-section {
@@ -631,6 +623,447 @@
             margin: 0;
         }
 
+        /* KOMITMEN 2*/
+
+        .commitment-2-section {
+            padding: 6rem 2rem;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        .commitment-2-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .commitment-2-section h2 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #074159;
+            line-height: 1.4;
+            max-width: 8000px;
+            margin: 0 auto 0.25rem auto;
+        }
+
+        .domino-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3.5rem;
+            margin-bottom: 0.5rem;
+            padding: 3rem 0;
+        }
+
+        /* .domino-tab (Ini adalah card utama) */
+        .domino-tab {
+            position: relative;
+            width: 130px;
+            height: 250px;
+            background: linear-gradient(145deg, #095a7c, #074159); /* Gradient biru */
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            font-family: 'Besley', serif;
+
+            /* EFEK SHADOW 3D TEBAL (10 lapis) - ATAS & KANAN */
+            box-shadow: 1px -1px #053244,
+                        2px -2px #053244,
+                        3px -3px #053244,
+                        4px -4px #053244,
+                        5px -5px #053244,
+                        6px -6px #053244,
+                        7px -7px #053244,
+                        8px -8px #053244,
+                        9px -9px #053244,
+                        10px -10px #053244,
+                        10px -10px 15px rgba(0,0,0,0.2);
+        }
+
+        /* .domino-tab span (Teks di dalam card) */
+        .domino-tab span {
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+            line-height: 1.4;
+            font-family: 'Besley', serif;
+        }
+
+        /* .domino-tab:hover (Efek saat di-hover) */
+        .domino-tab:hover {
+            transform: translate(6px, -6px);
+
+            /* Bayangan memanjang saat hover (12 lapis) */
+            box-shadow: 1px -1px #053244,
+                        2px -2px #053244,
+                        3px -3px #053244,
+                        4px -4px #053244,
+                        5px -5px #053244,
+                        6px -6px #053244,
+                        7px -7px #053244,
+                        8px -8px #053244,
+                        9px -9px #053244,
+                        10px -10px #053244,
+                        11px -11px #053244,
+                        12px -12px #053244,
+                        12px -12px 20px rgba(0,0,0,0.25);
+        }
+
+        /* Style untuk tab AKTIF (Orange) */
+        .domino-tab.active {
+            background: linear-gradient(145deg, #ff7a50, #ff5722); /* Gradient orange */
+            transform: translate(6px, -6px);
+
+            /* Shadow warna orange (12 lapis) */
+            box-shadow: 1px -1px #e64a19,
+                        2px -2px #e64a19,
+                        3px -3px #e64a19,
+                        4px -4px #e64a19,
+                        5px -5px #e64a19,
+                        6px -6px #e64a19,
+                        7px -7px #e64a19,
+                        8px -8px #e64a19,
+                        9px -9px #e64a19,
+                        10px -10px #e64a19,
+                        11px -11px #e64a19,
+                        12px -12px #e64a19,
+                        12px -12px 20px rgba(0,0,0,0.25);
+        }
+
+        .domino-content-wrapper {
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .domino-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .domino-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .domino-content h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #074159;
+            margin-bottom: 1rem;
+        }
+
+        .domino-content p {
+            font-size: 16px;
+            color: #425B66;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .orange-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .orange-box {
+            background-color: #ff5722;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 120px;
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.2);
+            font-family: 'Besley', serif;
+        }
+
+        /*CSS ALUR PROSES KAMI*/
+        .our-process-section {
+            background-color: #ffffff;
+            /* padding: 6rem 2rem; */ /* <-- DIUBAH */
+            padding: 2rem 2rem 6rem; /* <-- Jarak atas dikurangi, jarak bawah tetap 6rem */
+            font-family: 'Besley', serif;
+        }
+
+        .our-process-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title-process {
+            text-align: center;
+            color: #074159;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .section-title-process::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #ff5722;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .our-process-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .our-process-step {
+            text-align: center;
+        }
+
+        .process-image-wrapper {
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .process-image-wrapper img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .our-process-step:hover .process-image-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .process-step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #074159;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            margin-top: -30px;
+            z-index: 2;
+        }
+
+        .process-step-title {
+            color: #074159;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+
+        .process-step-description {
+            color: #425B66;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* =========================================== */
+        /* === CSS CUSTOM DESIGN SECTION (DIUBAH) === */
+        /* =========================================== */
+        .custom-design-section {
+            background-color: #F4F7F6; /* Background abu-abu muda */
+            padding: 6rem 2rem;
+            font-family: 'Besley', serif;
+        }
+
+        .custom-design-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title-custom-design {
+            text-align: center;
+            color: #074159;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .section-title-custom-design::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #ff5722;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* === CSS BARU UNTUK 3 GAMBAR === */
+        .custom-design-image-grid {
+            display: grid;
+            grid-template-columns: 0.7fr 2fr 0.8fr;
+            gap: 2rem;
+            margin-top: 4rem;
+            align-items: center;
+        }
+
+        .custom-design-image-item {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-design-image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* === CSS UNTUK TOMBOL CTA BAWAH === */
+        .custom-design-cta {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .cta-button-design-new {
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            background-color: #ff5722;
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.35);
+            text-transform: none;
+        }
+
+        .cta-button-design-new:hover {
+            background-color: #e64a19;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(255, 87, 34, 0.45);
+        }
+
+        .cta-button-icon {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        /*FREE DESIGN SECTION*/
+        .free-design-section {
+            position: relative;
+            background-image: url('{{ asset('assets/img/desainGr.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 8rem 2rem;
+            color: #ffffff;
+            text-align: center;
+            overflow: hidden;
+            font-family: 'Besley', serif;
+        }
+
+        .free-design-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(19, 51, 60, 0.425);
+            z-index: 1;
+        }
+
+        .free-design-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .free-design-subtitle {
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            margin-bottom: -0.65rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .free-design-title {
+            font-size: 3.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .free-design-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #ff5722;
+            margin: 0 auto 2rem;
+            border-radius: 2px;
+        }
+
+        .free-design-description {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .free-design-button {
+            display: inline-block;
+            background-color: #ff5722;
+            color: #ffffff;
+            padding: 0.875rem 2.25rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.35);
+            transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+        }
+
+        .free-design-button:hover {
+            background-color: #e64a19;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(255, 87, 34, 0.45);
+        }
+
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
@@ -733,15 +1166,125 @@
             .section-description-commitment {
                 font-size: 14px;
                 margin-bottom: 2rem;
-                margin-top: 1.5rem; /* Menyesuaikan margin-top untuk mobile */
+                margin-top: 1.5rem;
             }
             .commitment-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
 
+            /* --- CSS RESPONSIVE KOMITMEN 2  --- */
+            .commitment-2-section {
+                padding: 4rem 1.5rem;
+            }
+            .commitment-2-section h2 {
+                font-size: 24px;
+                margin-bottom: 2rem;
+            }
+            .domino-nav {
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 3rem;
+                padding: 0;
+            }
 
-            /* --- CSS RESPONSIVE BARU UNTUK DROPDOWN --- */
+            .domino-tab,
+            .domino-tab:hover,
+            .domino-tab.active {
+                width: calc(50% - 0.5rem);
+                height: 60px;
+                transform: none;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin: 0;
+            }
+
+            .domino-tab span {
+                transform: none;
+                font-size: 0.875rem;
+            }
+
+            .domino-tab:last-child {
+                width: 100%;
+            }
+
+            .domino-content-wrapper {
+                text-align: center;
+            }
+            .domino-content h3 {
+                font-size: 22px;
+            }
+            .domino-content p {
+                font-size: 15px;
+                text-align: left;
+            }
+            .orange-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .orange-box {
+                font-size: 1rem;
+                min-height: 80px;
+                padding: 1rem;
+            }
+
+            /* --- CSS RESPONSIVE ALUR PROSES --- */
+            .our-process-section {
+                padding: 4rem 1.5rem;
+            }
+            .section-title-process {
+                font-size: 28px;
+            }
+            .our-process-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                margin-top: 3rem;
+            }
+            .process-image-wrapper img {
+                height: 200px;
+            }
+
+            /* --- CSS RESPONSIVE CUSTOM DESIGN--- */
+            .custom-design-section {
+                padding: 4rem 1.5rem;
+            }
+            .section-title-custom-design {
+                font-size: 28px;
+            }
+
+            .custom-design-image-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-top: 3rem;
+            }
+
+            .cta-button-design-new {
+                font-size: 1.1rem;
+                padding: 1rem 1.5rem;
+
+            }
+
+            .cta-button-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            /* --- CSS RESPONSIVE FREE DESIGN --- */
+            .free-design-section {
+                padding: 4rem 1.5rem;
+                background-attachment: scroll;
+            }
+            .free-design-title {
+                font-size: 28px;
+            }
+            .free-design-description {
+                font-size: 14px;
+            }
+            .free-design-button {
+                padding: 10px 18px;
+            }
+
+
+            /* --- CSS RESPONSIVE UNTUK DROPDOWN --- */
 
             .profile-dropdown {
                 width: 100%;
@@ -801,7 +1344,6 @@
             .profile-dropdown-menu a.dropdown-button-primary:hover {
                 background-color: #e64a19;
             }
-            /* --- AKHIR CSS RESPONSIVE BARU --- */
 
         }
 
@@ -1003,7 +1545,7 @@
         <div class="commitment-container">
             <h2 class="section-title-commitment" id="commitment-title-id">Komitmen Terhadap Bisnis Berkelanjutan</h2>
             <p class="section-description-commitment">
-                Kami percaya bahwa kemasan yang baik tidak hanya melindungi produk, tetapi juga planet kita.
+                Kami percaya bahwa kemasan yang baik tidak only melindungi produk, tetapi juga planet kita.
                 Sikemas berkomitmen untuk menggunakan bahan baku yang bertanggung jawab dan proses produksi
                 yang efisien untuk mengurangi dampak lingkungan.
             </p>
@@ -1034,6 +1576,168 @@
                 </div>
 
             </div>
+        </div>
+    </section>
+
+    <section class="commitment-2-section" aria-labelledby="commitment-2-title">
+        <div class="commitment-2-container">
+            <h2 id="commitment-2-title">Berkarya dengan hati untuk dedikasi menjadi partner membangun<br>bisnis yang berkelanjutan</h2>
+            <nav class="domino-nav" aria-label="Komitmen Kami">
+                <button class="domino-tab active" data-target="content-eco">
+                    <span>Eco Solutions</span>
+                </button>
+                <button class="domino-tab" data-target="content-guidance">
+                    <span>Guidance</span>
+                </button>
+                <button class="domino-tab" data-target="content-quality">
+                    <span>Quality & Delivery</span>
+                </button>
+                <button class="domino-tab" data-target="content-transparency">
+                    <span>Transparency</span>
+                </button>
+                <button class="domino-tab" data-target="content-innovations">
+                    <span>Innovations</span>
+                </button>
+            </nav>
+
+            <div class="domino-content-wrapper">
+                <div class="domino-content active" id="content-eco">
+                    <h3>The world Need Sustainable Packaging</h3>
+                    <p>Meskipun banyak produsen menawarkan harga yang terkesan ekonomis, kualitas produk yang dihasilkan sering kali tidak optimal. Pilihan yang tampak murah di awal justru dapat menimbulkan kerugian jangka panjang bagi bisnis Anda.</p>
+                    <div class="orange-grid">
+                        <div class="orange-box">Solusi paling sirkular di setiap kategori.</div>
+                        <div class="orange-box">Pilihan bervariasi untuk kemasan, kardus, dan banyak lagi</div>
+                        <div class="orange-box">Branding dan Desain Custom untuk setiap pilihan kemasan</div>
+                        <div class="orange-box">Solusi untuk merek D2C sangat bervariasi</div>
+                    </div>
+                </div>
+
+                <div class="domino-content" id="content-guidance">
+                    <h3>Guidance & Support</h3>
+                    <p>Kami memandu Anda melalui setiap langkah, dari konsep hingga kenyataan. Tim ahli kami siap membantu Anda menemukan solusi kemasan terbaik untuk kebutuhan spesifik Anda, memastikan Anda membuat pilihan yang tepat.</p>
+                    <div class="orange-grid">
+                        <div class="orange-box">Konsultasi Desain Gratis</div>
+                        <div class="orange-box">Dukungan Teknis Ahli</div>
+                        <div class="orange-box">Pemilihan Material Terbaik</div>
+                        <div class="orange-box">Prototyping Cepat</div>
+                    </div>
+                </div>
+
+                <div class="domino-content" id="content-quality">
+                    <h3>Quality & Delivery</h3>
+                    <p>Kualitas adalah janji kami. Kami menggunakan material terbaik dan proses produksi yang ketat untuk memastikan setiap kemasan kokoh dan sempurna. Pengiriman tepat waktu adalah prioritas kami agar bisnis Anda terus berjalan lancar.</p>
+                    <div class="orange-grid">
+                        <div class="orange-box">Kontrol Kualitas Berlapis</div>
+                        <div class="orange-box">Jaminan Tepat Waktu</div>
+                        <div class="orange-box">Material Premium Teruji</div>
+                        <div class="orange-box">Garansi Produk</div>
+                    </div>
+                </div>
+
+                <div class="domino-content" id="content-transparency">
+                    <h3>Transparency</h3>
+                    <p>Kami percaya pada kemitraan yang jujur. Anda akan mendapatkan informasi yang jelas dan terbuka mengenai harga, material, dan proses produksi. Tidak ada biaya tersembunyi, hanya komitmen tulus untuk kesuksesan Anda.</p>
+                    <div class="orange-grid">
+                        <div class="orange-box">Harga Jujur Tanpa Biaya Tersembunyi</div>
+                        <div class="orange-box">Pelacakan Proses Produksi</div>
+                        <div class="orange-box">Spesifikasi Material Jelas</div>
+                        <div class="orange-box">Komunikasi Proaktif</div>
+                    </div>
+                </div>
+
+                <div class="domino-content" id="content-innovations">
+                    <h3>Innovations</h3>
+                    <p>Dunia terus berubah, begitu pula kami. Sikemas terus berinovasi dalam teknologi dan desain untuk memberikan Anda solusi kemasan yang tidak only fungsional tetapi juga modern dan terdepan di pasar.</p>
+                    <div class="orange-grid">
+                        <div class="orange-box">Teknologi Cetak Terbaru</div>
+                        <div class="orange-box">Desain Kemasan Pintar (Smart Packaging)</div>
+                        <div class="orange-box">Riset Material Baru</div>
+                        <div class="orange-box">Solusi Otomatisasi Kemasan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="our-process-section" aria-labelledby="process-title">
+        <div class="our-process-container">
+            <h2 class="section-title-process" id="process-title">Alur Proses Kami</h2>
+            <div class="our-process-grid">
+
+                <div class="our-process-step">
+                    <div class="process-image-wrapper">
+                        <img src="{{ asset('assets/img/alur1.png') }}" alt="Konsultasi dan Desain">
+                    </div>
+                    <div class="process-step-number">1</div>
+                    <h3 class="process-step-title">Konsultasi & Desain</h3>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                </div>
+
+                <div class="our-process-step">
+                    <div class="process-image-wrapper">
+                        <img src="{{ asset('assets/img/alur2.png') }}" alt="Pemilihan Material">
+                    </div>
+                    <div class="process-step-number">2</div>
+                    <h3 class="process-step-title">Pemilihan Material</h3>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                </div>
+
+                <div class="our-process-step">
+                    <div class="process-image-wrapper">
+                        <img src="{{ asset('assets/img/alur3.png') }}" alt="Purchase / Dealing">
+                    </div>
+                    <div class="process-step-number">3</div>
+                    <h3 class="process-step-title">Purchase / Dealing</h3>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                </div>
+
+                <div class="our-process-step">
+                    <div class="process-image-wrapper">
+                        <img src="{{ asset('assets/img/alur4.png') }}" alt="Produksi & Kontrol Kualitas">
+                    </div>
+                    <div class="process-step-number">4</div>
+                    <h3 class="process-step-title">Produksi & Kontrol Kualitas</h3>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                </div>
+
+                <div class="our-process-step">
+                    <div class="process-image-wrapper">
+                        <img src="{{ asset('assets/img/alur5.png') }}" alt="Pengiriman">
+                    </div>
+                    <div class="process-step-number">5</div>
+                    <h3 class="process-step-title">Pengiriman</h3>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="custom-design-section" aria-labelledby="custom-design-title">
+        <div class="custom-design-container">
+            <h2 class="section-title-custom-design" id="custom-design-title">Custom Desain Anda Sendiri</h2>
+
+            <div class="custom-design-image-grid">
+                <img src="{{ asset('assets/img/custom1.png') }}" alt="Contoh Desain Box 1" class="custom-design-image-item">
+                <img src="{{ asset('assets/img/custom2.png') }}" alt="Contoh Desain Box 2" class="custom-design-image-item">
+                <img src="{{ asset('assets/img/custom3.png') }}" alt="Contoh Desain Box 3" class="custom-design-image-item">
+            </div>
+
+            <div class="custom-design-cta">
+                <a href="#" class="cta-button-design-new">
+                    Buat Desain Sendiri Sekarang
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="free-design-section" aria-labelledby="free-design-title">
+        <div class="free-design-overlay"></div>
+        <div class="free-design-container">
+            <p class="free-design-subtitle">konsultasi</p>
+            <h2 class="free-design-title" id="free-design-title">DESAIN GRATIS</h2>
+            <p class="free-design-description">Kami siap membuat ide desainmu menjadi nyata. Konsultasikan sekarang juga secara gratis!</p>
+            <a href="#" class="free-design-button">Konsultasi Gratis Sekarang</a>
         </div>
     </section>
     <section class="skm-articles" aria-labelledby="articles-title">
@@ -1103,6 +1807,23 @@
 
             hamburgerButton.addEventListener('click', function () {
                 mobileMenu.classList.toggle('active');
+            });
+
+            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
+            const dominoTabs = document.querySelectorAll('.domino-tab');
+            const dominoContents = document.querySelectorAll('.domino-content');
+
+            dominoTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.dataset.target;
+                    const targetContent = document.getElementById(targetId);
+
+                    dominoTabs.forEach(t => t.classList.remove('active'));
+                    dominoContents.forEach(c => c.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    targetContent.classList.add('active');
+                });
             });
         });
     </script>

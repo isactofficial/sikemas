@@ -891,7 +891,7 @@
                                     <span>{{ Auth::user()->name }}</span>
                                     <small>{{ Auth::user()->email }}</small>
                                 </div>
-                                <a href="#">Profil Saya</a>
+                                <a href="{{ route('profile.index') }}">Profil Saya</a>
                                 <div class="dropdown-divider"></div>
                                 <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault();

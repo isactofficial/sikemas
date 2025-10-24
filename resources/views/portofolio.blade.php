@@ -1022,7 +1022,7 @@
             </div>
 
             <div class="portfolio-image-container">
-                <img src="{{ asset('assets/img/ kardus.png') }}" alt="Produksi Kemasan Karton SIKEMAS" class="portfolio-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                <img src="{{ asset('assets/img/kardus.png') }}" alt="Produksi Kemasan Karton SIKEMAS" class="portfolio-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
             </div>
         </div>
     </section>
@@ -1030,7 +1030,7 @@
     <section class="profile-section">
         <div class="profile-wrapper">
             <div class="profile-image-container">
-                <img src="{{ asset('assets/img/ pabrik.png') }}" alt="Profil Perusahaan SIKEMAS" class="profile-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                <img src="{{ asset('assets/img/pabrik.png') }}" alt="Profil Perusahaan SIKEMAS" class="profile-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
             </div>
             
             <div class="profile-text">
@@ -1069,7 +1069,7 @@
                     </div>
                     <div class="history-dot"></div>
                     <div class="history-image-container">
-                        <img src="{{ asset('assets/img/ awalperusahaan.png') }}" alt="Awal Mula Perusahaan SIKEMAS" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                        <img src="{{ asset('assets/img/awalperusahaan.png') }}" alt="Awal Mula Perusahaan SIKEMAS" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
                 </div>
 

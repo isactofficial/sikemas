@@ -4,25 +4,36 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleAuthController;
 
 // ============================================
 // HOME ROUTE
 // ============================================
 Route::get('/', function () {
     return view('index');
-});
+})->name('home');
+
+
+// ============================================
+// GOOGLE OAUTH ROUTES (JANGAN PAKAI MIDDLEWARE GUEST!)
+// ============================================
+Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // ============================================
 // AUTH ROUTES (Public)
 // ============================================
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-})->name('password.request');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/forgot-password', function () {
+        return view('auth.forgot-password');
+    })->name('password.request');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // ============================================
 // PROTECTED ROUTES (Require Authentication)

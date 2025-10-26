@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,11 +20,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'phone',              // Kolom baru untuk nomor telepon
-        'gender',             // Kolom baru untuk jenis kelamin
-        'birth_date',         // Kolom baru untuk tanggal lahir
-        'profile_photo',      // Kolom baru untuk foto profil
-        'survey_completed',   // Kolom existing untuk status survey
+        'phone',
+        'gender',
+        'birth_date',
+        'profile_photo',
+        'survey_completed',
+        'google_id', // Tambahan untuk Google OAuth
     ];
 
     /**
@@ -47,8 +47,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'birth_date' => 'date',           // Cast birth_date sebagai date
-            'survey_completed' => 'boolean',  // Cast survey_completed sebagai boolean
+            'birth_date' => 'date',
+            'survey_completed' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -90,11 +90,17 @@ class User extends Authenticatable
 
     /**
      * Get profile photo URL with cache busting
+     * Updated to handle both local files and Google URLs
      */
     public function getProfilePhotoUrlAttribute()
     {
         if ($this->profile_photo) {
-            // Check if file exists in storage
+            // Check if it's a URL (from Google)
+            if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
+                return $this->profile_photo;
+            }
+            
+            // Check if file exists in storage (local upload)
             $path = 'public/profiles/' . $this->profile_photo;
             
             if (Storage::exists($path)) {
@@ -113,8 +119,16 @@ class User extends Authenticatable
      */
     public function getProfilePhotoPathAttribute()
     {
-        if ($this->profile_photo && Storage::exists('public/profiles/' . $this->profile_photo)) {
-            return asset('storage/profiles/' . $this->profile_photo);
+        if ($this->profile_photo) {
+            // Return URL as-is if it's from Google
+            if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
+                return $this->profile_photo;
+            }
+            
+            // Return local path if file exists
+            if (Storage::exists('public/profiles/' . $this->profile_photo)) {
+                return asset('storage/profiles/' . $this->profile_photo);
+            }
         }
         
         return null;
@@ -125,7 +139,17 @@ class User extends Authenticatable
      */
     public function hasProfilePhoto()
     {
-        return !empty($this->profile_photo) && Storage::exists('public/profiles/' . $this->profile_photo);
+        if (!$this->profile_photo) {
+            return false;
+        }
+        
+        // Check if it's a URL (from Google)
+        if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
+            return true;
+        }
+        
+        // Check if local file exists
+        return Storage::exists('public/profiles/' . $this->profile_photo);
     }
 
     /**
@@ -156,5 +180,13 @@ class User extends Authenticatable
         return !empty($this->phone) && 
                !empty($this->gender) && 
                !empty($this->birth_date);
+    }
+
+    /**
+     * Check if user registered via Google
+     */
+    public function isGoogleUser()
+    {
+        return !empty($this->google_id);
     }
 }

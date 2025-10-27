@@ -94,3 +94,23 @@ Route::get('/portofolio', function () {
 Route::get('/about', function () {
     return view('about');
 })->name('about');
+
+Route::get('/admin', function () {
+    return view('admin.index');
+})->name('admin');
+
+Route::get('/admin/articles', function () {
+    return view('admin.articles');
+})->name('admin.articles');
+
+Route::get('/admin/products', function () {
+    return view('admin.products');
+})->name('admin.products');
+
+Route::get('/admin/testimonials', function () {
+    return view('admin.testimonials');
+})->name('admin.testimonials');
+
+Route::get('/admin/transactions', function () {
+    return view('admin.transactions');
+})->name('admin.transactions');

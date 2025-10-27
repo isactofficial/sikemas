@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\ArticleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleAuthController;
 
@@ -13,9 +14,8 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
-
 // ============================================
-// GOOGLE OAUTH ROUTES (JANGAN PAKAI MIDDLEWARE GUEST!)
+// GOOGLE OAUTH ROUTES
 // ============================================
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
@@ -46,10 +46,7 @@ Route::middleware(['auth'])->group(function () {
     
     // ======== PROFILE ROUTES ========
     Route::prefix('profile')->name('profile.')->group(function () {
-        // Profile Page
         Route::get('/', [ProfileController::class, 'show'])->name('index');
-        
-        // Edit Profile
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::post('/update', [ProfileController::class, 'update'])->name('update');
         
@@ -60,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/address/{id}', [ProfileController::class, 'updateAddress'])->name('address.update');
         Route::delete('/address/{id}', [ProfileController::class, 'deleteAddress'])->name('address.delete');
         
-        // Orders / Riwayat Belanja
+        // Orders
         Route::get('/orders', [ProfileController::class, 'getOrders'])->name('orders');
     });
 });
@@ -80,10 +77,7 @@ Route::get('/artikel', function () {
     return view('artikel');
 })->name('artikel');
 
-// Detail artikel (sementara statis, hanya tampilan)
 Route::get('/artikel/{id}', function ($id) {
-    // Nanti data artikel akan diambil dari database berdasarkan $id/slug.
-    // Untuk sekarang, cukup kirimkan ID untuk ditampilkan secara informatif.
     return view('detail_artikel', ['id' => $id]);
 })->name('detail_artikel');
 
@@ -95,22 +89,28 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-Route::get('/admin', function () {
-    return view('admin.index');
-})->name('admin');
+// ============================================
+// ADMIN ROUTES (Protected)
+// ============================================
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard
+    Route::get('/', function () {
+        return view('admin.index');
+    })->name('index');
 
-Route::get('/admin/articles', function () {
-    return view('admin.articles');
-})->name('admin.articles');
+    // Article Management - CRUD (RESOURCE ROUTE)
+    Route::resource('articles', ArticleController::class);
+    
+    // Other Admin Static Pages
+    Route::get('/products', function () {
+        return view('admin.products');
+    })->name('products');
 
-Route::get('/admin/products', function () {
-    return view('admin.products');
-})->name('admin.products');
+    Route::get('/testimonials', function () {
+        return view('admin.testimonials');
+    })->name('testimonials');
 
-Route::get('/admin/testimonials', function () {
-    return view('admin.testimonials');
-})->name('admin.testimonials');
-
-Route::get('/admin/transactions', function () {
-    return view('admin.transactions');
-})->name('admin.transactions');
+    Route::get('/transactions', function () {
+        return view('admin.transactions');
+    })->name('admin.transactions');
+});

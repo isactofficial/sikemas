@@ -331,9 +331,9 @@
             background: var(--skm-white);
             border-radius: 15px;
             z-index: 1001;
-            max-width: 800px;
+            max-width: 900px;
             width: 90%;
-            max-height: 90vh;
+            max-height: 620px;
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             visibility: hidden;
@@ -341,16 +341,16 @@
             transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
         }
 
-         .modal-overlay.active,
-         .modal-detail.active {
+        .modal-overlay.active,
+        .modal-detail.active {
             visibility: visible;
             opacity: 1;
             transition-delay: 0s;
-         }
+        }
 
-         .modal-detail.active {
-             transform: translate(-50%, -50%) scale(1);
-         }
+        .modal-detail.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
 
         .modal-close-btn {
             position: absolute;
@@ -372,30 +372,32 @@
 
         .modal-content {
             display: flex;
-            padding: 30px;
-            gap: 25px;
+            padding: 20px 25px;
+            gap: 30px;
         }
 
-        .modal-left { flex-basis: 45%; }
-        .modal-right { flex-basis: 55%; }
+        .modal-left { flex-basis: 40%; }
+        .modal-right { flex-basis: 60%; }
 
         #modal-img-main {
             width: 100%;
             border-radius: 10px;
             border: 1px solid #eee;
             height: 320px;
-            object-fit: cover;
+            object-fit: contain;
+            background-color: #f8f8f8;
         }
 
         .modal-thumbnails {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 10px;
+            justify-content: center;
         }
 
         .modal-thumbnails img {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             object-fit: cover;
             border-radius: 5px;
             cursor: pointer;
@@ -407,101 +409,156 @@
         .modal-thumbnails img.active { border-color: var(--skm-accent); }
 
         .modal-right h2 {
-            font-size: 2.0rem;
+            font-size: 1.6rem;
             color: var(--skm-new-teal-1);
-            margin: 0 0 10px;
+            margin: 0 0 5px;
             line-height: 1.2;
         }
 
         .modal-right #modal-deskripsi {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: var(--skm-gray);
-            line-height: 1.6;
-            margin-bottom: 15px;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
 
         .modal-right #modal-harga {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--skm-accent);
-            margin: 0 0 20px 0;
+            margin: 0 0 10px 0;
         }
 
         .modal-spek h3 {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--skm-blue);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border-bottom: 2px solid #eee;
             padding-bottom: 5px;
         }
 
         .modal-spek table {
             width: 100%;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             border-collapse: collapse;
         }
 
         .modal-spek td {
-            padding: 8px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #f0f0f0;
         }
+
         .modal-spek td:first-child {
             font-weight: 600;
             color: #333;
-            width: 120px;
+            width: 110px;
         }
+
         .modal-spek td:last-child { color: var(--skm-gray); }
 
+        .modal-spek .modal-form-group.quantity-group {
+            justify-content: flex-start;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0f0f0;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .modal-spek .modal-form-group.quantity-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            width: 110px;
+            flex-shrink: 0;
+        }
+
         .modal-form-group {
+            margin-top: 10px;
+        }
+
+        .modal-form-group.quantity-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-top: 15px;
         }
+
+        .modal-form-group.quantity-group label {
+            margin-bottom: 0;
+        }
+
         .modal-form-group label {
             display: block;
-            font-size: 1.1rem;
+            font-size: 1.0rem;
             font-weight: 700;
             color: var(--skm-blue);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .quantity-input { display: flex; align-items: center; }
+
         .quantity-btn {
-            width: 40px; height: 40px;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            font-size: 1.5rem;
+            width: 35px; height: 35px;
+            background: var(--skm-blue);
+            border: 1px solid var(--skm-blue);
+            font-size: 1.2rem;
             cursor: pointer;
             font-weight: bold;
-            line-height: 1.5rem;
-            color: var(--skm-gray);
+            line-height: 1.2rem;
+            color: var(--skm-white);
         }
-        .quantity-btn:hover { background: #e0e0e0; }
+
+        .quantity-btn:hover {
+            background: var(--skm-blue-2);
+            border-color: var(--skm-blue-2);
+        }
+
         #modal-qty {
-            width: 60px; height: 40px;
+            width: 50px; height: 35px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 1px solid var(--skm-blue);
             border-left: none; border-right: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-family: 'Besley', serif;
             -moz-appearance: textfield;
+            color: var(--skm-blue);
+            font-weight: 600;
         }
+
         #modal-qty::-webkit-outer-spin-button,
         #modal-qty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        .radio-group { display: flex; gap: 20px; }
-        .radio-group label { font-size: 0.95rem; font-weight: 500; color: var(--skm-gray); cursor: pointer; }
+        .quantity-btn#qty-minus {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        .quantity-btn#qty-plus {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .radio-group { display: flex; gap: 15px; }
+        .radio-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--skm-gray);
+            cursor: pointer;
+        }
         .radio-group input { margin-right: 5px; }
 
         .modal-actions {
             display: flex;
             gap: 10px;
-            margin-top: 25px;
+            margin-top: 15px;
         }
+
         .btn-modal {
             flex: 1;
-            padding: 12px 20px;
+            padding: 10px 15px;
             font-family: 'Besley', serif;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             border: none;
             border-radius: 8px;
@@ -509,17 +566,26 @@
             transition: all 0.3s ease;
             text-align: center;
         }
+
+        .btn-modal i {
+            margin-right: 6px;
+        }
+
         .btn-modal-primary {
             background-color: var(--skm-accent);
             color: var(--skm-white);
         }
+
         .btn-modal-primary:hover { background-color: #e64a19; }
 
+        /* --- PERUBAHAN CSS TOMBOL SESUAIKAN DESAIN --- */
         .btn-modal-secondary {
-            background-color: #f0ad4e;
+            background-color: var(--skm-accent); /* DIUBAH - Sesuai gambar */
             color: var(--skm-white);
         }
-        .btn-modal-secondary:hover { background-color: #ec971f; }
+
+        .btn-modal-secondary:hover { background-color: #e64a19; } /* DIUBAH - Menyamakan hover */
+        /* --- AKHIR PERUBAHAN CSS --- */
 
         /* Responsive for popup */
         @media (max-width: 768px) {
@@ -861,18 +927,18 @@
                             <tbody id="modal-spek-tbody">
                                 </tbody>
                         </table>
-                    </div>
 
-                    <div class="modal-form-group">
-                        <label for="modal-qty">Jumlah</label>
-                        <div class="quantity-input">
-                            <button class="quantity-btn" id="qty-minus">-</button>
-                            <input type="number" id="modal-qty" value="1" min="1">
-                            <button class="quantity-btn" id="qty-plus">+</button>
+                        <div class="modal-form-group quantity-group">
+                            <label for="modal-qty">Jumlah</label>
+                            <div class="quantity-input">
+                                <button class="quantity-btn" id="qty-minus">-</button>
+                                <input type="number" id="modal-qty" value="1" min="1">
+                                <button class="quantity-btn" id="qty-plus">+</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="modal-form-group">
+                    <div class="modal-form-group radio-group-container">
                         <label>Punya desain sendiri?</label>
                         <div class="radio-group">
                             <label><input type="radio" name="custom_design" value="ya"> Ya</label>
@@ -882,7 +948,7 @@
 
                     <div class="modal-actions">
                         <button class="btn-modal btn-modal-primary"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                        <button class="btn-modal btn-modal-secondary">Sesuaikan Desain</button>
+                        <button class="btn-modal btn-modal-secondary"><i class="fas fa-pen"></i> Sesuaikan Desain</button>
                     </div>
                 </div>
             </div>

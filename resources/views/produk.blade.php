@@ -578,14 +578,13 @@
 
         .btn-modal-primary:hover { background-color: #e64a19; }
 
-        /* --- PERUBAHAN CSS TOMBOL SESUAIKAN DESAIN --- */
         .btn-modal-secondary {
-            background-color: var(--skm-accent); /* DIUBAH - Sesuai gambar */
+            background-color: var(--skm-accent);
             color: var(--skm-white);
         }
 
-        .btn-modal-secondary:hover { background-color: #e64a19; } /* DIUBAH - Menyamakan hover */
-        /* --- AKHIR PERUBAHAN CSS --- */
+        .btn-modal-secondary:hover { background-color: #e64a19; }
+
 
         /* Responsive for popup */
         @media (max-width: 768px) {

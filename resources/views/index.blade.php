@@ -1724,7 +1724,7 @@
             </div>
 
             <div class="custom-design-cta">
-                <a href="#" class="cta-button-design-new">
+                <a href="{{ url('/edit-design') }}" class="cta-button-design-new">
                     Buat Desain Sendiri Sekarang
                 </a>
             </div>

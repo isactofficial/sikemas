@@ -14,6 +14,9 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
+Route::get('/edit-design', function () {
+    return view('edit-design');
+})->name('edit.design');
 // ============================================
 // GOOGLE OAUTH ROUTES
 // ============================================

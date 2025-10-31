@@ -39,8 +39,8 @@
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            padding: 2rem 2rem;
-            max-width: 400px;
+            padding: 1.5rem 1.75rem;
+            max-width: 360px;
             width: 90%;
             text-align: center;
             margin: auto;
@@ -51,21 +51,21 @@
         }
 
         .logo-container img {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             margin: 0 auto;
         }
 
         .login-title {
             color: #074159;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 0.4rem;
         }
 
         .login-subtitle {
             color: #666;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             margin-bottom: 1.25rem;
             line-height: 1.4;
         }
@@ -94,7 +94,7 @@
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.85rem;
             text-align: left;
         }
 
@@ -156,11 +156,11 @@
 
         .form-input {
             width: 100%;
-            padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+            padding: 0.65rem 2.5rem 0.65rem 2.5rem;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-family: 'Besley', serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
         }
 
@@ -199,11 +199,11 @@
             width: 100%;
             background-color: #074159;
             color: white;
-            padding: 0.75rem;
+            padding: 0.65rem;
             border: none;
             border-radius: 6px;
             font-family: 'Besley', serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;

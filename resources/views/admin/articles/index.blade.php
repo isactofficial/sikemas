@@ -134,9 +134,50 @@
 			gap: 8px; 
 			padding: 20px 16px; 
 		}
-		.skm-pagination .skm-page-summary { font-size: 13px; color: #6B8791; }
-		.skm-pagination nav a, .skm-pagination nav span { padding: 8px 12px; border-radius: 6px; text-decoration: none; color: var(--skm-blue); font-weight: 600; font-size: 13px; }
-		.skm-pagination nav .active { background: var(--skm-blue); color: #fff; }
+		.skm-pagination .skm-page-summary { 
+			font-size: 13px; 
+			color: #23C8B8; 
+		}
+		.skm-pagination nav { 
+			display: flex; 
+			gap: 4px; 
+			align-items: center; 
+		}
+		.skm-pagination nav a, 
+		.skm-pagination nav span { 
+			padding: 6px 10px; 
+			border-radius: 6px; 
+			text-decoration: none; 
+			color: #23C8B8; 
+			font-weight: 600; 
+			font-size: 13px; 
+			min-width: 32px;
+			height: 32px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+		}
+		.skm-pagination nav a:hover { 
+			background: #F9FAFB; 
+		}
+		.skm-pagination nav .active { 
+			background: #23C8B8; 
+			color: #fff; 
+		}
+		.skm-pagination nav .disabled { 
+			opacity: 0.5; 
+			cursor: not-allowed; 
+			pointer-events: none; 
+			color: #23C8B8;
+		}
+		/* Styling untuk Previous dan Next */
+		.skm-pagination nav a[rel="prev"],
+		.skm-pagination nav a[rel="next"] {
+			font-size: 12px;
+			padding: 6px 12px;
+			color: #23C8B8;
+		}
 		
 		/* Alert */
 		.skm-alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
@@ -254,7 +295,30 @@
 					<span class="skm-page-summary">
 						Showing data {{ $articles->firstItem() }} to {{ $articles->lastItem() }} of {{ $articles->total() }} entries
 					</span>
-					{{ $articles->links() }}
+					<nav>
+						{{-- Previous Page Link --}}
+						@if ($articles->onFirstPage())
+							<span class="disabled">« Previous</span>
+						@else
+							<a href="{{ $articles->previousPageUrl() }}" rel="prev">« Previous</a>
+						@endif
+
+						{{-- Pagination Elements --}}
+						@foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
+							@if ($page == $articles->currentPage())
+								<span class="active">{{ $page }}</span>
+							@else
+								<a href="{{ $url }}">{{ $page }}</a>
+							@endif
+						@endforeach
+
+						{{-- Next Page Link --}}
+						@if ($articles->hasMorePages())
+							<a href="{{ $articles->nextPageUrl() }}" rel="next">Next »</a>
+						@else
+							<span class="disabled">Next »</span>
+						@endif
+					</nav>
 				</div>
 				@endif
 			</div>

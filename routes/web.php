@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\TestimonyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleAuthController;
 
@@ -104,14 +106,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Article Management - CRUD (RESOURCE ROUTE)
     Route::resource('articles', ArticleController::class);
     
-    // Other Admin Static Pages
-    Route::get('/products', function () {
-        return view('admin.products');
-    })->name('products');
+    // Products CRUD
+    Route::resource('products', ProductController::class)->names('products');
 
-    Route::get('/testimonials', function () {
-        return view('admin.testimonials');
-    })->name('testimonials');
+    // Testimonies CRUD
+    Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
     Route::get('/transactions', function () {
         return view('admin.transactions');

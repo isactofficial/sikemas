@@ -63,11 +63,25 @@ class Article extends Model
     }
 
     /**
+     * Relationship: Article belongs to many categories
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(
+            ArticleCategory::class,
+            'article_category_pivot', // pivot table name
+            'article_id',             // foreign key for this model on pivot
+            'category_id'             // foreign key for related model on pivot
+        );
+    }
+
+    /**
      * Scope: Published articles only
      */
     public function scopePublished($query)
     {
-        return $query->where('status', 'published');
+        // Be lenient with status casing (e.g., 'Published' or 'published')
+        return $query->whereRaw('LOWER(status) = ?', ['published']);
     }
 
     /**
@@ -131,7 +145,7 @@ class Article extends Model
      */
     public function isPublished()
     {
-        return $this->status === 'published';
+        return strtolower((string) $this->status) === 'published';
     }
 
     /**
@@ -139,6 +153,6 @@ class Article extends Model
      */
     public function isDraft()
     {
-        return $this->status === 'draft';
+        return strtolower((string) $this->status) === 'draft';
     }
 }

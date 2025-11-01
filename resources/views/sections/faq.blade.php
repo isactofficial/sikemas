@@ -18,9 +18,9 @@
                 <button class="faq-q" aria-expanded="false">
                     Apakah ada minimum order?
                 </button>
-                <!-- <div class="faq-a">
+                <div class="faq-a">
                     Minimum order bergantung pada jenis kemasan dan spesifikasi. Silakan hubungi kami untuk detail dan penawaran terbaik.
-                </div> -->
+                </div>
             </div>
 
             <!-- Item 3 -->
@@ -28,9 +28,9 @@
                 <button class="faq-q" aria-expanded="false">
                     Berapa lama waktu produksi?
                 </button>
-                <!-- <div class="faq-a">
+                <div class="faq-a">
                     Rata-rata 7 sampai 14 hari kerja setelah desain dan spesifikasi disetujui. Proyek kompleks dapat memerlukan waktu tambahan.
-                </div> -->
+                </div>
             </div>
 
             <!-- Item 4 -->
@@ -38,9 +38,9 @@
                 <button class="faq-q" aria-expanded="false">
                     Apakah produk Anda ramah lingkungan?
                 </button>
-                <!-- <div class="faq-a">
+                <div class="faq-a">
                     Kami menyediakan opsi bahan daur ulang dan proses ramah lingkungan untuk membantu mengurangi dampak terhadap alam.
-                </div> -->
+                </div>
             </div>
         </div>
     </div>

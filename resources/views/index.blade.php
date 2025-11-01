@@ -1800,6 +1800,8 @@
         </div>
     </section>
 
+    @include('layouts.footer')
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const hamburgerButton = document.getElementById('navbar-hamburger');

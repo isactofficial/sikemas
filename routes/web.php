@@ -78,13 +78,10 @@ Route::get('/produk', function () {
     return view('produk');
 })->name('produk');
 
-Route::get('/artikel', function () {
-    return view('artikel');
-})->name('artikel');
+use App\Http\Controllers\ArticlePublicController;
 
-Route::get('/artikel/{id}', function ($id) {
-    return view('detail_artikel', ['id' => $id]);
-})->name('detail_artikel');
+Route::get('/artikel', [ArticlePublicController::class, 'index'])->name('artikel');
+Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
 
 Route::get('/portofolio', function () {
     return view('portofolio');

@@ -13,6 +13,7 @@
             <span class="visually-hidden">Toggle navigation</span>
         </button>
 
+        <div class="skm-right">
         <div id="navbar-mobile-menu" class="skm-menu">
             <ul class="skm-links">
                 <li><a href="{{ url('/beranda') }}">Beranda</a></li>
@@ -78,7 +79,8 @@
                     <a href="{{ route('register') }}" class="skm-dropdown-item skm-dropdown-register">Daftar</a>
                 @endauth
             </div>
-        </div>
+    </div>
+    </div>
     </div>
 
     <style>
@@ -98,35 +100,42 @@
             background: #ffffff; 
             border-bottom: 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            height: 80px;                 /* Samakan tinggi dengan index */
+            display: flex;                /* Vertically center contents */
+            align-items: center;
         }
         
         .skm-container { 
-            max-width: 1200px; 
+            max-width: 1400px;            /* Samakan lebar kontainer */
             margin: 0 auto; 
-            padding: 10px 16px; 
-            display: grid; 
-            grid-template-columns: auto 1fr auto; 
+            padding: 1rem 3rem;           /* = 16px 48px, sesuai index */
+            display: flex;                /* Selaraskan dengan index */
             align-items: center; 
             gap: 16px; 
+            width: 100%;
         }
         
-        .skm-logo img { height: 48px; width: auto; display: block; }
+        .skm-logo img { height: 50px; width: auto; display: block; }
         
-        /* Menu aligned to the right */
-        .skm-menu { justify-self: end; margin-right: 12px; }
+        /* Right group (menu + user) */
+    .skm-right { display: flex; align-items: center; gap: 2rem; margin-left: auto; }
+        /* Menu aligned inside right group */
+        .skm-menu { margin: 0; }
+
         .skm-navbar .skm-links { 
             list-style: none; 
             display: flex; 
             align-items: center; 
-            gap: 28px; 
+            gap: 2rem;                 /* Samakan jarak item menu dengan index */
             margin: 0; 
             padding: 0; 
+            box-sizing: border-box;
         }
         .skm-navbar .skm-links a { 
             text-decoration: none; 
             color: var(--skm-link); 
-            font-weight: 600; 
-            font-size: 14px; 
+            font-weight: 500;          /* Samakan ketebalan font dengan index */
+            font-size: 1rem;           /* Samakan ukuran teks dengan index */
             letter-spacing: 0.2px;
             transition: color 0.2s ease;
         }
@@ -147,11 +156,13 @@
             border-radius: 50%; 
             background: transparent;
             border: none;
+            padding: 0;
+            line-height: 1; /* keep svg perfectly centered */
             cursor: pointer;
             transition: background 0.2s ease;
         }
         .skm-user:hover { background-color: #f0f0f0; }
-        .skm-user-icon { color: currentColor; }
+        .skm-user-icon { color: currentColor; display: block; }
 
         /* Dropdown menu */
         .skm-dropdown-menu {
@@ -246,14 +257,12 @@
 
         /* Responsive */
         @media (max-width: 900px) {
-            .skm-container { grid-template-columns: auto 1fr auto; }
+            /* Flex container already set above */
             .skm-nav-toggle { 
                 display: inline-block; 
-                grid-column: 3; 
-                justify-self: end; 
                 align-self: center; 
             }
-            .skm-logo img { height: 40px; }
+            .skm-logo img { height: 50px; } /* Samakan ukuran logo di mobile */
             
             .skm-menu { 
                 position: absolute; 

@@ -120,21 +120,8 @@
 	<script>
 		// Base URL untuk halaman detail artikel
 		const DETAIL_BASE = "{{ url('/artikel') }}";
-		// Dataset dummy
-		const ARTICLES = [
-			{ id: 1,  title: 'Trend Kemasan Ramah Lingkungan', cat: ['Keberlanjutan'], date: '10 Juli 2024', ts: 1750012800000, pop: 78, img: '{{ asset('assets/img/Rectangle12.png') }}', excerpt: 'Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.' },
-			{ id: 2,  title: 'Pentingnya Kemasan yang Tepat', cat: ['Bisnis'], date: '08 Juli 2024', ts: 1749753600000, pop: 65, img: '{{ asset('assets/img/Pentingnya_Kemasan_yang_Tepat.png') }}', excerpt: 'Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.' },
-			{ id: 3,  title: 'Proses Produksi Kami', cat: ['Teknologi'], date: '05 Juli 2024', ts: 1749408000000, pop: 90, img: '{{ asset('assets/img/Proses_Produksi_Kami.png') }}', excerpt: 'Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.' },
-			{ id: 4,  title: 'Inovasi Material Karton Terbaru', cat: ['Teknologi'], date: '02 Juli 2024', ts: 1749148800000, pop: 50, img: '{{ asset('assets/img/karton_banyak.png') }}', excerpt: 'Memperkenalkan material karton inovatif yang lebih kuat dan ringan untuk efisiensi pengiriman.' },
-			{ id: 5,  title: 'Strategi Branding dengan Kemasan', cat: ['Desain'], date: '30 Juni 2024', ts: 1748976000000, pop: 84, img: '{{ asset('assets/img/Strategi_Branding_dengan_Kemasan.png') }}', excerpt: 'Pelajari cara memanfaatkan kemasan sebagai alat pemasaran yang efektif untuk brand Anda.' },
-			{ id: 6,  title: 'Kemasan Tahan Air untuk Produk Makanan', cat: ['Bisnis'], date: '28 Juni 2024', ts: 1748803200000, pop: 73, img: '{{ asset('assets/img/kardus2.png') }}', excerpt: 'Solusi kemasan tahan air yang menjaga produk makanan tetap segar dan aman selama distribusi.' },
-			{ id: 7,  title: 'Teknik Cetak pada Karton', cat: ['Teknologi','Desain'], date: '25 Sep 2025', ts: 1748544000000, pop: 92, img: '{{ asset('assets/img/Article-image.png') }}', excerpt: 'Perbandingan flexo vs offset untuk kemasan.' },
-			{ id: 8,  title: 'Menghitung Ukuran Kotak dengan Tepat', cat: ['Bisnis'], date: '22 Sep 2025', ts: 1748284800000, pop: 60, img: '{{ asset('assets/img/Article-image.png') }}', excerpt: 'Cara menentukan dimensi agar efisien dan aman.' },
-			{ id: 9,  title: 'Karton Gelombang: Tipe & Kegunaan', cat: ['Teknologi'], date: '20 Sep 2025', ts: 1748112000000, pop: 58, img: '{{ asset('assets/img/Article-image.png') }}', excerpt: 'B-, C-, dan E-flute: mana yang cocok untuk Anda?' },
-			{ id: 10, title: 'Desain Ramah Daur Ulang', cat: ['Keberlanjutan','Desain'], date: '18 Sep 2025', ts: 1747939200000, pop: 88, img: '{{ asset('assets/img/Article-image.png') }}', excerpt: 'Desain yang mempermudah proses daur ulang.' },
-			{ id: 11, title: 'Optimasi Packing untuk Ekspedisi', cat: ['Bisnis'], date: '15 Sep 2025', ts: 1747680000000, pop: 55, img: '{{ asset('assets/img/Article-image.png') }}', excerpt: 'Mengurangi kerusakan saat pengiriman massal.' },
-			{ id: 12, title: 'Kontrol Kualitas Produksi', cat: ['Teknologi'], date: '12 Sep 2025', ts: 1747420800000, pop: 70, img: '{{ asset('assets/img/Article-image.png') }}', excerpt: 'Tahapan QC untuk menjaga standar kemasan.' },
-		];
+		// Dataset dari database (dibentuk di controller)
+		const ARTICLES = @json($articlesJS ?? []);
 
 		const CATEGORIES = ['Semua', 'Keberlanjutan', 'Desain', 'Teknologi', 'Bisnis'];
 
@@ -169,6 +156,24 @@
 		const nextBtn = document.getElementById('nextBtn');
 		const pills = document.getElementById('filterPills');
 		const sortPills = document.getElementById('sortPills');
+
+		// Format tanggal ke Bahasa Indonesia, contoh: 10 Juli 2024
+		function formatDateID(ts) {
+			if (ts === undefined || ts === null) return '';
+			const n = Number(ts);
+			if (!Number.isFinite(n)) return '';
+			// Backend currently sends milliseconds (getTimestampMs). If seconds are ever sent, normalize here.
+			const ms = n > 1e12 ? n : n * 1000;
+			const months = [
+				'Januari','Februari','Maret','April','Mei','Juni',
+				'Juli','Agustus','September','Oktober','November','Desember'
+			];
+			const d = new Date(ms);
+			const day = d.getDate();
+			const month = months[d.getMonth()];
+			const year = d.getFullYear();
+			return `${day} ${month} ${year}`;
+		}
 
 		function renderPills() {
 			pills.innerHTML = '';
@@ -211,10 +216,10 @@
 				<article class="skm-card" data-id="${a.id}">
 					<div class="skm-card-body">
 						<div class="skm-thumb"><img src="${a.img}" alt="${a.title}"></div>
-						<div class="skm-meta"><span>${a.date}</span></div>
+						<div class="skm-meta"><span>${formatDateID(a.ts)}</span></div>
 						<h3>${a.title}</h3>
 						<p class="skm-excerpt">${a.excerpt}</p>
-						<a class="skm-more" href="${DETAIL_BASE}/${a.id}" aria-label="Baca selengkapnya ${a.title}">Baca Selengkapnya</a>
+						<a class="skm-more" href="${DETAIL_BASE}/${a.slug}" aria-label="Baca selengkapnya ${a.title}">Baca Selengkapnya</a>
 					</div>
 				</article>
 			`;

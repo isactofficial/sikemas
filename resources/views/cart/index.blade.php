@@ -153,7 +153,6 @@
             margin-bottom: 10px;
         }
 
-        /* DIPERBARUI: Warna tombol +/- */
         .quantity-btn {
             width: 30px;
             height: 30px;
@@ -168,7 +167,7 @@
         }
 
         .quantity-btn:hover {
-            background: var(--skm-border); /* Warna hover sedikit lebih gelap */
+            background: var(--skm-border);
             border-color: var(--skm-teal);
         }
 
@@ -241,14 +240,14 @@
             font-size: 1rem;
         }
 
+        /* DIPERBARUI: Garis oranye ditambahkan */
         .summary-total {
             margin-top: 15px;
             padding-top: 15px;
             border-top: 2px solid var(--skm-border);
             
-            /* Garis oranye di bawah total */
             padding-bottom: 15px;
-            border-bottom: 2px solid var(--color-faktur); 
+            border-bottom: 2px solid var(--color-faktur); /* Garis oranye */
         }
 
         .summary-total .summary-label {
@@ -281,12 +280,12 @@
             background: var(--skm-blue-dark); 
         }
 
-        /* Shipping Info */
+        /* Shipping Info (DIPERBARUI) */
         .shipping-info {
-            background: none; 
-            padding: 0; 
+            background: none; /* Latar belakang dihapus */
+            padding: 0; /* Padding dihapus */
             border-radius: 8px;
-            margin-top: 20px; 
+            margin-top: 20px; /* Diubah dari margin-bottom */
             margin-bottom: 20px;
         }
 
@@ -294,21 +293,22 @@
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--skm-blue);
-            margin-bottom: 15px; 
+            margin-bottom: 15px; /* Jarak ditambah */
         }
         
+        /* BARU: Style untuk baris detail pengiriman */
         .shipping-detail-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
             font-size: 0.95rem;
             line-height: 1.5;
-            gap: 15px; 
+            gap: 15px; /* Jarak label & isi */
         }
         .shipping-detail-label {
             color: var(--color-value); /* 001B24 */
             font-weight: 600;
-            flex-shrink: 0; 
+            flex-shrink: 0; /* Mencegah label menyusut */
         }
         .shipping-detail-value {
             color: var(--color-label); /* 555555 */
@@ -422,6 +422,7 @@
                 gap: 5px;
             }
             
+            /* Agar label dan isi muat di mobile */
             .shipping-detail-row {
                 flex-direction: column;
                 align-items: flex-start;
@@ -593,6 +594,8 @@
         </div>
         @endif
     </div>
+
+    @include('layouts.footer')
 
     <script>
         // Setup CSRF token

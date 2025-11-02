@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Produk - SIKEMAS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -677,6 +678,9 @@
                     data-img="{{ asset('assets/img/Product1.png') }}"
                     data-deskripsi="Didesain untuk memenuhi kebutuhan spesifik produk Anda."
                     data-harga="Rp 5.000 / pcs"
+                    data-price="5000"
+                    data-material="Karton B-Flute"
+                    data-size="20x10x30 cm"
                     data-thumb1="{{ asset('assets/img/Product1.png') }}"
                     data-thumb2="{{ asset('assets/img/Product2.png') }}"
                     data-thumb3="{{ asset('assets/img/Product3.png') }}"
@@ -700,6 +704,9 @@
                     data-img="{{ asset('assets/img/Product2.png') }}"
                     data-deskripsi="Kekuatan dan ketahanan optimal untuk pengiriman yang aman."
                     data-harga="Rp 8.000 / pcs"
+                    data-price="8000"
+                    data-material="Karton Bergelombang"
+                    data-size="25x20x35 cm"
                     data-thumb1="{{ asset('assets/img/Product2.png') }}"
                     data-thumb2="{{ asset('assets/img/Product5.png') }}"
                     data-thumb3="{{ asset('assets/img/Product1.png') }}"
@@ -769,6 +776,9 @@
                     data-img="{{ asset('assets/img/Product5.png') }}"
                     data-deskripsi="Aman dan kokoh untuk industri kuliner."
                     data-harga="Rp 9.500 / pcs"
+                    data-price="8000"
+                    data-material="Food Grade Paper"
+                    data-size="15x15x5 cm"
                     data-thumb1="{{ asset('assets/img/Product5.png') }}"
                     data-thumb2="{{ asset('assets/img/Product2.png') }}"
                     data-thumb3="{{ asset('assets/img/Product1.png') }}"
@@ -792,6 +802,9 @@
                     data-img="{{ asset('assets/img/Product6.png') }}"
                     data-deskripsi="Elegan dan mewah untuk produk kecantikan."
                     data-harga="Rp 18.000 / pcs"
+                    data-price="18000"
+                    data-material="Hard Cover Karton"
+                    data-size="8x5x3 cm"
                     data-thumb1="{{ asset('assets/img/Product6.png') }}"
                     data-thumb2="{{ asset('assets/img/Product1.png') }}"
                     data-thumb3="{{ asset('assets/img/Product3.png') }}"
@@ -815,6 +828,9 @@
                     data-img="{{ asset('assets/img/Product1.png') }}"
                     data-deskripsi="Kemasan plastik bening untuk minuman dan cairan."
                     data-harga="Rp 2.000 / pcs"
+                    data-price="2000"
+                    data-material="Plastik PET"
+                    data-size="500 ml"
                     data-thumb1="{{ asset('assets/img/Product1.png') }}"
                     data-thumb2="{{ asset('assets/img/Product2.png') }}"
                     data-thumb3="{{ asset('assets/img/Product3.png') }}"
@@ -838,6 +854,9 @@
                     data-img="{{ asset('assets/img/Product1.png') }}"
                     data-deskripsi="Tas kertas ramah lingkungan untuk belanja."
                     data-harga="Rp 3.500 / pcs"
+                    data-price="3500"
+                    data-material="Kertas Kraft"
+                    data-size="25x30x10 cm"
                     data-thumb1="{{ asset('assets/img/Product1.png') }}"
                     data-thumb2="{{ asset('assets/img/Product2.png') }}"
                     data-thumb3="{{ asset('assets/img/Product3.png') }}"
@@ -861,6 +880,9 @@
                     data-img="{{ asset('assets/img/Product1.png') }}"
                     data-deskripsi="Kemasan kaleng untuk minuman bersoda."
                     data-harga="Rp 4.000 / pcs"
+                    data-price="4000"
+                    data-material="Aluminium"
+                    data-size="330 ml"
                     data-thumb1="{{ asset('assets/img/Product1.png') }}"
                     data-thumb2="{{ asset('assets/img/Product2.png') }}"
                     data-thumb3="{{ asset('assets/img/Product3.png') }}"
@@ -884,6 +906,9 @@
                     data-img="{{ asset('assets/img/Product1.png') }}"
                     data-deskripsi="Pelindung guncangan untuk pengiriman barang."
                     data-harga="Rp 1.000 / meter"
+                    data-price="1000"
+                    data-material="Plastik Bubble"
+                    data-size="100x100 cm"
                     data-thumb1="{{ asset('assets/img/Product1.png') }}"
                     data-thumb2="{{ asset('assets/img/Product2.png') }}"
                     data-thumb3="{{ asset('assets/img/Product3.png') }}"
@@ -946,7 +971,7 @@
                     </div>
 
                     <div class="modal-actions">
-                        <button class="btn-modal btn-modal-primary"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
+                        <button class="btn-modal btn-modal-primary" id="modal-add-to-cart"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
                         <button class="btn-modal btn-modal-secondary"><i class="fas fa-pen"></i> Sesuaikan Desain</button>
                     </div>
                 </div>
@@ -1051,7 +1076,24 @@
                 const cartButton = card.querySelector('.btn-keranjang');
                 cartButton.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    console.log(`Produk ${card.dataset.title} ditambah ke keranjang.`);
+                    
+                    // Get product data
+                    const productName = card.dataset.title;
+                    const price = card.dataset.price || card.dataset.harga.replace(/[^0-9]/g, '');
+                    const material = card.dataset.material || card.dataset.spekBahan || 'Standard';
+                    const size = card.dataset.size || (card.dataset.spekLebar + 'x' + card.dataset.spekTinggi + 'x' + card.dataset.spekPanjang) || 'Standard';
+                    const productImage = card.dataset.img;
+                    
+                    // Call add to cart function
+                    addToCart({
+                        product_name: productName,
+                        material: material,
+                        size: size,
+                        design: 'Standard',
+                        quantity: 1,
+                        unit_price: parseFloat(price),
+                        product_image: productImage
+                    });
                 });
 
                 card.addEventListener('click', () => {
@@ -1083,6 +1125,238 @@
                 }
             });
 
+        });
+    </script>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════
+        // ADD TO CART FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════
+        
+        // Get CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        
+        // Add to Cart Function
+        function addToCart(productData) {
+            // Check if user is logged in
+            @guest
+                alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.');
+                window.location.href = '{{ route("login") }}';
+                return;
+            @endguest
+            
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                alert('Terjadi kesalahan. Silakan refresh halaman.');
+                return;
+            }
+            
+            // Show loading state
+            const button = event.target.closest('button');
+            const originalButtonText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menambahkan...';
+            
+            // Send request to add to cart
+            fetch('{{ route("cart.add") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(productData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 419) {
+                        throw new Error('Silakan login terlebih dahulu.');
+                    }
+                    throw new Error('Terjadi kesalahan. Silakan coba lagi.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Show success notification
+                    showNotification('success', data.message);
+                    
+                    // Update cart badge
+                    if (typeof updateCartBadge === 'function') {
+                        updateCartBadge(data.cart_count);
+                    }
+                    
+                    // Reset button
+                    button.disabled = false;
+                    button.innerHTML = originalButtonText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('error', error.message);
+                
+                // Reset button
+                button.disabled = false;
+                button.innerHTML = originalButtonText;
+                
+                // Redirect to login if needed
+                if (error.message.includes('login')) {
+                    setTimeout(() => {
+                        window.location.href = '{{ route("login") }}';
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Show Notification Function
+        function showNotification(type, message) {
+            // Remove existing notification
+            const existingNotification = document.querySelector('.cart-notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = `cart-notification cart-notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="notification-close">&times;</button>
+            `;
+            
+            // Add styles if not present
+            if (!document.querySelector('#cart-notification-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'cart-notification-styles';
+                styles.textContent = `
+                    .cart-notification {
+                        position: fixed;
+                        top: 80px;
+                        right: 20px;
+                        min-width: 300px;
+                        max-width: 400px;
+                        padding: 15px 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                        z-index: 9999;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        animation: slideIn 0.3s ease-out;
+                    }
+                    
+                    @keyframes slideIn {
+                        from {
+                            transform: translateX(400px);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                    
+                    .cart-notification-success {
+                        background: #d4edda;
+                        border: 1px solid #c3e6cb;
+                        color: #155724;
+                    }
+                    
+                    .cart-notification-error {
+                        background: #f8d7da;
+                        border: 1px solid #f5c6cb;
+                        color: #721c24;
+                    }
+                    
+                    .notification-content {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        flex: 1;
+                    }
+                    
+                    .notification-content i {
+                        font-size: 1.2rem;
+                    }
+                    
+                    .notification-close {
+                        background: none;
+                        border: none;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        opacity: 0.7;
+                        transition: opacity 0.2s;
+                        padding: 0;
+                        margin-left: 15px;
+                        color: inherit;
+                    }
+                    
+                    .notification-close:hover {
+                        opacity: 1;
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Close button
+            notification.querySelector('.notification-close').addEventListener('click', function() {
+                notification.remove();
+            });
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+        
+        // Handle Modal Add to Cart Button
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
+            if (modalAddToCartBtn) {
+                let currentProduct = null;
+                
+                // Store current product when modal opens
+                const openModalOriginal = window.openModal;
+                window.openModal = function(card) {
+                    currentProduct = {
+                        product_name: card.dataset.title,
+                        price: card.dataset.price || card.dataset.harga.replace(/[^0-9]/g, ''),
+                        material: card.dataset.material || card.dataset.spekBahan || 'Standard',
+                        size: card.dataset.size || (card.dataset.spekLebar + 'x' + card.dataset.spekTinggi + 'x' + card.dataset.spekPanjang) || 'Standard',
+                        product_image: card.dataset.img
+                    };
+                    if (openModalOriginal) openModalOriginal(card);
+                };
+                
+                modalAddToCartBtn.addEventListener('click', function() {
+                    if (currentProduct) {
+                        const quantity = parseInt(document.getElementById('modal-qty').value) || 1;
+                        const customDesign = document.querySelector('input[name="custom_design"]:checked')?.value;
+                        
+                        addToCart({
+                            product_name: currentProduct.product_name,
+                            material: currentProduct.material,
+                            size: currentProduct.size,
+                            design: customDesign === 'ya' ? 'Custom' : 'Standard',
+                            quantity: quantity,
+                            unit_price: parseFloat(currentProduct.price),
+                            product_image: currentProduct.product_image
+                        });
+                        
+                        // Close modal after adding
+                        setTimeout(() => {
+                            const closeBtn = document.getElementById('modal-close-btn');
+                            if (closeBtn) closeBtn.click();
+                        }, 500);
+                    }
+                });
+            }
         });
     </script>
     </body>

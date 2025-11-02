@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TestimonyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\CartController;
 
 // ============================================
 // HOME ROUTE
@@ -24,6 +25,21 @@ Route::get('/edit-design', function () {
 // ============================================
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
+Route::middleware(['auth'])->group(function () {
+    // Cart Management
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
+    Route::put('/cart/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
+    Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+    
+    // Checkout
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    
+    // Invoice
+    Route::get('/invoice/{id}', [CartController::class, 'showInvoice'])->name('invoice.show');
+});
 
 // ============================================
 // AUTH ROUTES (Public)

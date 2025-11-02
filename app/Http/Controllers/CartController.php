@@ -1,0 +1,250 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Cart;
+use App\Models\CartItem;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\UserAddress;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class CartController extends Controller
+{
+    /**
+     * Show cart page
+     */
+    public function index()
+    {
+        $user = Auth::user();
+        
+        // Get or create cart for user
+        $cart = Cart::with('items')->firstOrCreate(
+            ['user_id' => $user->id]
+        );
+        
+        // Get user's primary address
+        $primaryAddress = UserAddress::where('user_id', $user->id)
+            ->where('is_primary', true)
+            ->first();
+        
+        // If no primary address, get first address
+        if (!$primaryAddress) {
+            $primaryAddress = UserAddress::where('user_id', $user->id)->first();
+        }
+        
+        return view('cart.index', compact('cart', 'primaryAddress'));
+    }
+
+    /**
+     * Add item to cart
+     */
+    public function addItem(Request $request)
+    {
+        $validated = $request->validate([
+            'product_name' => 'required|string|max:255',
+            'material' => 'nullable|string|max:100',
+            'size' => 'nullable|string|max:100',
+            'design' => 'nullable|string|max:100',
+            'quantity' => 'required|integer|min:1',
+            'unit_price' => 'required|numeric|min:0',
+            'product_image' => 'nullable|string|max:255'
+        ]);
+
+        $user = Auth::user();
+        
+        // Get or create cart
+        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+        
+        // Check if item with same specifications already exists
+        $existingItem = CartItem::where('cart_id', $cart->id)
+            ->where('product_name', $validated['product_name'])
+            ->where('material', $validated['material'] ?? null)
+            ->where('size', $validated['size'] ?? null)
+            ->where('design', $validated['design'] ?? null)
+            ->first();
+        
+        if ($existingItem) {
+            // Update quantity if item exists
+            $existingItem->quantity += $validated['quantity'];
+            $existingItem->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Jumlah produk di keranjang berhasil diperbarui!',
+                'cart_count' => $cart->total_quantity
+            ]);
+        }
+        
+        // Create new cart item
+        CartItem::create([
+            'cart_id' => $cart->id,
+            'product_name' => $validated['product_name'],
+            'material' => $validated['material'] ?? null,
+            'size' => $validated['size'] ?? null,
+            'design' => $validated['design'] ?? null,
+            'quantity' => $validated['quantity'],
+            'unit_price' => $validated['unit_price'],
+            'product_image' => $validated['product_image'] ?? null
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil ditambahkan ke keranjang!',
+            'cart_count' => $cart->total_quantity
+        ]);
+    }
+
+    /**
+     * Update cart item quantity
+     */
+    public function updateItem(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        $cartItem = CartItem::whereHas('cart', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->findOrFail($id);
+        
+        $cartItem->quantity = $validated['quantity'];
+        $cartItem->save();
+        
+        $cart = $cartItem->cart;
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Jumlah produk berhasil diperbarui!',
+            'subtotal' => $cartItem->formatted_subtotal,
+            'cart_total' => $cart->formatted_total,
+            'grand_total' => $cart->formatted_grand_total
+        ]);
+    }
+
+    /**
+     * Remove item from cart
+     */
+    public function removeItem($id)
+    {
+        $cartItem = CartItem::whereHas('cart', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->findOrFail($id);
+        
+        $cart = $cartItem->cart;
+        $cartItem->delete();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil dihapus dari keranjang!',
+            'cart_total' => $cart->formatted_total,
+            'grand_total' => $cart->formatted_grand_total,
+            'items_count' => $cart->items_count
+        ]);
+    }
+
+    /**
+     * Get cart count (for navbar badge)
+     */
+    public function getCartCount()
+    {
+        $cart = Cart::where('user_id', Auth::id())->first();
+        
+        return response()->json([
+            'count' => $cart ? $cart->total_quantity : 0
+        ]);
+    }
+
+    /**
+     * Checkout - create order from cart
+     */
+    public function checkout(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Get user's cart
+        $cart = Cart::with('items')->where('user_id', $user->id)->first();
+        
+        if (!$cart || $cart->items->isEmpty()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Keranjang belanja Anda kosong!');
+        }
+        
+        // Get user's primary address
+        $address = UserAddress::where('user_id', $user->id)
+            ->where('is_primary', true)
+            ->first();
+        
+        if (!$address) {
+            $address = UserAddress::where('user_id', $user->id)->first();
+        }
+        
+        if (!$address) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Silakan tambahkan alamat pengiriman terlebih dahulu!');
+        }
+        
+        DB::beginTransaction();
+        
+        try {
+            // Generate invoice number
+            $invoiceNumber = 'INV-' . date('ymd') . '-' . strtoupper(Str::random(6));
+            
+            // Create order
+            $order = Order::create([
+                'user_id' => $user->id,
+                'cart_id' => $cart->id,
+                'invoice_number' => $invoiceNumber,
+                'order_date' => now(),
+                'total_amount' => $cart->grand_total,
+                'status' => 'Diproses',
+                'payment_method' => 'Transfer Bank',
+                'shipping_address_id' => $address->id,
+                'notes' => $request->input('notes')
+            ]);
+            
+            // Create order items from cart items
+            foreach ($cart->items as $cartItem) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_name' => $cartItem->product_name . 
+                        ($cartItem->specification ? ' (' . $cartItem->specification . ')' : ''),
+                    'quantity' => $cartItem->quantity,
+                    'unit_price' => $cartItem->unit_price,
+                    'subtotal' => $cartItem->subtotal
+                ]);
+            }
+            
+            // Clear cart items after successful checkout
+            $cart->clearItems();
+            
+            DB::commit();
+            
+            // Redirect to invoice page using order ID
+            return redirect()->route('invoice.show', $order->id)
+                ->with('success', 'Pesanan berhasil dibuat!');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return redirect()->route('cart.index')
+                ->with('error', 'Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
+        }
+    }
+
+    /**
+     * Show invoice page
+     */
+    public function showInvoice($id)
+    {
+        $order = Order::with(['items', 'shippingAddress', 'user'])
+            ->where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+        
+        return view('cart.invoice', compact('order'));
+    }
+}

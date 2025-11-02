@@ -33,7 +33,10 @@
                         <span>{{ Auth::user()->name }}</span>
                         <small>{{ Auth::user()->email }}</small>
                     </div>
-                    <a href="#" class="skm-mobile-link">Profil Saya</a>
+                    <a href="{{ route('cart.index') }}" class="skm-mobile-link">
+                        <i class="fas fa-shopping-cart"></i> Keranjang Belanja
+                    </a>
+                    <a href="{{ route('profile.index') }}" class="skm-mobile-link">Profil Saya</a>
                     <a href="{{ route('logout') }}" class="skm-mobile-link" 
                        onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
                         Logout
@@ -48,36 +51,55 @@
             </div>
         </div>
 
-        <!-- Right: User icon with dropdown (Desktop) -->
-        <div class="skm-user-dropdown">
-            <button class="skm-user" aria-label="Akun" id="user-menu-button">
-                <svg class="skm-user-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6" />
-                    <circle cx="12" cy="10" r="3.2" stroke="currentColor" stroke-width="1.6" />
-                    <path d="M5.5 19.5c1.9-3.2 5-4.8 6.5-4.8s4.6 1.6 6.5 4.8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" />
+        <!-- Right: Cart Icon + User icon with dropdown (Desktop) -->
+        <div class="skm-right-icons">
+            <!-- Cart Icon (Only show when logged in) -->
+            @auth
+            <a href="{{ route('cart.index') }}" class="skm-cart-link" aria-label="Keranjang Belanja">
+                <svg class="skm-cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 2L7 7H21L19 2H9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 7C5.34315 7 4 8.34315 4 10V19C4 20.6569 5.34315 22 7 22H17C18.6569 22 20 20.6569 20 19V10C20 8.34315 18.6569 7 17 7H7Z" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="9" cy="15" r="1" fill="currentColor"/>
+                    <circle cx="15" cy="15" r="1" fill="currentColor"/>
                 </svg>
-            </button>
+                <span class="skm-cart-badge" data-cart-count style="display:none;">0</span>
+            </a>
+            @endauth
             
-            <!-- Dropdown Menu -->
-            <div class="skm-dropdown-menu" id="user-dropdown">
-                @auth
-                    <div class="skm-dropdown-header">
-                        <span>{{ Auth::user()->name }}</span>
-                        <small>{{ Auth::user()->email }}</small>
-                    </div>
-                    <a href="#" class="skm-dropdown-item">Profil Saya</a>
-                    <div class="skm-dropdown-divider"></div>
-                    <a href="{{ route('logout') }}" class="skm-dropdown-item"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        Logout
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="skm-dropdown-item">Login</a>
-                    <a href="{{ route('register') }}" class="skm-dropdown-item skm-dropdown-register">Daftar</a>
-                @endauth
+            <!-- User Dropdown -->
+            <div class="skm-user-dropdown">
+                <button class="skm-user" aria-label="Akun" id="user-menu-button">
+                    <svg class="skm-user-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6" />
+                        <circle cx="12" cy="10" r="3.2" stroke="currentColor" stroke-width="1.6" />
+                        <path d="M5.5 19.5c1.9-3.2 5-4.8 6.5-4.8s4.6 1.6 6.5 4.8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" />
+                    </svg>
+                </button>
+                
+                <!-- Dropdown Menu -->
+                <div class="skm-dropdown-menu" id="user-dropdown">
+                    @auth
+                        <div class="skm-dropdown-header">
+                            <span>{{ Auth::user()->name }}</span>
+                            <small>{{ Auth::user()->email }}</small>
+                        </div>
+                        <a href="{{ route('profile.index') }}" class="skm-dropdown-item">Profil Saya</a>
+                        <a href="{{ route('cart.index') }}" class="skm-dropdown-item">
+                            <i class="fas fa-shopping-cart"></i> Keranjang Belanja
+                        </a>
+                        <div class="skm-dropdown-divider"></div>
+                        <a href="{{ route('logout') }}" class="skm-dropdown-item"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="skm-dropdown-item">Login</a>
+                        <a href="{{ route('register') }}" class="skm-dropdown-item skm-dropdown-register">Daftar</a>
+                    @endauth
+                </div>
             </div>
     </div>
     </div>
@@ -144,6 +166,54 @@
             color: var(--skm-link-hover); 
         }
 
+        /* Right Icons Container */
+        .skm-right-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Cart Icon */
+        .skm-cart-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--skm-link);
+            text-decoration: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+        
+        .skm-cart-link:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .skm-cart-icon {
+            color: currentColor;
+        }
+        
+        .skm-cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff5722;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            line-height: 1;
+        }
+        
+        .skm-cart-badge:empty {
+            display: none;
+        }
+
         /* User icon & dropdown */
         .skm-user-dropdown { position: relative; }
         .skm-user { 
@@ -206,6 +276,11 @@
         .skm-dropdown-item:hover {
             background-color: #f5f5f5;
             color: var(--skm-link);
+        }
+        
+        .skm-dropdown-item i {
+            margin-right: 8px;
+            color: var(--skm-teal);
         }
 
         .skm-dropdown-divider {
@@ -290,8 +365,8 @@
             }
             .skm-navbar .skm-links li:last-child a { border-bottom: 0; }
             
-            /* Hide desktop user dropdown */
-            .skm-user-dropdown { display: none; }
+            /* Hide desktop cart and user dropdown */
+            .skm-right-icons { display: none; }
             
             /* Show mobile user section */
             .skm-mobile-user-wrapper { 
@@ -327,6 +402,10 @@
             }
             .skm-mobile-link:hover {
                 background: #f5f5f5;
+            }
+            
+            .skm-mobile-link i {
+                margin-right: 8px;
             }
             
             .skm-mobile-register {
@@ -373,6 +452,38 @@
                     }
                 });
             }
+            
+            // Load cart count on page load
+            @auth
+            fetch('{{ route("cart.count") }}', {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateCartBadge(data.count);
+            })
+            .catch(error => {
+                console.error('Error loading cart count:', error);
+            });
+            @endauth
+            
+            // Function to update cart badge
+            function updateCartBadge(count) {
+                const badges = document.querySelectorAll('[data-cart-count]');
+                badges.forEach(badge => {
+                    badge.textContent = count;
+                    if (count > 0) {
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Make updateCartBadge available globally
+            window.updateCartBadge = updateCartBadge;
         });
     </script>
 </nav>

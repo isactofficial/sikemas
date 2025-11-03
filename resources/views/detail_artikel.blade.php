@@ -10,7 +10,9 @@
         .skm-hero{ background:#ffffff; padding:38px 16px; border-bottom:none; }
         .skm-hero-inner{ max-width:900px; margin:0 auto; }
         .skm-breadcrumb{ display:none; }
-        .skm-topline{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:8px; }
+    .skm-topline{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:12px; }
+    .skm-back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--skm-blue); background:#EAF1F3; border:1px solid #E3EEF1; padding:8px 12px; border-radius:10px; font-weight:700; margin-bottom:12px; box-shadow:0 1px 0 rgba(14,75,99,0.05) }
+    .skm-back:hover{ background:#E3EEF1 }
     .skm-badges{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
     .skm-badge{ display:inline-flex; align-items:center; padding:8px 14px; font-weight:800; font-size:12px; letter-spacing:.5px; border-radius:999px; text-transform:uppercase; color:#fff }
     /* Force light blue for Published badge regardless of global :root overrides */
@@ -49,6 +51,10 @@
 
 <header class="skm-hero" role="banner">
     <div class="skm-hero-inner">
+        <a href="{{ route('artikel') }}" class="skm-back" aria-label="Kembali ke daftar artikel">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <span>Kembali</span>
+        </a>
         <div class="skm-topline">
             <div class="skm-badges">
                 @if($article->isPublished())
@@ -122,10 +128,94 @@
         @endforelse
     </article>
 
+    @php($comments = $article->comments)
     <section class="skm-comments" aria-labelledby="comments-title">
-        <h3 id="comments-title">Komentar (0)</h3>
-        <p class="skm-login-note">Silakan <a href="{{ route('login') }}">login</a> untuk memberikan komentar.</p>
-        <p class="skm-login-note" style="margin-top:8px; font-style:italic">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+        <h3 id="comments-title">Komentar ({{ $comments->count() }})</h3>
+
+        @auth
+            <form action="{{ route('comments.store', $article) }}" method="POST" style="margin-bottom:16px">
+                @csrf
+                <label for="comment-content" class="sr-only">Tulis komentar</label>
+                <textarea id="comment-content" name="content" rows="3" required placeholder="Tulis komentar kamu..." style="width:100%; padding:10px; border:1px solid #E6EEF1; border-radius:8px; resize:vertical"></textarea>
+                @error('content')
+                    <div style="color:#b00020; font-size:12px; margin-top:6px">{{ $message }}</div>
+                @enderror
+                <div style="display:flex; justify-content:flex-end; margin-top:8px">
+                    <button type="submit" style="background:#0E4B63; color:#fff; border:none; padding:8px 14px; border-radius:8px; cursor:pointer">Kirim</button>
+                </div>
+            </form>
+        @else
+            <p class="skm-login-note">Silakan <a href="{{ route('login') }}">login</a> untuk memberikan komentar.</p>
+        @endauth
+
+        @if(session('status'))
+            <div style="background:#EAF8F6; color:#0E4B63; border:1px solid #BFE7E2; padding:8px 12px; border-radius:8px; margin-bottom:10px">{{ session('status') }}</div>
+        @endif
+
+        @if($comments->isEmpty())
+            <p class="skm-login-note" style="margin-top:8px; font-style:italic">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+        @else
+            <ul style="list-style:none; padding:0; margin:0">
+                @foreach($comments as $c)
+                    <li style="border-top:1px solid #E6EEF1; padding:12px 0">
+                        <div style="display:flex; gap:10px; align-items:flex-start">
+                            <img src="{{ optional($c->user)->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode(optional($c->user)->name ?? 'U').'&size=64&background=074159&color=fff&bold=true' }}" alt="avatar" style="width:36px; height:36px; border-radius:50%; object-fit:cover"/>
+                            <div style="flex:1">
+                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px">
+                                    <strong style="color:#0E4B63">{{ optional($c->user)->name ?? 'Pengguna' }}</strong>
+                                    <span style="color:#6B8791; font-size:12px">{{ optional($c->created_at)->diffForHumans() }}</span>
+                                </div>
+                                <div style="color:#475B63; margin-bottom:6px">{!! nl2br(e($c->content)) !!}</div>
+                                <div style="display:flex; align-items:center; gap:10px; color:#6B8791; font-size:13px; margin-bottom:4px">
+                                    <form action="{{ route('comments.like', $c) }}" method="POST" style="display:inline" onsubmit="this.querySelector('button').disabled=true;">
+                                        @csrf
+                                        <button type="submit" title="Suka" aria-label="Suka komentar" style="display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid #E6EEF1; color:#0E4B63; padding:4px 8px; border-radius:999px; cursor:pointer">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-5.31l.95-4.57.03-.32a1 1 0 0 0-.29-.7L14 2 7.59 8.41C7.22 8.78 7 9.3 7 9.83V19c0 1.1.9 2 2 2h7c.82 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.21.14-.43.14-.66V10z"/></svg>
+                                            <span>{{ (int) $c->likes_count }}</span>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                @php($replies = $c->replies)
+                                @if($replies->isNotEmpty())
+                                    <ul style="list-style:none; padding-left:46px; margin:8px 0 0">
+                                        @foreach($replies as $r)
+                                            <li style="padding:8px 0; border-left:3px solid #E6EEF1; padding-left:10px">
+                                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px">
+                                                    <strong style="color:#0E4B63">{{ optional($r->user)->name ?? 'Pengguna' }}</strong>
+                                                    <span style="color:#6B8791; font-size:12px">{{ optional($r->created_at)->diffForHumans() }}</span>
+                                                </div>
+                                                <div style="color:#475B63; margin-bottom:4px">{!! nl2br(e($r->content)) !!}</div>
+                                                <div style="display:flex; align-items:center; gap:10px; color:#6B8791; font-size:12px">
+                                                    <form action="{{ route('replies.like', $r) }}" method="POST" style="display:inline" onsubmit="this.querySelector('button').disabled=true;">
+                                                        @csrf
+                                                        <button type="submit" title="Suka" aria-label="Suka balasan" style="display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid #E6EEF1; color:#0E4B63; padding:3px 8px; border-radius:999px; cursor:pointer">
+                                                            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-5.31l.95-4.57.03-.32a1 1 0 0 0-.29-.7L14 2 7.59 8.41C7.22 8.78 7 9.3 7 9.83V19c0 1.1.9 2 2 2h7c.82 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.21.14-.43.14-.66V10z"/></svg>
+                                                            <span>{{ (int) $r->likes_count }}</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                                @auth
+                                    <form action="{{ route('comments.reply', $c) }}" method="POST" style="margin-top:8px; padding-left:46px">
+                                        @csrf
+                                        <label for="reply-{{ $c->id }}" class="sr-only">Balas komentar</label>
+                                        <textarea id="reply-{{ $c->id }}" name="content" rows="2" required placeholder="Tulis balasan..." style="width:100%; padding:8px; border:1px solid #E6EEF1; border-radius:8px; resize:vertical"></textarea>
+                                        <div style="display:flex; justify-content:flex-end; margin-top:6px">
+                                            <button type="submit" style="background:#0B3D52; color:#fff; border:none; padding:6px 12px; border-radius:8px; cursor:pointer">Balas</button>
+                                        </div>
+                                    </form>
+                                @endauth
+                            </div>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
     </section>
 </main>
 

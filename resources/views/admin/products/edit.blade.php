@@ -78,6 +78,11 @@
 				@error('name')<div style="color:#e53935; font-size:12px;">{{ $message }}</div>@enderror
 			</div>
 			<div>
+				<label for="category">Category</label>
+				<input class="skm-input" type="text" name="category" id="category" value="{{ old('category', $product->category) }}">
+				@error('category')<div style="color:#e53935; font-size:12px;">{{ $message }}</div>@enderror
+			</div>
+			<div>
 				<label for="image">Product Image</label>
 				<div id="dropzone" class="dropzone" onclick="document.getElementById('image').click()">
 					<div class="drop-inner">

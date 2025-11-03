@@ -56,7 +56,12 @@ class ArticlePublicController extends Controller
         // Guard categories loading in case category tables are not present
         $hasCategoryTables = Schema::hasTable('article_categories') && Schema::hasTable('article_category_pivot');
 
-        $query = Article::where('slug', $slug)->with(['contents', 'editor']);
+        $query = Article::where('slug', $slug)->with([
+            'contents',
+            'editor',
+            'comments.user',
+            'comments.replies.user',
+        ]);
         if ($hasCategoryTables) {
             $query->with('categories');
         }

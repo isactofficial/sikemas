@@ -119,25 +119,38 @@
     <div class="t-wrap">
         <h2 id="testimoni-title">Testimoni</h2>
 
-        @php($testi=[
-            ['img'=>'orang1.png','name'=>'Haekal','role'=>'Pengusaha','text'=>'congue lectus ut, tincidunt est. In laoreet vehicula tincidunt. Curabitur'],
-            ['img'=>'orang2.png','name'=>'Aisha','role'=>'Founder','text'=>'congue lectus ut, tincidunt est. In laoreet vehicula tincidunt. Curabitur'],
-            ['img'=>'orang3.png','name'=>'Danu','role'=>'UMKM','text'=>'congue lectus ut, tincidunt est. In laoreet vehicula tincidunt. Curabitur'],
-            ['img'=>'orang4.png','name'=>'Sinta','role'=>'Marketing','text'=>'congue lectus ut, tincidunt est. In laoreet vehicula tincidunt. Curabitur'],
-        ])
-
-        <div class="t-grid">
-            @foreach($testi as $i=>$t)
-            <figure class="t-card">
-                <img src="{{ asset('assets/img/'.$t['img']) }}" alt="Foto {{ $t['name'] }}" loading="lazy">
-                <figcaption class="t-overlay">
-                    <h3 class="t-name">{{ $t['name'] }}</h3>
-                    <div class="t-role">{{ $t['role'] }}</div>
-                    <p class="t-quote">{{ $t['text'] }}.</p>
-                </figcaption>
-            </figure>
-            @endforeach
+        @if(isset($testimonies) && $testimonies->count() > 0)
+        <div class="t-carousel" data-count="{{ $testimonies->count() }}">
+            <button class="t-nav t-prev" aria-label="Sebelumnya" disabled>
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </button>
+            <div class="t-viewport">
+                <div class="t-track">
+                    @foreach($testimonies as $t)
+                        @php
+                            $img = $t->image ? asset('storage/'.$t->image) : asset('assets/img/Container.png');
+                        @endphp
+                        <div class="t-slide">
+                            <figure class="t-card">
+                                <img src="{{ $img }}" alt="Foto {{ $t->name }}" loading="lazy">
+                                <figcaption class="t-overlay">
+                                    <h3 class="t-name">{{ $t->name }}</h3>
+                                    <div class="t-role">{{ $t->job ?? '-' }}</div>
+                                    <p class="t-quote">{{ Str::limit($t->testimony ?? '', 160) }}</p>
+                                </figcaption>
+                            </figure>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <button class="t-nav t-next" aria-label="Berikutnya">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </button>
+            <div class="t-dots" role="tablist" aria-label="Navigasi testimoni"></div>
         </div>
+        @else
+            <p style="text-align:center; color:#355a68">Belum ada testimoni untuk ditampilkan.</p>
+        @endif
     </div>
 
     <style>
@@ -146,37 +159,87 @@
         .t-wrap{max-width:1100px;margin:0 auto}
         .t-wrap h2{color:#074159;text-align:center;font-size:28px;font-weight:800;margin:4px 0 18px}
 
-        /* Grid */
-        .t-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+        /* Carousel */
+        .t-carousel{position:relative; --per:3}
+    .t-viewport{overflow:hidden}
+        .t-track{display:flex; gap:16px; transition:transform .45s ease}
+        .t-slide{flex:0 0 calc(100% / var(--per))}
+    .t-nav{position:absolute; top:50%; transform:translateY(-50%); background:#fff; color:#074159; border:1px solid #d7e3e0; box-shadow:0 4px 14px rgba(7,65,89,.08); width:38px; height:38px; border-radius:50%; display:grid; place-items:center; cursor:pointer; z-index:3}
+        .t-prev{left:-6px}
+        .t-next{right:-6px}
+        .t-nav[disabled]{opacity:.5; cursor:not-allowed}
+        .t-dots{display:flex; justify-content:center; gap:6px; margin-top:12px}
+        .t-dots button{width:8px; height:8px; border-radius:50%; border:0; background:#c9d9d5; cursor:pointer}
+        .t-dots button[aria-current="true"]{background:#074159}
 
         /* Card */
-        .t-card{position:relative;overflow:hidden;border-radius:0;background:#fff}
+        .t-card{position:relative;overflow:hidden;border-radius:10px;background:#fff}
         .t-card img{width:100%;height:auto;display:block;aspect-ratio:4/5;object-fit:cover;transition:transform .35s ease}
-
-        /* Overlay base (hidden for non-default) */
-        .t-overlay{position:absolute;inset:0;display:grid;align-content:center;gap:6px;color:#fff;padding:22px;transition:all .35s ease}
-        .t-name{font-weight:800;font-size:34px;line-height:1;margin:0}
+        .t-overlay{position:absolute;inset:0;display:grid;align-content:center;gap:6px;color:#fff;padding:22px;transition:all .35s ease; opacity:0; background:rgba(0,0,0,0);}
+        .t-name{font-weight:800;font-size:26px;line-height:1;margin:0}
         .t-role{opacity:.9;margin-bottom:6px}
-        .t-quote{font-size:14px;line-height:1.5;max-width:32ch}
-
-        /* Start state: hanya foto (overlay tersembunyi) */
-        .t-overlay{opacity:0;background:rgba(0,0,0,0);transform:translateY(8px)}
-
-        /* Hover state (like image 2: full gelap, teks di tengah) */
+        .t-quote{font-size:14px;line-height:1.5;max-width:40ch}
         .t-card:hover img{transform:scale(1.04)}
-        .t-card:hover .t-overlay{opacity:1;background:rgba(0,0,0,.6);justify-items:center;text-align:center;transform:translateY(0)}
-        .t-card:hover .t-name{font-size:36px}
+        .t-card:hover .t-overlay{opacity:1;background:rgba(0,0,0,.6);justify-items:center;text-align:center}
 
-        /* Responsive */
-        @media (max-width:900px){
-            .t-grid{grid-template-columns:1fr 1fr;gap:2px}
-            .t-name{font-size:28px}
-        }
-        @media (max-width:560px){
-            .t-grid{grid-template-columns:1fr;gap:2px}
-            .t-section{padding:22px 10px}
-        }
+        /* Responsive: adjust items per view */
+        @media (max-width:900px){ .t-carousel{ --per:2 } }
+        @media (max-width:560px){ .t-carousel{ --per:1 } .t-section{padding:22px 10px} }
     </style>
+
+    <script>
+        (function(){
+            const root = document.currentScript.previousElementSibling.previousElementSibling.closest('.t-section');
+            const carousel = root.querySelector('.t-carousel');
+            if(!carousel) return;
+            const viewport = carousel.querySelector('.t-viewport');
+            const track = carousel.querySelector('.t-track');
+            const slides = Array.from(track.children);
+            const btnPrev = carousel.querySelector('.t-prev');
+            const btnNext = carousel.querySelector('.t-next');
+            const dotsWrap = carousel.querySelector('.t-dots');
+
+            function per(){
+                const styles = getComputedStyle(carousel);
+                return Math.max(1, parseInt(styles.getPropertyValue('--per')) || 1);
+            }
+
+            let page = 0;
+            function pages(){ return Math.max(1, Math.ceil(slides.length / per())); }
+
+            function updateDots(){
+                dotsWrap.innerHTML = '';
+                const total = pages();
+                for(let i=0;i<total;i++){
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.setAttribute('aria-label', 'Ke halaman ' + (i+1));
+                    if(i===page) b.setAttribute('aria-current','true');
+                    b.addEventListener('click', ()=>{ page=i; render(); });
+                    dotsWrap.appendChild(b);
+                }
+            }
+
+            function render(){
+                const total = pages();
+                if(page >= total) page = total-1;
+                const offset = (100 / per()) * page;
+                track.style.transform = `translateX(-${offset}%)`;
+                btnPrev.disabled = page === 0;
+                btnNext.disabled = page >= total - 1;
+                Array.from(dotsWrap.children).forEach((d, i)=>{
+                    if(i===page) d.setAttribute('aria-current','true'); else d.removeAttribute('aria-current');
+                });
+            }
+
+            btnPrev.addEventListener('click', ()=>{ if(page>0){ page--; render(); } });
+            btnNext.addEventListener('click', ()=>{ if(page < pages()-1){ page++; render(); } });
+            window.addEventListener('resize', ()=>{ updateDots(); render(); });
+
+            updateDots();
+            render();
+        })();
+    </script>
 </section>
 
  <!-- FAQ -->

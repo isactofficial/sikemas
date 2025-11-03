@@ -155,4 +155,12 @@ class Article extends Model
     {
         return strtolower((string) $this->status) === 'draft';
     }
+
+    /**
+     * Relationship: Article has many comments
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->orderByDesc('created_at');
+    }
 }

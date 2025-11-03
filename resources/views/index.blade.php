@@ -1379,6 +1379,18 @@
             .skm-a-card .excerpt { font-size: 14px; }
         }
 
+        /* Slider styles for Artikel & Berita when more than 3 items */
+        .skm-a-slider { position: relative; margin-top: 26px; --per: 3; }
+        .skm-a-viewport { overflow-x: auto; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; }
+        .skm-a-viewport::-webkit-scrollbar { display: none; }
+        .skm-a-track { display: flex; gap: 22px; }
+        .skm-a-slider .skm-a-card { flex: 0 0 calc((100% - (var(--per) - 1) * 22px) / var(--per)); scroll-snap-align: start; }
+        .skm-a-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; border: 1px solid #E0ECEC; background: #FFFFFF; color: #074159; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(7,65,89,.12); z-index: 3; }
+        .skm-a-prev { left: -18px; }
+        .skm-a-next { right: -18px; }
+        @media (max-width: 900px) { .skm-a-slider { --per: 2; } }
+        @media (max-width: 600px) { .skm-a-slider { --per: 1; } .skm-a-prev { left: 6px; } .skm-a-next { right: 6px; } }
+
         /* CSS Untuk Testimoni Section dari file Anda */
         .skm-testimonials { background: #FFFFFF; padding: 60px 16px 70px; font-family: 'Besley', serif; }
         .skm-t-wrap { max-width: 1100px; margin: 0 auto; }
@@ -1743,38 +1755,46 @@
     <section class="skm-articles" aria-labelledby="articles-title">
         <div class="skm-a-wrap">
             <h2 id="articles-title">Artikel &amp; Berita</h2>
-            <div class="skm-a-grid">
-                <article class="skm-a-card">
-                    <div class="thumb">
-                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Trend Kemasan Ramah Lingkungan">
+            @php $articleCount = isset($articles) ? $articles->count() : 0; @endphp
+            @if($articleCount === 0)
+                <p style="text-align:center;color:#425B66;margin-top:16px;">Belum ada artikel.</p>
+            @elseif($articleCount <= 3)
+                <div class="skm-a-grid">
+                    @foreach($articles as $a)
+                        <article class="skm-a-card">
+                            <div class="thumb">
+                                <img src="{{ $a->thumbnail_url }}" alt="{{ $a->title }}">
+                            </div>
+                            <div class="body">
+                                <h3 class="title">{{ $a->title }}</h3>
+                                <p class="excerpt">{{ $a->short_excerpt }}</p>
+                                <a class="more" href="{{ route('detail_artikel', $a->slug) }}">Baca selengkapnya →</a>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            @else
+                <div class="skm-a-slider" id="skmArticleSlider">
+                    <button class="skm-a-nav skm-a-prev" type="button" aria-label="Sebelumnya">&#10094;</button>
+                    <div class="skm-a-viewport">
+                        <div class="skm-a-track">
+                            @foreach($articles as $a)
+                                <article class="skm-a-card">
+                                    <div class="thumb">
+                                        <img src="{{ $a->thumbnail_url }}" alt="{{ $a->title }}">
+                                    </div>
+                                    <div class="body">
+                                        <h3 class="title">{{ $a->title }}</h3>
+                                        <p class="excerpt">{{ $a->short_excerpt }}</p>
+                                        <a class="more" href="{{ route('detail_artikel', $a->slug) }}">Baca selengkapnya →</a>
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="body">
-                        <h3 class="title">Trend Kemasan Ramah Lingkungan</h3>
-                        <p class="excerpt">Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.</p>
-                        <a class="more" href="#" aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
-                    </div>
-                </article>
-                <article class="skm-a-card">
-                    <div class="thumb">
-                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Pentingnya Kemasan yang Tepat">
-                    </div>
-                    <div class="body">
-                        <h3 class="title">Pentingnya Kemasan yang Tepat</h3>
-                        <p class="excerpt">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.</p>
-                        <a class="more" href="#" aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
-                    </div>
-                </article>
-                <article class="skm-a-card">
-                    <div class="thumb">
-                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Proses Produksi Kami">
-                    </div>
-                    <div class="body">
-                        <h3 class="title">Proses Produksi Kami</h3>
-                        <p class="excerpt">Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.</p>
-                        <a class="more" href="#" aria-label="Baca selengkapnya Proses Produksi Kami">Baca Selengkapnya</a>
-                    </div>
-                </article>
-            </div>
+                    <button class="skm-a-nav skm-a-next" type="button" aria-label="Berikutnya">&#10095;</button>
+                </div>
+            @endif
         </div>
     </section>
 
@@ -1827,6 +1847,18 @@
                     targetContent.classList.add('active');
                 });
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const slider = document.getElementById('skmArticleSlider');
+            if(!slider) return;
+            const viewport = slider.querySelector('.skm-a-viewport');
+            const prev = slider.querySelector('.skm-a-prev');
+            const next = slider.querySelector('.skm-a-next');
+            const scrollByAmount = () => viewport.clientWidth;
+            prev.addEventListener('click', () => viewport.scrollBy({ left: -scrollByAmount(), behavior: 'smooth' }));
+            next.addEventListener('click', () => viewport.scrollBy({ left: scrollByAmount(), behavior: 'smooth' }));
         });
     </script>
 </body>

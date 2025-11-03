@@ -13,8 +13,14 @@ use App\Http\Controllers\CartController;
 // ============================================
 // HOME ROUTE
 // ============================================
+use App\Models\Article;
 Route::get('/', function () {
-    return view('index');
+    $articles = Article::published()
+        ->orderByDesc('published_at')
+        ->orderByDesc('created_at')
+        ->take(12)
+        ->get();
+    return view('index', compact('articles'));
 })->name('home');
 
 Route::get('/edit-design', function () {
@@ -87,20 +93,43 @@ Route::middleware(['auth'])->group(function () {
 // PUBLIC PAGES
 // ============================================
 Route::get('/beranda', function () {
-    return view('index');
+    $articles = Article::published()
+        ->orderByDesc('published_at')
+        ->orderByDesc('created_at')
+        ->take(12)
+        ->get();
+    return view('index', compact('articles'));
 })->name('beranda');
 
+use App\Models\Product;
 Route::get('/produk', function () {
-    return view('produk');
+    $products = Product::query()
+        ->orderByDesc('created_at')
+        ->get();
+    return view('produk', compact('products'));
 })->name('produk');
 
 use App\Http\Controllers\ArticlePublicController;
+use App\Http\Controllers\CommentController;
 
 Route::get('/artikel', [ArticlePublicController::class, 'index'])->name('artikel');
 Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
 
+// =====================
+// COMMENTS (auth only)
+// =====================
+Route::middleware(['auth'])->group(function () {
+    Route::post('/artikel/{article}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/comments/{comment}/replies', [CommentController::class, 'reply'])->name('comments.reply');
+    Route::post('/comments/{comment}/like', [CommentController::class, 'likeComment'])->name('comments.like');
+    Route::post('/replies/{reply}/like', [CommentController::class, 'likeReply'])->name('replies.like');
+});
+
+use App\Models\Testimony;
+
 Route::get('/portofolio', function () {
-    return view('portofolio');
+    $testimonies = Testimony::orderByDesc('created_at')->get();
+    return view('portofolio', compact('testimonies'));
 })->name('portofolio');
 
 Route::get('/about', function () {

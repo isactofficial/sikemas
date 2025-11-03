@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\TestimonyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\Admin\TransactionController;
 
 // ============================================
 // HOME ROUTE
@@ -39,10 +40,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cart/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
     Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
-    
+
     // Checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-    
+
     // Invoice
     Route::get('/invoice/{id}', [CartController::class, 'showInvoice'])->name('invoice.show');
 });
@@ -66,24 +67,24 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // PROTECTED ROUTES (Require Authentication)
 // ============================================
 Route::middleware(['auth'])->group(function () {
-    
+
     // ======== SURVEY ROUTES ========
     Route::get('/survey', [SurveyController::class, 'show'])->name('survey');
     Route::post('/survey/submit', [SurveyController::class, 'submit'])->name('survey.submit');
-    
+
     // ======== PROFILE ROUTES ========
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::post('/update', [ProfileController::class, 'update'])->name('update');
-        
+
         // Address Management
         Route::get('/address/create', [ProfileController::class, 'createAddress'])->name('address.create');
         Route::post('/address', [ProfileController::class, 'storeAddress'])->name('address.store');
         Route::get('/address/{id}/edit', [ProfileController::class, 'editAddress'])->name('address.edit');
         Route::put('/address/{id}', [ProfileController::class, 'updateAddress'])->name('address.update');
         Route::delete('/address/{id}', [ProfileController::class, 'deleteAddress'])->name('address.delete');
-        
+
         // Orders
         Route::get('/orders', [ProfileController::class, 'getOrders'])->name('orders');
     });
@@ -147,14 +148,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Article Management - CRUD (RESOURCE ROUTE)
     Route::resource('articles', ArticleController::class);
-    
+
     // Products CRUD
     Route::resource('products', ProductController::class)->names('products');
 
     // Testimonies CRUD
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
-    Route::get('/transactions', function () {
-        return view('admin.transactions');
-    })->name('admin.transactions');
+    // Transactions CRUD (BARU)
+    Route::resource('transactions', TransactionController::class)->except([
+        'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
+    ]);
 });

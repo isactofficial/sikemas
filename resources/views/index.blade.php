@@ -1370,13 +1370,13 @@
         .skm-a-card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .skm-a-card .body { padding: 14px 16px 16px; }
         .skm-a-card .title { color: #074159; font-size: 18px; font-weight: 800; line-height: 1.35; margin: 0 0 8px; }
-        .skm-a-card .excerpt { color: #425B66; font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
+        .skm-a-card .deskripsi { color: #425B66; font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
         .skm-a-card .more { color: #ff5722; font-weight: 800; text-decoration: none; }
         .skm-a-card .more:hover { text-decoration: underline; }
         @media (max-width: 640px) {
             .skm-articles h2 { font-size: 28px; }
             .skm-a-card .title { font-size: 16px; }
-            .skm-a-card .excerpt { font-size: 14px; }
+            .skm-a-card .deskripsi { font-size: 14px; }
         }
 
         /* CSS Untuk Testimoni Section dari file Anda */
@@ -1750,7 +1750,7 @@
                     </div>
                     <div class="body">
                         <h3 class="title">Trend Kemasan Ramah Lingkungan</h3>
-                        <p class="excerpt">Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.</p>
+                        <p class="deskripsi">Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.</p>
                         <a class="more" href="#" aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
                     </div>
                 </article>
@@ -1760,7 +1760,7 @@
                     </div>
                     <div class="body">
                         <h3 class="title">Pentingnya Kemasan yang Tepat</h3>
-                        <p class="excerpt">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.</p>
+                        <p class="deskripsi">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.</p>
                         <a class="more" href="#" aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
                     </div>
                 </article>
@@ -1770,7 +1770,7 @@
                     </div>
                     <div class="body">
                         <h3 class="title">Proses Produksi Kami</h3>
-                        <p class="excerpt">Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.</p>
+                        <p class="deskripsi">Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.</p>
                         <a class="more" href="#" aria-label="Baca selengkapnya Proses Produksi Kami">Baca Selengkapnya</a>
                     </div>
                 </article>

@@ -114,8 +114,8 @@
                 @endif
             @endif
         @empty
-            @if(!empty($article->excerpt))
-                <p>{!! nl2br(e($article->excerpt)) !!}</p>
+            @if(!empty($article->deskripsi))
+                <p>{!! nl2br(e($article->deskripsi)) !!}</p>
             @else
                 <p>Konten artikel belum tersedia.</p>
             @endif

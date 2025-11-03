@@ -60,7 +60,7 @@ class ArticleController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'excerpt' => 'required|string',
+            'deskripsi' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'editor_id' => 'nullable|exists:users,id',
             'status' => 'required|in:draft,published',
@@ -80,7 +80,7 @@ class ArticleController extends Controller
         $article = Article::create([
             'title' => $validated['title'],
             'slug' => Str::slug($validated['title']),
-            'excerpt' => $validated['excerpt'],
+            'deskripsi' => $validated['deskripsi'],
             'thumbnail' => $thumbnailPath,
             'editor_id' => $validated['editor_id'] ?? auth()->id(),
             'status' => $validated['status'],
@@ -120,7 +120,7 @@ class ArticleController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'excerpt' => 'required|string',
+            'deskripsi' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'editor_id' => 'nullable|exists:users,id',
             'status' => 'required|in:draft,published',
@@ -142,7 +142,7 @@ class ArticleController extends Controller
         $article->update([
             'title' => $validated['title'],
             'slug' => Str::slug($validated['title']),
-            'excerpt' => $validated['excerpt'],
+            'deskripsi' => $validated['deskripsi'],
             'editor_id' => $validated['editor_id'] ?? $article->editor_id,
             'status' => $validated['status'],
             'published_at' => $validated['status'] === 'published' && !$article->published_at 

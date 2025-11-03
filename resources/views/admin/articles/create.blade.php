@@ -157,8 +157,8 @@
 				
 				<div class="skm-form-group">
 					<label class="skm-form-label">Description</label>
-					<textarea name="excerpt" class="skm-form-textarea" required>{{ old('excerpt') }}</textarea>
-					@error('excerpt')
+					<textarea name="deskripsi" class="skm-form-textarea" required>{{ old('deskripsi') }}</textarea>
+					@error('deskripsi')
 					<span class="skm-error">{{ $message }}</span>
 					@enderror
 				</div>

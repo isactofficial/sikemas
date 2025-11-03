@@ -184,11 +184,251 @@
 		.skm-alert.success { background: #D4EDDA; color: #155724; border: 1px solid #C3E6CB; }
 		
 		@media (max-width: 767px) {
-			.skm-admin-main { margin-left: 0; margin-top: 72px; padding: 16px; }
-			.skm-actions { flex-direction: column; align-items: stretch; }
-			.skm-table-header-bar { flex-wrap: wrap; gap: 16px; }
-			/* Beri overflow-x pada wrapper tabel, BUKAN wrapper konten */
-			.skm-table-wrap { overflow-x: auto; } 
+			.skm-admin-main { 
+				margin-left: 0; 
+				margin-top: 72px; 
+				padding: 12px; 
+			}
+
+			.skm-content-wrapper {
+				border-radius: 8px;
+			}
+
+			.skm-header {
+				padding: 16px;
+			}
+
+			.skm-header h1 {
+				font-size: 22px;
+			}
+
+			.skm-header p {
+				font-size: 13px;
+			}
+
+			.skm-controls-card {
+				padding: 16px;
+			}
+
+			.skm-actions { 
+				flex-direction: column; 
+				align-items: stretch;
+				margin-bottom: 16px;
+			}
+
+			.skm-btn {
+				width: 100%;
+				justify-content: center;
+				padding: 12px 16px;
+			}
+
+			.skm-table-header-bar { 
+				flex-direction: column;
+				align-items: stretch;
+				gap: 12px;
+			}
+
+			.skm-table-title {
+				font-size: 18px;
+			}
+
+			.skm-filters {
+				flex-direction: column;
+				align-items: stretch;
+				width: 100%;
+			}
+
+			.skm-filters select {
+				width: 100%;
+			}
+
+			/* Hide default table display on mobile */
+			.skm-table-wrap {
+				overflow: visible;
+			}
+
+			.skm-table thead {
+				display: none;
+			}
+
+			.skm-table,
+			.skm-table tbody,
+			.skm-table tr {
+				display: block;
+				width: 100%;
+			}
+
+			.skm-table tr {
+				margin-bottom: 16px;
+				border: 1px solid #E5E7EB;
+				border-radius: 12px;
+				overflow: hidden;
+				background: white;
+				box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+			}
+
+			.skm-table td {
+				display: block;
+				width: 100%;
+				border-bottom: none;
+				padding: 0;
+			}
+
+			/* Thumbnail - Full width at top */
+			.skm-table td:first-child {
+				padding: 0;
+			}
+
+			.skm-thumb {
+				width: 100%;
+				height: 180px;
+				border-radius: 0;
+			}
+
+			.skm-thumb img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			/* Title */
+			.skm-table td:nth-child(2) {
+				padding: 16px;
+			}
+
+			.skm-table td:nth-child(2) strong {
+				font-size: 16px;
+				line-height: 1.4;
+				display: block;
+				color: var(--skm-blue);
+			}
+
+			/* Date */
+			.skm-table td:nth-child(3) {
+				padding: 0 16px 16px 16px;
+				font-size: 13px;
+				color: #666;
+			}
+
+			/* Action buttons - Full width at bottom */
+			.skm-table td:nth-child(4) {
+				padding: 16px;
+				background: #F9FAFB;
+				border-top: 1px solid #E5E7EB;
+			}
+
+			.skm-action-btns {
+				display: flex;
+				justify-content: center;
+				gap: 20px;
+				width: 100%;
+			}
+
+			.skm-icon-btn {
+				width: 44px;
+				height: 44px;
+				border-radius: 8px;
+				background: transparent;
+				border: none;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.skm-icon-btn img {
+				width: 32px;
+				height: 32px;
+			}
+
+			.skm-icon-btn:hover {
+				background: #E5E7EB;
+			}
+
+			/* Remove text labels */
+			.skm-icon-btn.view::after,
+			.skm-icon-btn.edit::after,
+			.skm-icon-btn.delete::after {
+				display: none;
+			}
+
+			/* Pagination responsive */
+			.skm-pagination {
+				flex-direction: column;
+				gap: 12px;
+				padding: 16px;
+			}
+
+			.skm-pagination .skm-page-summary {
+				font-size: 12px;
+				text-align: center;
+			}
+
+			.skm-pagination nav {
+				width: 100%;
+				justify-content: center;
+				flex-wrap: wrap;
+			}
+
+			.skm-pagination nav a,
+			.skm-pagination nav span {
+				font-size: 12px;
+				padding: 6px 8px;
+				min-width: 28px;
+				height: 28px;
+			}
+
+			.skm-alert {
+				font-size: 13px;
+				padding: 10px 12px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.skm-admin-main {
+				padding: 8px;
+			}
+
+			.skm-header {
+				padding: 12px;
+			}
+
+			.skm-header h1 {
+				font-size: 20px;
+			}
+
+			.skm-controls-card {
+				padding: 12px;
+			}
+
+			.skm-thumb {
+				height: 160px;
+			}
+
+			.skm-table td:nth-child(2) strong {
+				font-size: 15px;
+			}
+
+			.skm-table td:nth-child(3) {
+				font-size: 12px;
+			}
+
+			.skm-action-btns {
+				gap: 16px;
+			}
+
+			.skm-icon-btn {
+				width: 40px;
+				height: 40px;
+			}
+
+			.skm-icon-btn img {
+				width: 28px;
+				height: 28px;
+			}
+
+			.skm-pagination {
+				padding: 12px;
+			}
 		}
 	</style>
 </head>

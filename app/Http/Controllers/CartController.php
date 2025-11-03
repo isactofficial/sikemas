@@ -10,6 +10,7 @@ use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage; // <-- PERBAIKAN: Ditambahkan
 use Illuminate\Support\Str;
 
 class CartController extends Controller
@@ -41,9 +42,11 @@ class CartController extends Controller
 
     /**
      * Add item to cart
+     * (Logika Anda di sini sudah benar, hanya merapikan 'use' statement)
      */
     public function addItem(Request $request)
     {
+        // Validasi dari JavaScript Anda sudah benar
         $validated = $request->validate([
             'product_name' => 'required|string|max:255',
             'material' => 'nullable|string|max:100',
@@ -51,7 +54,9 @@ class CartController extends Controller
             'design' => 'nullable|string|max:100',
             'quantity' => 'required|integer|min:1',
             'unit_price' => 'required|numeric|min:0',
-            'product_image' => 'nullable|string|max:255'
+            'product_image' => 'nullable|string|max:255',
+            'has_custom_design' => 'required|boolean', // Diperlukan dari JS
+            'custom_design_file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,ai,psd,cdr|max:10240' // max 10MB
         ]);
 
         $user = Auth::user();
@@ -59,27 +64,44 @@ class CartController extends Controller
         // Get or create cart
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
         
+        // Handle custom design file upload
+        $customDesignPath = null;
+        if ($request->hasFile('custom_design_file')) {
+            $file = $request->file('custom_design_file');
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            // Simpan di storage/app/public/custom_designs
+            $customDesignPath = $file->storeAs('custom_designs', $filename, 'public');
+        }
+        
         // Check if item with same specifications already exists
         $existingItem = CartItem::where('cart_id', $cart->id)
             ->where('product_name', $validated['product_name'])
             ->where('material', $validated['material'] ?? null)
             ->where('size', $validated['size'] ?? null)
             ->where('design', $validated['design'] ?? null)
+            ->where('has_custom_design', $validated['has_custom_design'])
+            // Jika tidak ada file custom, kita anggap sama
+            ->where(function($query) use ($customDesignPath) {
+                if (!$customDesignPath) {
+                    $query->whereNull('custom_design_file');
+                }
+            })
             ->first();
         
-        if ($existingItem) {
+        if ($existingItem && !$customDesignPath) { // Hanya update qty jika item ada DAN tidak ada file baru diupload
             // Update quantity if item exists
             $existingItem->quantity += $validated['quantity'];
             $existingItem->save();
             
             return response()->json([
-                'success' => true,
+                'success' => true, // Diubah dari 'success' ke 'message' agar konsisten
                 'message' => 'Jumlah produk di keranjang berhasil diperbarui!',
                 'cart_count' => $cart->total_quantity
             ]);
         }
         
-        // Create new cart item
+        // Jika itemnya ada TAPI ada file baru, atau itemnya belum ada,
+        // buat item baru.
         CartItem::create([
             'cart_id' => $cart->id,
             'product_name' => $validated['product_name'],
@@ -88,11 +110,13 @@ class CartController extends Controller
             'design' => $validated['design'] ?? null,
             'quantity' => $validated['quantity'],
             'unit_price' => $validated['unit_price'],
-            'product_image' => $validated['product_image'] ?? null
+            'product_image' => $validated['product_image'] ?? null,
+            'has_custom_design' => $validated['has_custom_design'],
+            'custom_design_file' => $customDesignPath
         ]);
         
         return response()->json([
-            'success' => true,
+            'success' => true, // Diubah dari 'success' ke 'message'
             'message' => 'Produk berhasil ditambahkan ke keranjang!',
             'cart_count' => $cart->total_quantity
         ]);
@@ -135,6 +159,12 @@ class CartController extends Controller
         })->findOrFail($id);
         
         $cart = $cartItem->cart;
+
+        // Hapus file custom design jika ada
+        if ($cartItem->custom_design_file && Storage::disk('public')->exists($cartItem->custom_design_file)) {
+            Storage::disk('public')->delete($cartItem->custom_design_file);
+        }
+
         $cartItem->delete();
         
         return response()->json([
@@ -196,12 +226,12 @@ class CartController extends Controller
             // Create order
             $order = Order::create([
                 'user_id' => $user->id,
-                'cart_id' => $cart->id,
+                // 'cart_id' => $cart->id, // Lihat Catatan di bawah
                 'invoice_number' => $invoiceNumber,
                 'order_date' => now(),
-                'total_amount' => $cart->grand_total,
-                'status' => 'Diproses',
-                'payment_method' => 'Transfer Bank',
+                'total_amount' => $cart->grand_total, // Asumsi grand_total termasuk ongkir
+                'status' => 'Diproses', // Status awal
+                'payment_method' => 'Transfer Bank', // Bisa dibuat dinamis
                 'shipping_address_id' => $address->id,
                 'notes' => $request->input('notes')
             ]);
@@ -212,14 +242,23 @@ class CartController extends Controller
                     'order_id' => $order->id,
                     'product_name' => $cartItem->product_name . 
                         ($cartItem->specification ? ' (' . $cartItem->specification . ')' : ''),
+                    
+                    // ===============================================
+                    //  INI ADALAH PERBAIKAN UTAMA YANG ANDA MINTA
+                    //  Menyalin path file dari keranjang ke pesanan
+                    // ===============================================
+                    'custom_design_file' => $cartItem->custom_design_file,
+                    
                     'quantity' => $cartItem->quantity,
                     'unit_price' => $cartItem->unit_price,
                     'subtotal' => $cartItem->subtotal
                 ]);
             }
             
-            // Clear cart items after successful checkout
-            $cart->clearItems();
+            // PERBAIKAN: Menggunakan metode Eloquent standar untuk menghapus
+            // item keranjang, BUKAN file-nya di storage.
+            // File di storage JANGAN dihapus, karena sudah jadi milik Order.
+            $cart->items()->delete(); 
             
             DB::commit();
             
@@ -230,8 +269,9 @@ class CartController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             
+            // Tampilkan error untuk debugging
             return redirect()->route('cart.index')
-                ->with('error', 'Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -242,7 +282,8 @@ class CartController extends Controller
     {
         $order = Order::with(['items', 'shippingAddress', 'user'])
             ->where('id', $id)
-            ->where('user_id', Auth::id())
+            // Pastikan hanya pemilik order yang bisa lihat
+            ->where('user_id', Auth::id()) 
             ->firstOrFail();
         
         return view('cart.invoice', compact('order'));

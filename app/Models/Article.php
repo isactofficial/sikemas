@@ -14,7 +14,7 @@ class Article extends Model
         'title',
         'slug',
         'thumbnail',
-        'excerpt',
+        'deskripsi',
         'editor_id',
         'status',
         'views',
@@ -133,11 +133,11 @@ class Article extends Model
     }
 
     /**
-     * Get excerpt with limit
+     * Get deskripsi with limit
      */
-    public function getShortExcerptAttribute()
+    public function getShortdeskripsiAttribute()
     {
-        return Str::limit($this->excerpt, 150);
+        return Str::limit($this->deskripsi, 150);
     }
 
     /**

@@ -20,6 +20,8 @@
             font-family: 'Besley', serif;
             background-color: #f5f5ff;
             overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
         }
 
         /* Main Editor Container */
@@ -27,6 +29,9 @@
             display: flex;
             height: 100vh;
             background-color: #f5f5ff;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
 
         /* Left Sidebar - Elements & Upload */
@@ -35,7 +40,9 @@
             background-color: #ffffff;
             border-right: 1px solid #e0e0e0;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 1.5rem;
+            box-sizing: border-box;
         }
 
         .sidebar-title {
@@ -196,11 +203,14 @@
             padding: 2rem;
             position: relative;
             background-color: #F4F7F6;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .design-title-bar {
             width: 100%;
-            max-width: calc(100% - 4rem);
+            max-width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -216,9 +226,10 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             padding: 2rem;
-            max-width: calc(100% - 4rem);
+            max-width: 100%;
             width: 100%;
             position: relative;
+            box-sizing: border-box;
         }
 
         .canvas {
@@ -332,7 +343,9 @@
             background-color: #ffffff;
             border-left: 1px solid #e0e0e0;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 1.5rem;
+            box-sizing: border-box;
         }
 
         .property-section {
@@ -708,6 +721,347 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            .editor-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                width: 100%;
+                overflow-x: hidden;
+            }
+
+            .left-sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                padding: 1rem;
+                max-height: 50vh;
+                box-sizing: border-box;
+            }
+
+            .canvas-area {
+                padding: 0.75rem;
+                min-height: auto;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .design-title-bar {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: stretch;
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+                box-sizing: border-box;
+            }
+
+            .view-switcher-container {
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .canvas-wrapper {
+                padding: 0.75rem;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                box-sizing: border-box;
+            }
+
+            .canvas {
+                height: 350px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .right-sidebar {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e0e0e0;
+                padding: 1rem;
+                max-height: none;
+                box-sizing: border-box;
+            }
+
+            .canvas-controls {
+                justify-content: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .control-button {
+                flex: 0 1 auto;
+                min-width: 80px;
+                font-size: 0.85rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            #canvas-3d {
+                height: 350px;
+                width: 100%;
+            }
+
+            .action-buttons {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                flex-direction: row;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                justify-content: center;
+                width: 100%;
+                padding: 0 1rem;
+                box-sizing: border-box;
+            }
+
+            .action-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+                flex: 1;
+                max-width: 200px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+                max-width: 100vw;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            .editor-container {
+                width: 100vw;
+                max-width: 100%;
+            }
+
+            .left-sidebar {
+                padding: 0.75rem;
+                max-height: 40vh;
+                width: 100%;
+            }
+
+            .sidebar-title {
+                font-size: 0.95rem;
+                margin: -0.75rem -0.75rem 0.75rem -0.75rem !important;
+                padding: 0.6rem 0.75rem !important;
+            }
+
+            .upload-button {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+                width: 100%;
+            }
+
+            .elements-grid {
+                gap: 0.5rem;
+                grid-template-columns: repeat(3, 1fr);
+                width: 100%;
+            }
+
+            .tab-button {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .canvas-area {
+                padding: 0.5rem;
+                width: 100%;
+            }
+
+            .design-title-bar {
+                gap: 0.5rem;
+                margin-bottom: 0.75rem;
+                width: 100%;
+                padding: 0;
+            }
+
+            .view-switcher-container {
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .view-label {
+                font-size: 0.85rem;
+            }
+
+            .canvas-wrapper {
+                padding: 0.5rem;
+                width: 100%;
+                margin: 0;
+            }
+
+            .canvas {
+                height: 280px;
+                width: 100%;
+            }
+
+            .dimension-label {
+                font-size: 0.65rem;
+                padding: 0.15rem 0.3rem;
+            }
+
+            .view-3d-button {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .view-3d-button img {
+                width: 14px;
+                height: 14px;
+            }
+
+            .view-3d-button span {
+                font-size: 0.75rem;
+            }
+
+            .control-button {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.6rem;
+                white-space: nowrap;
+                min-width: 70px;
+            }
+
+            .right-sidebar {
+                padding: 0.75rem;
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 0.9rem;
+                margin-bottom: 0.75rem;
+                padding-bottom: 0.4rem;
+            }
+
+            .control-group {
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+
+            .control-label {
+                font-size: 0.8rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .input-field {
+                font-size: 0.85rem;
+                padding: 0.5rem;
+                width: 100%;
+            }
+
+            .color-grid {
+                gap: 0.5rem;
+                grid-template-columns: repeat(3, 1fr);
+                width: 100%;
+            }
+
+            .color-item {
+                min-height: 40px;
+            }
+
+            #canvas-3d {
+                height: 280px;
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 90%;
+                max-width: 90vw;
+                margin: 30% auto;
+                padding: 1.25rem;
+                box-sizing: border-box;
+            }
+
+            .modal-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .modal-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .modal-message {
+                font-size: 0.85rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .modal-button {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                margin-top: 0.75rem;
+                gap: 0.4rem;
+                width: 100%;
+                padding: 0 0.5rem;
+            }
+
+            .action-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                max-width: 150px;
+            }
+
+            .loading-overlay .spinner {
+                width: 50px;
+                height: 50px;
+            }
+
+            .loading-content p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .elements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .canvas {
+                height: 250px;
+            }
+
+            #canvas-3d {
+                height: 250px;
+            }
+
+            .control-button {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.5rem;
+                min-width: 60px;
+            }
+
+            .action-button {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .canvas-area {
+                padding: 0.25rem;
+            }
+
+            .canvas-wrapper {
+                padding: 0.25rem;
+            }
         }
     </style>
 </head>

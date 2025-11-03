@@ -332,12 +332,30 @@
 
         /* Responsive */
         @media (max-width: 900px) {
-            /* Flex container already set above */
-            .skm-nav-toggle { 
-                display: inline-block; 
-                align-self: center; 
+            .skm-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.5rem;
             }
-            .skm-logo img { height: 50px; } /* Samakan ukuran logo di mobile */
+
+            .skm-logo {
+                order: 1;
+                margin-right: auto;
+            }
+
+            .skm-nav-toggle { 
+                display: inline-block;
+                order: 3;
+                margin-left: auto;
+            }
+
+            .skm-right {
+                order: 2;
+                margin-left: 0;
+            }
+
+            .skm-logo img { height: 50px; }
             
             .skm-menu { 
                 position: absolute; 

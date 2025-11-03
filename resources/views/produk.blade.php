@@ -549,6 +549,46 @@
         }
         .radio-group input { margin-right: 5px; }
 
+        .upload-group {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .upload-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .btn-upload {
+            padding: 8px 16px;
+            background-color: var(--skm-teal);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-upload:hover {
+            background-color: var(--skm-teal-dark);
+        }
+
+        .file-name {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+        }
+
         .modal-actions {
             display: flex;
             gap: 10px;
@@ -597,6 +637,41 @@
             #modal-img-main { height: 250px; }
             .modal-right h2 { font-size: 1.8rem; }
             .modal-actions { flex-direction: column; }
+        }
+
+        /* Fix Hamburger Menu Position for Mobile */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0.75rem 1rem !important;
+            }
+
+            nav .container,
+            nav > div {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                width: 100% !important;
+            }
+
+            nav .logo,
+            nav a:first-child {
+                order: 1 !important;
+                margin-right: auto !important;
+            }
+
+            nav .hamburger,
+            nav .menu-toggle,
+            nav button[class*="hamburger"],
+            nav button[class*="menu"],
+            nav .fa-bars {
+                order: 3 !important;
+                margin-left: auto !important;
+            }
+
+            nav ul,
+            nav .nav-links {
+                order: 2 !important;
+            }
         }
 
     </style>
@@ -965,14 +1040,28 @@
                     <div class="modal-form-group radio-group-container">
                         <label>Punya desain sendiri?</label>
                         <div class="radio-group">
-                            <label><input type="radio" name="custom_design" value="ya"> Ya</label>
-                            <label><input type="radio" name="custom_design" value="tidak" checked> Tidak</label>
+                            <label><input type="radio" name="custom_design" value="ya" id="radio-ya"> Ya</label>
+                            <label><input type="radio" name="custom_design" value="tidak" id="radio-tidak" checked> Tidak</label>
                         </div>
+                    </div>
+
+                    <div class="modal-form-group upload-group" id="upload-group" style="display: none;">
+                        <label for="custom-design-file">Upload File Desain</label>
+                        <div class="upload-container">
+                            <input type="file" id="custom-design-file" name="custom_design_file" accept=".jpg,.jpeg,.png,.pdf,.ai,.psd" style="display: none;">
+                            <button type="button" class="btn-upload" id="btn-upload">
+                                <i class="fas fa-cloud-upload-alt"></i> Pilih File
+                            </button>
+                            <span class="file-name" id="file-name">Belum ada file dipilih</span>
+                        </div>
+                        <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 0.5rem;">
+                            Format: JPG, PNG, PDF, AI, PSD (Max: 10MB)
+                        </small>
                     </div>
 
                     <div class="modal-actions">
                         <button class="btn-modal btn-modal-primary" id="modal-add-to-cart"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                        <button class="btn-modal btn-modal-secondary"><i class="fas fa-pen"></i> Sesuaikan Desain</button>
+                        <button class="btn-modal btn-modal-secondary" id="btn-customize-design"><i class="fas fa-pen"></i> Sesuaikan Desain</button>
                     </div>
                 </div>
             </div>
@@ -983,381 +1072,436 @@
     @include('layouts.footer')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterContainer = document.querySelector('.filter-produk');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const produkCards = document.querySelectorAll('.card-produk');
+    // ═══════════════════════════════════════════════════════════
+    // FUNGSI HELPER (didefinisikan di luar agar bisa diakses)
+    // ═══════════════════════════════════════════════════════════
+    
+    // Ambil CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    
+    /**
+     * Helper untuk menangani response fetch
+     */
+    async function handleResponse(response) {
+        if (response.status === 401 || response.status === 419) {
+            let err = new Error('Sesi Anda telah berakhir. Silakan login kembali.');
+            err.status = response.status;
+            throw err;
+        }
 
-            function filterProduk(filter) {
-                produkCards.forEach(card => {
-                    if (card.dataset.kategori === filter) {
-                        card.classList.remove('hidden');
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                });
+        const data = await response.json();
+        if (!response.ok) {
+            let message = data.message || 'Terjadi kesalahan.';
+            if (data.errors) {
+                message = Object.values(data.errors).flat().join('\n');
             }
+            let err = new Error(message);
+            err.status = response.status;
+            err.data = data;
+            throw err;
+        }
+        return data;
+    }
 
-            const initialFilter = document.querySelector('.filter-btn.active').dataset.filter;
-            filterProduk(initialFilter);
-
-            filterContainer.addEventListener('click', function(e) {
-                if (e.target.classList.contains('filter-btn')) {
-                    filterBtns.forEach(btn => btn.classList.remove('active'));
-                    e.target.classList.add('active');
-                    const filterValue = e.target.dataset.filter;
-                    filterProduk(filterValue);
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const productCards = document.querySelectorAll('.card-produk');
-            const modal = document.getElementById('modal-detail');
-            const overlay = document.getElementById('modal-overlay');
-            const closeModalBtn = document.getElementById('modal-close-btn');
-
-            if (!modal || !overlay || !closeModalBtn) {
-                console.error('Modal elements not found!');
-                return;
-            }
-
-            const modalTitle = document.getElementById('modal-title');
-            const modalImg = document.getElementById('modal-img-main');
-            const modalDeskripsi = document.getElementById('modal-deskripsi');
-            const modalHarga = document.getElementById('modal-harga');
-            const modalThumbnails = document.getElementById('modal-thumbnails');
-            const modalSpekTable = document.getElementById('modal-spek-tbody');
-
-            // Tombol Kuantitas
-            const qtyMinus = document.getElementById('qty-minus');
-            const qtyPlus = document.getElementById('qty-plus');
-            const qtyInput = document.getElementById('modal-qty');
-
-            function openModal(card) {
-                // 1. Isi data dari data-attributes
-                modalTitle.textContent = card.dataset.title;
-                modalImg.src = card.dataset.img;
-                modalDeskripsi.textContent = card.dataset.deskripsi;
-                modalHarga.textContent = card.dataset.harga;
-
-                // 2. Isi Thumbnails
-                modalThumbnails.innerHTML = `
-                    <img src="${card.dataset.thumb1}" alt="thumbnail 1" class="active">
-                    <img src="${card.dataset.thumb2}" alt="thumbnail 2">
-                    <img src="${card.dataset.thumb3}" alt="thumbnail 3">
-                `;
-
-                // 3. Isi Spesifikasi
-                modalSpekTable.innerHTML = `
-                    <tr><td>Lebar</td><td>${card.dataset.spekLebar}</td></tr>
-                    <tr><td>Tinggi</td><td>${card.dataset.spekTinggi}</td></tr>
-                    <tr><td>Panjang</td><td>${card.dataset.spekPanjang}</td></tr>
-                    <tr><td>Bahan</td><td>${card.dataset.spekBahan}</td></tr>
-                    <tr><td>Kapasitas</td><td>${card.dataset.spekKapasitas}</td></tr>
-                `;
-
-                qtyInput.value = 1;
-
-                modal.classList.add('active');
-                overlay.classList.add('active');
-            }
-
-            function closeModal() {
-                modal.classList.remove('active');
-                overlay.classList.remove('active');
-            }
-
-            // --- Event Listeners ---
-            productCards.forEach(card => {
-
-                const cartButton = card.querySelector('.btn-keranjang');
-                cartButton.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    // Get product data
-                    const productName = card.dataset.title;
-                    const price = card.dataset.price || card.dataset.harga.replace(/[^0-9]/g, '');
-                    const material = card.dataset.material || card.dataset.spekBahan || 'Standard';
-                    const size = card.dataset.size || (card.dataset.spekLebar + 'x' + card.dataset.spekTinggi + 'x' + card.dataset.spekPanjang) || 'Standard';
-                    const productImage = card.dataset.img;
-                    
-                    // Call add to cart function
-                    addToCart({
-                        product_name: productName,
-                        material: material,
-                        size: size,
-                        design: 'Standard',
-                        quantity: 1,
-                        unit_price: parseFloat(price),
-                        product_image: productImage
-                    });
-                });
-
-                card.addEventListener('click', () => {
-                    openModal(card);
-                });
-            });
-
-            closeModalBtn.addEventListener('click', closeModal);
-            overlay.addEventListener('click', closeModal);
-
-            // Logika klik thumbnail (Event Delegation)
-            modalThumbnails.addEventListener('click', function(e) {
-                if (e.target.tagName === 'IMG') {
-                    modalThumbnails.querySelectorAll('img').forEach(img => img.classList.remove('active'));
-                    e.target.classList.add('active');
-                    modalImg.src = e.target.src;
-                }
-            });
-
-            // Logika Kuantitas
-            qtyPlus.addEventListener('click', () => {
-                qtyInput.value = parseInt(qtyInput.value) + 1;
-            });
-
-            qtyMinus.addEventListener('click', () => {
-                let currentVal = parseInt(qtyInput.value);
-                if (currentVal > 1) {
-                    qtyInput.value = currentVal - 1;
-                }
-            });
-
-        });
-    </script>
-
-    <script>
-        // ═══════════════════════════════════════════════════════════
-        // ADD TO CART FUNCTIONALITY
-        // ═══════════════════════════════════════════════════════════
+    /**
+     * Fungsi untuk menambah item ke keranjang (via JSON)
+     * Digunakan untuk "Quick Add" dari kartu produk
+     */
+    function addToCart(productData, buttonElement) {
+        @guest
+            alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.');
+            window.location.href = '{{ route("login") }}';
+            return;
+        @endguest
         
-        // Get CSRF token
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        
-        // Add to Cart Function
-        function addToCart(productData) {
-            // Check if user is logged in
-            @guest
-                alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.');
-                window.location.href = '{{ route("login") }}';
-                return;
-            @endguest
-            
-            if (!csrfToken) {
-                console.error('CSRF token not found');
-                alert('Terjadi kesalahan. Silakan refresh halaman.');
-                return;
-            }
-            
-            // Show loading state
-            const button = event.target.closest('button');
-            const originalButtonText = button.innerHTML;
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menambahkan...';
-            
-            // Send request to add to cart
-            fetch('{{ route("cart.add") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(productData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    if (response.status === 401 || response.status === 419) {
-                        throw new Error('Silakan login terlebih dahulu.');
-                    }
-                    throw new Error('Terjadi kesalahan. Silakan coba lagi.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Show success notification
-                    showNotification('success', data.message);
-                    
-                    // Update cart badge
-                    if (typeof updateCartBadge === 'function') {
-                        updateCartBadge(data.cart_count);
-                    }
-                    
-                    // Reset button
-                    button.disabled = false;
-                    button.innerHTML = originalButtonText;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('error', error.message);
-                
-                // Reset button
-                button.disabled = false;
-                button.innerHTML = originalButtonText;
-                
-                // Redirect to login if needed
-                if (error.message.includes('login')) {
-                    setTimeout(() => {
-                        window.location.href = '{{ route("login") }}';
-                    }, 2000);
-                }
-            });
+        if (!csrfToken) {
+            console.error('CSRF token not found');
+            alert('Terjadi kesalahan. Silakan refresh halaman.');
+            return;
         }
         
-        // Show Notification Function
-        function showNotification(type, message) {
-            // Remove existing notification
-            const existingNotification = document.querySelector('.cart-notification');
-            if (existingNotification) {
-                existingNotification.remove();
+        let originalButtonText = '';
+        if (buttonElement) {
+            originalButtonText = buttonElement.innerHTML;
+            buttonElement.disabled = true;
+            buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        }
+        
+        fetch('{{ route("cart.add") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        })
+        .then(handleResponse)
+        .then(data => {
+            // === PERBAIKAN DI SINI ===
+            // Kita gunakan 'data.message' yang berisi teks, bukan 'data.success' yang berisi 'true'
+            showNotification('success', data.message || 'Produk berhasil ditambahkan!');
+            // === AKHIR PERBAIKAN ===
+
+            if (typeof updateCartBadge === 'function') {
+                updateCartBadge(data.cart_count);
+            }
+        })
+        .catch(error => {
+            console.error('Error (addToCart):', error);
+            showNotification('error', error.message);
+            if (error.status === 401 || error.status === 419) {
+                setTimeout(() => window.location.href = '{{ route("login") }}', 2000);
+            }
+        })
+        .finally(() => {
+            if (buttonElement) {
+                buttonElement.disabled = false;
+                buttonElement.innerHTML = originalButtonText;
+            }
+        });
+    }
+
+    /**
+     * Fungsi untuk menambah item ke keranjang (via FormData)
+     * Digunakan untuk "Add to Cart" dari dalam modal (karena ada file)
+     */
+    function addToCartWithFile(formData, buttonElement) {
+        @guest
+            alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.');
+            window.location.href = '{{ route("login") }}';
+            return;
+        @endguest
+        
+        if (!csrfToken) {
+            console.error('CSRF token not found');
+            alert('Terjadi kesalahan. Silakan refresh halaman.');
+            return;
+        }
+        
+        const originalButtonText = buttonElement.innerHTML;
+        buttonElement.disabled = true;
+        buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menambahkan...';
+        
+        fetch('{{ route("cart.add") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+                // JANGAN set 'Content-Type' saat kirim FormData
+            },
+            body: formData
+        })
+        .then(handleResponse)
+        .then(data => {
+            // === PERBAIKAN DI SINI ===
+            // Kita gunakan 'data.message' yang berisi teks, bukan 'data.success' yang berisi 'true'
+            showNotification('success', data.message || 'Produk berhasil ditambahkan!');
+            // === AKHIR PERBAIKAN ===
+            
+            if (typeof updateCartBadge === 'function') {
+                updateCartBadge(data.cart_count);
             }
             
-            // Create notification
-            const notification = document.createElement('div');
-            notification.className = `cart-notification cart-notification-${type}`;
-            notification.innerHTML = `
-                <div class="notification-content">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                    <span>${message}</span>
-                </div>
-                <button class="notification-close">&times;</button>
+            // Tutup modal
+            document.getElementById('modal-detail').classList.remove('active');
+            document.getElementById('modal-overlay').classList.remove('active');
+        })
+        .catch(error => {
+            console.error('Error (addToCartWithFile):', error);
+            showNotification('error', error.message);
+            if (error.status === 401 || error.status === 419) {
+                setTimeout(() => window.location.href = '{{ route("login") }}', 2000);
+            }
+        })
+        .finally(() => {
+            if (buttonElement) {
+                buttonElement.disabled = false;
+                buttonElement.innerHTML = originalButtonText;
+            }
+        });
+    }
+
+    /**
+     * Fungsi untuk menampilkan notifikasi
+     */
+    function showNotification(type, message) {
+        const existingNotification = document.querySelector('.cart-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+        
+        const notification = document.createElement('div');
+        notification.className = `cart-notification cart-notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            </div>
+            <button class="notification-close">&times;</button>
+        `;
+        
+        // (Styles untuk notifikasi, jika Anda perlukan)
+        if (!document.querySelector('#cart-notification-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'cart-notification-styles';
+            styles.textContent = `
+                .cart-notification {
+                    position: fixed; top: 80px; right: 20px; min-width: 300px; max-width: 400px;
+                    padding: 15px 20px; border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); z-index: 9999;
+                    display: flex; align-items: center; justify-content: space-between;
+                    animation: slideIn 0.3s ease-out;
+                }
+                @keyframes slideIn {
+                    from { transform: translateX(400px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                .cart-notification-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+                .cart-notification-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+                .notification-content { display: flex; align-items: center; gap: 10px; flex: 1; }
+                .notification-content i { font-size: 1.2rem; }
+                .notification-close {
+                    background: none; border: none; font-size: 1.5rem; cursor: pointer;
+                    opacity: 0.7; transition: opacity 0.2s; padding: 0;
+                    margin-left: 15px; color: inherit;
+                }
+                .notification-close:hover { opacity: 1; }
             `;
-            
-            // Add styles if not present
-            if (!document.querySelector('#cart-notification-styles')) {
-                const styles = document.createElement('style');
-                styles.id = 'cart-notification-styles';
-                styles.textContent = `
-                    .cart-notification {
-                        position: fixed;
-                        top: 80px;
-                        right: 20px;
-                        min-width: 300px;
-                        max-width: 400px;
-                        padding: 15px 20px;
-                        border-radius: 8px;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                        z-index: 9999;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        animation: slideIn 0.3s ease-out;
-                    }
-                    
-                    @keyframes slideIn {
-                        from {
-                            transform: translateX(400px);
-                            opacity: 0;
-                        }
-                        to {
-                            transform: translateX(0);
-                            opacity: 1;
-                        }
-                    }
-                    
-                    .cart-notification-success {
-                        background: #d4edda;
-                        border: 1px solid #c3e6cb;
-                        color: #155724;
-                    }
-                    
-                    .cart-notification-error {
-                        background: #f8d7da;
-                        border: 1px solid #f5c6cb;
-                        color: #721c24;
-                    }
-                    
-                    .notification-content {
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                        flex: 1;
-                    }
-                    
-                    .notification-content i {
-                        font-size: 1.2rem;
-                    }
-                    
-                    .notification-close {
-                        background: none;
-                        border: none;
-                        font-size: 1.5rem;
-                        cursor: pointer;
-                        opacity: 0.7;
-                        transition: opacity 0.2s;
-                        padding: 0;
-                        margin-left: 15px;
-                        color: inherit;
-                    }
-                    
-                    .notification-close:hover {
-                        opacity: 1;
-                    }
-                `;
-                document.head.appendChild(styles);
-            }
-            
-            // Add to page
-            document.body.appendChild(notification);
-            
-            // Close button
-            notification.querySelector('.notification-close').addEventListener('click', function() {
-                notification.remove();
-            });
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                notification.remove();
-            }, 5000);
+            document.head.appendChild(styles);
         }
         
-        // Handle Modal Add to Cart Button
-        document.addEventListener('DOMContentLoaded', function() {
-            const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
-            if (modalAddToCartBtn) {
-                let currentProduct = null;
+        document.body.appendChild(notification);
+        
+        notification.querySelector('.notification-close').addEventListener('click', function() {
+            notification.remove();
+        });
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+
+
+    // ═══════════════════════════════════════════════════════════
+    // LOGIKA UTAMA (setelah DOM dimuat)
+    // ═══════════════════════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- Elemen Global ---
+        const productCards = document.querySelectorAll('.card-produk');
+        const modal = document.getElementById('modal-detail');
+        const overlay = document.getElementById('modal-overlay');
+        const closeModalBtn = document.getElementById('modal-close-btn');
+
+        if (!modal || !overlay || !closeModalBtn) {
+            console.error('Modal elements not found!');
+            return;
+        }
+
+        // --- Elemen-elemen Modal ---
+        const modalTitle = document.getElementById('modal-title');
+        const modalImg = document.getElementById('modal-img-main');
+        const modalDeskripsi = document.getElementById('modal-deskripsi');
+        const modalHarga = document.getElementById('modal-harga');
+        const modalThumbnails = document.getElementById('modal-thumbnails');
+        const modalSpekTable = document.getElementById('modal-spek-tbody');
+        const qtyMinus = document.getElementById('qty-minus');
+        const qtyPlus = document.getElementById('qty-plus');
+        const qtyInput = document.getElementById('modal-qty');
+        
+        // --- Elemen Custom Design ---
+        const radioYa = document.getElementById('radio-ya');
+        const radioTidak = document.getElementById('radio-tidak');
+        const uploadGroup = document.getElementById('upload-group');
+        const customDesignFile = document.getElementById('custom-design-file');
+        const btnUpload = document.getElementById('btn-upload');
+        const fileName = document.getElementById('file-name');
+        const btnCustomizeDesign = document.getElementById('btn-customize-design');
+        const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
+
+        // --- Variabel untuk menyimpan data produk saat modal dibuka ---
+        let currentProductCard = null;
+
+        // --- Fungsi Modal ---
+        function openModal(card) {
+            currentProductCard = card; // <-- Simpan card saat ini
+
+            // 1. Isi data dari data-attributes
+            modalTitle.textContent = card.dataset.title;
+            modalImg.src = card.dataset.img;
+            modalDeskripsi.textContent = card.dataset.deskripsi;
+            modalHarga.textContent = card.dataset.harga;
+
+            // 2. Isi Thumbnails
+            modalThumbnails.innerHTML = `
+                <img src="${card.dataset.thumb1}" alt="thumbnail 1" class="active">
+                <img src="${card.dataset.thumb2}" alt="thumbnail 2">
+                <img src="${card.dataset.thumb3}" alt="thumbnail 3">
+            `;
+
+            // 3. Isi Spesifikasi
+            modalSpekTable.innerHTML = `
+                <tr><td>Lebar</td><td>${card.dataset.spekLebar}</td></tr>
+                <tr><td>Tinggi</td><td>${card.dataset.spekTinggi}</td></tr>
+                <tr><td>Panjang</td><td>${card.dataset.spekPanjang}</td></tr>
+                <tr><td>Bahan</td><td>${card.dataset.spekBahan}</td></tr>
+                <tr><td>Kapasitas</td><td>${card.dataset.spekKapasitas}</td></tr>
+            `;
+
+            // 4. Reset Modal State
+            qtyInput.value = 1;
+            radioTidak.checked = true;
+            uploadGroup.style.display = 'none';
+            customDesignFile.value = '';
+            fileName.textContent = 'Belum ada file dipilih';
+            
+            // 5. Tampilkan Modal
+            modal.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // --- Event Listener untuk Semua Card Produk ---
+        productCards.forEach(card => {
+            const cartButton = card.querySelector('.btn-keranjang');
+
+            // 1. Event Listener Tombol Keranjang (Quick Add)
+            cartButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // Hentikan event agar modal tidak terbuka
                 
-                // Store current product when modal opens
-                const openModalOriginal = window.openModal;
-                window.openModal = function(card) {
-                    currentProduct = {
-                        product_name: card.dataset.title,
-                        price: card.dataset.price || card.dataset.harga.replace(/[^0-9]/g, ''),
-                        material: card.dataset.material || card.dataset.spekBahan || 'Standard',
-                        size: card.dataset.size || (card.dataset.spekLebar + 'x' + card.dataset.spekTinggi + 'x' + card.dataset.spekPanjang) || 'Standard',
-                        product_image: card.dataset.img
-                    };
-                    if (openModalOriginal) openModalOriginal(card);
-                };
+                // Ambil data produk
+                const productName = card.dataset.title;
+                const price = card.dataset.price || card.dataset.harga.replace(/[^0-9]/g, '');
+                const material = card.dataset.material || card.dataset.spekBahan || 'Standard';
+                const size = card.dataset.size || (card.dataset.spekLebar + 'x' + card.dataset.spekTinggi + 'x' + card.dataset.spekPanjang) || 'Standard';
+                const productImage = card.dataset.img;
                 
-                modalAddToCartBtn.addEventListener('click', function() {
-                    if (currentProduct) {
-                        const quantity = parseInt(document.getElementById('modal-qty').value) || 1;
-                        const customDesign = document.querySelector('input[name="custom_design"]:checked')?.value;
-                        
-                        addToCart({
-                            product_name: currentProduct.product_name,
-                            material: currentProduct.material,
-                            size: currentProduct.size,
-                            design: customDesign === 'ya' ? 'Custom' : 'Standard',
-                            quantity: quantity,
-                            unit_price: parseFloat(currentProduct.price),
-                            product_image: currentProduct.product_image
-                        });
-                        
-                        // Close modal after adding
-                        setTimeout(() => {
-                            const closeBtn = document.getElementById('modal-close-btn');
-                            if (closeBtn) closeBtn.click();
-                        }, 500);
-                    }
-                });
+                // Panggil fungsi addToCart (JSON)
+                addToCart({
+                    product_name: productName,
+                    material: material,
+                    size: size,
+                    design: 'Standard', // Quick add selalu standard
+                    quantity: 1,
+                    unit_price: parseFloat(price),
+                    product_image: productImage,
+                    has_custom_design: '0'
+                }, e.currentTarget); // Kirim elemen tombol untuk loading state
+            });
+
+            // 2. Event Listener Card (untuk buka Modal)
+            card.addEventListener('click', () => {
+                openModal(card);
+            });
+        });
+
+        // --- Event Listener Modal Lainnya ---
+        closeModalBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', closeModal);
+
+        modalThumbnails.addEventListener('click', function(e) {
+            if (e.target.tagName === 'IMG') {
+                modalThumbnails.querySelectorAll('img').forEach(img => img.classList.remove('active'));
+                e.target.classList.add('active');
+                modalImg.src = e.target.src;
             }
         });
-    </script>
-    </body>
-</html>
+
+        // Logika Kuantitas
+        qtyPlus.addEventListener('click', () => { qtyInput.value = parseInt(qtyInput.value) + 1; });
+        qtyMinus.addEventListener('click', () => {
+            let currentVal = parseInt(qtyInput.value);
+            if (currentVal > 1) qtyInput.value = currentVal - 1;
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        // CUSTOM DESIGN TOGGLE & FILE UPLOAD
+        // ═══════════════════════════════════════════════════════════
+        radioYa.addEventListener('change', function() {
+            if (this.checked) {
+                uploadGroup.style.display = 'block';
+            }
+        });
+
+        radioTidak.addEventListener('change', function() {
+            if (this.checked) {
+                uploadGroup.style.display = 'none';
+                customDesignFile.value = '';
+                fileName.textContent = 'Belum ada file dipilih';
+            }
+        });
+
+        btnUpload.addEventListener('click', function() {
+            customDesignFile.click();
+        });
+
+        customDesignFile.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileName.textContent = this.files[0].name;
+            } else {
+                fileName.textContent = 'Belum ada file dipilih';
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        // CUSTOMIZE DESIGN BUTTON
+        // ═══════════════════════════════════════════════════════════
+        btnCustomizeDesign.addEventListener('click', function() {
+            window.location.href = '{{ route("edit.design") }}';
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        // ADD TO CART DARI MODAL (Menggunakan FormData)
+        // ═══════════════════════════════════════════════════════════
+        modalAddToCartBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (!currentProductCard) {
+                console.error('currentProductCard is not set!');
+                return;
+            }
+            
+            // Ambil data produk dari card yang disimpan
+            const productName = currentProductCard.dataset.title;
+            const price = currentProductCard.dataset.price || currentProductCard.dataset.harga.replace(/[^0-9]/g, '');
+            const material = currentProductCard.dataset.material || currentProductCard.dataset.spekBahan || 'Standard';
+            const size = currentProductCard.dataset.size || (currentProductCard.dataset.spekLebar + 'x' + currentProductCard.dataset.spekTinggi + 'x' + currentProductCard.dataset.spekPanjang) || 'Standard';
+            const productImage = currentProductCard.dataset.img;
+            
+            // Ambil data dari modal
+            const quantity = parseInt(qtyInput.value);
+            const hasCustomDesign = radioYa.checked;
+            const customFile = customDesignFile.files[0];
+
+            // Validasi: Jika pilih "Ya" tapi file kosong
+            if (hasCustomDesign && !customFile) {
+                alert('Silakan upload file desain Anda terlebih dahulu.');
+                return;
+            }
+
+            // Buat FormData untuk kirim data + file
+            const formData = new FormData();
+            formData.append('product_name', productName);
+            formData.append('material', material);
+            formData.append('size', size);
+            formData.append('design', hasCustomDesign ? 'Custom' : 'Standard');
+            formData.append('quantity', quantity);
+            formData.append('unit_price', parseFloat(price));
+            formData.append('product_image', productImage);
+            formData.append('has_custom_design', hasCustomDesign ? '1' : '0');
+            
+            if (hasCustomDesign && customFile) {
+                formData.append('custom_design_file', customFile);
+            }
+
+            // Panggil fungsi addToCartWithFile (FormData)
+            addToCartWithFile(formData, this); // 'this' adalah tombol 'modalAddToCartBtn'
+        });
+
+    }); // Akhir dari DOMContentLoaded
+</script>

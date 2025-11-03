@@ -18,13 +18,16 @@ class CartItem extends Model
         'quantity',
         'unit_price',
         'subtotal',
-        'product_image'
+        'product_image',
+        'custom_design_file',
+        'has_custom_design'
     ];
 
     protected $casts = [
         'quantity' => 'integer',
         'unit_price' => 'decimal:2',
         'subtotal' => 'decimal:2',
+        'has_custom_design' => 'boolean',
     ];
 
     /**

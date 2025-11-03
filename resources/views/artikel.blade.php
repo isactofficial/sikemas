@@ -66,7 +66,7 @@
 		.skm-card-body { padding: 0; display: flex; flex-direction: column; gap: 10px; }
 		.skm-meta { color: #78929C; font-size: 12px; margin-top: 10px; }
 			.skm-card h3 { font-size: 18px; color: var(--skm-blue); margin: 2px 0 0; line-height: 1.35; font-weight: 800; }
-			.skm-excerpt { color: var(--skm-gray); font-size: 14px; line-height: 1.55; margin: 0; }
+			.skm-deskripsi { color: var(--skm-gray); font-size: 14px; line-height: 1.55; margin: 0; }
 		/* CTA with arrow, no bullet */
 		.skm-more { margin-top: 6px; color: var(--skm-accent); font-weight: 800; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
 		.skm-more::before { content: none; }
@@ -218,7 +218,7 @@
 						<div class="skm-thumb"><img src="${a.img}" alt="${a.title}"></div>
 						<div class="skm-meta"><span>${formatDateID(a.ts)}</span></div>
 						<h3>${a.title}</h3>
-						<p class="skm-excerpt">${a.excerpt}</p>
+						<p class="skm-deskripsi">${a.deskripsi}</p>
 						<a class="skm-more" href="${DETAIL_BASE}/${a.slug}" aria-label="Baca selengkapnya ${a.title}">Baca Selengkapnya</a>
 					</div>
 				</article>

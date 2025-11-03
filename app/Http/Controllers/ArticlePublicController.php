@@ -17,7 +17,7 @@ class ArticlePublicController extends Controller
         $query = Article::published()
             ->orderByDesc('published_at')
             ->orderByDesc('created_at')
-            ->select(['id','title','slug','thumbnail','excerpt','views','published_at','created_at']);
+            ->select(['id','title','slug','thumbnail','deskripsi','views','published_at','created_at']);
 
         if ($hasCategoryTables) {
             $query->with('categories');
@@ -36,7 +36,7 @@ class ArticlePublicController extends Controller
                 'ts'    => optional($a->created_at)->getTimestampMs(),
                 'pop'   => (int) $a->views,
                 'img'   => $a->thumbnail_url,
-                'excerpt'=> $a->short_excerpt,
+                'deskripsi'=> $a->short_deskripsi,
                 // Front-end filter expects an array of category names under key 'cat'
                 'cat'   => $hasCategoryTables && isset($a->categories)
                     ? $a->categories->pluck('name')->values()->all()

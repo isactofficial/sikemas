@@ -85,48 +85,40 @@
         .skm-badge.is-published { background: #20C8B5; color: #fff; }
         .skm-badge.is-draft { background: #FFA726; color: #fff; }
 
-        /* === BLOK CSS YANG DIUBAH === */
         .status-badge {
             padding: 4px 10px;
-            /* Diubah dari pil (9999px) menjadi kotak bulat (6px) */
             border-radius: 6px;
             font-weight: 700;
             font-size: 12px;
             text-transform: capitalize;
-            /* Ditambahkan border 1px solid */
             border: 1px solid;
         }
 
-        /* Hijau: Paid, Arrived (sesuai gambar) */
         .status-badge.paid,
         .status-badge.arrived {
-            background-color: #D4EDDA; /* Menggunakan warna dari alert sukses */
+            background-color: #D4EDDA;
             color: #155724;
             border-color: #C3E6CB;
         }
 
-        /* Kuning: Pending, In Delivery (sesuai gambar) */
         .status-badge.pending,
         .status-badge.in-delivery {
-            background-color: #FEF3C7; /* Warna asli sudah cocok */
+            background-color: #FEF3C7;
             color: #92400E;
-            border-color: #FDE68A; /* Border kuning/emas */
+            border-color: #FDE68A;
         }
 
-        /* Merah: Processed (sesuai gambar) */
         .status-badge.processed {
-            background-color: #FEE2E2; /* Warna .cancelled asli, karena cocok dgn gambar */
+            background-color: #FEE2E2;
             color: #991B1B;
-            border-color: #FDD2D2; /* Border merah muda */
+            border-color: #FDD2D2;
         }
 
-        /* Merah: Cancelled (disamakan dengan processed, sesuai gambar) */
         .status-badge.cancelled {
             background-color: #FEE2E2;
             color: #991B1B;
             border-color: #FDD2D2;
         }
-        /* === AKHIR BLOK CSS YANG DIUBAH === */
 
         .skm-action-btns { display: flex; gap: 8px; }
         .skm-icon-btn {
@@ -374,30 +366,34 @@
                                 <td data-label="No Invoice">{{ $order->invoice_number }}</td>
                                 <td data-label="Pemesan">{{ $order->user->name ?? 'User Dihapus' }}</td>
                                 <td data-label="Harga Akhir">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+
                                 <td data-label="Pembayaran">
-                                    @if($order->status == 'Selesai')
+                                    @if($order->payment_status == 'Paid')
                                         <span class="status-badge paid">Paid</span>
-                                    @elseif($order->status == 'Dibatalkan')
+                                    @elseif($order->payment_status == 'Unpaid')
+                                        <span class="status-badge pending">Unpaid</span>
+                                    @elseif($order->payment_status == 'Cancelled')
                                         <span class="status-badge cancelled">Cancelled</span>
                                     @else
-                                        <span class="status-badge pending">Pending</span>
+                                        {{-- Fallback jika ada status lain --}}
+                                        <span class="status-badge pending">{{ $order->payment_status }}</span>
                                     @endif
                                 </td>
+
                                 <td data-label="Status Barang">
-                                    @if($order->status == 'Selesai')
+                                    @if($order->shipping_status == 'Arrived')
                                         <span class="status-badge arrived">Arrived</span>
-                                    @elseif($order->status == 'Diproses')
-                                        <span class="status-badge processed">Processed</span>
-                                    @elseif($order->status == 'Dikirim')
-                                        <span class="status-badge in-delivery">In Delivery</span>
-                                    @elseif($order->status == 'Dibatalkan')
-                                        <span class="status-badge cancelled">Cancelled</span>
-                                    @elseif($order->status == 'Pending')
+                                    @elseif($order->shipping_status == 'Shipped')
+                                        <span class="status-badge in-delivery">Shipped</span>
+                                    @elseif($order->shipping_status == 'Pending')
                                         <span class="status-badge pending">Pending</span>
+                                    @elseif($order->shipping_status == 'Cancelled')
+                                        <span class="status-badge cancelled">Cancelled</span>
                                     @else
-                                        <span class="status-badge pending">{{ $order->status }}</span>
+                                        <span class="status-badge pending">{{ $order->shipping_status }}</span>
                                     @endif
                                 </td>
+
                                 <td>
                                     <div class="skm-action-btns">
                                         <a href="{{ route('admin.transactions.show', $order->id) }}" class="skm-icon-btn btn-view" title="View Details">

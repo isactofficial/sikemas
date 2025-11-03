@@ -14,6 +14,8 @@ class Order extends Model
         'order_date',
         'total_amount',
         'status',
+        'payment_status',    // <-- TAMBAHKAN INI
+        'shipping_status',
         'payment_method',
         'shipping_address_id',
         'notes'
@@ -47,7 +49,7 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-    
+
     /**
      * Get status badge HTML
      */
@@ -58,10 +60,10 @@ class Order extends Model
             'Diproses' => '<span class="order-status status-diproses">⏳ Diproses</span>',
             'Dibatalkan' => '<span class="order-status status-dibatalkan">✕ Dibatalkan</span>',
         ];
-        
+
         return $badges[$this->status] ?? $this->status;
     }
-    
+
     /**
      * Get formatted total amount
      */
@@ -69,4 +71,6 @@ class Order extends Model
     {
         return 'Rp ' . number_format($this->total_amount, 0, ',', '.');
     }
+
+
 }

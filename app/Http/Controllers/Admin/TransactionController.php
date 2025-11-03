@@ -11,69 +11,67 @@ class TransactionController extends Controller
 {
     /**
      * Menampilkan daftar semua transaksi (pesanan).
-     *
-     * CATATAN: Pastikan Anda telah mendefinisikan relasi 'user' di Model Order Anda:
-     * public function user() {
-     * return $this->belongsTo(User::class);
-     * }
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data order dengan relasi user, urutkan terbaru, dan paginasi 8 per halaman
-        $orders = Order::with('user')
-                       ->orderBy('created_at', 'desc')
-                       ->paginate(8);
+        // Ambil data order dengan relasi user
+        $query = Order::with('user');
 
-        return view('admin.transactions.transactions', compact('orders'));
-    }
+        // Logika sorting dari request
+        $sort = $request->get('sort');
+        if ($sort == 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            // Default atau 'newest'
+            $query->orderBy('created_at', 'desc');
+        }
 
-    /**
-     * Menampilkan detail satu transaksi.
-     *
-     * CATATAN: Pastikan Anda telah mendefinisikan relasi 'orderItems' di Model Order Anda:
-     * public function orderItems() {
-     * return $this->hasMany(OrderItem::class); // Pastikan Model OrderItem ada
-     * }
-     */
-    public function show($id)
-    {
-        $order = Order::with(['user', 'orderItems'])->findOrFail($id);
-        return view('admin.transactions.show', compact('order'));
+        $orders = $query->paginate(8);
+
+        // Tambahkan query string ke link paginasi
+        $orders->appends($request->only('sort'));
+
+        return view('admin.transactions.transactions', compact('orders')); // Asumsi nama view: admin.transactions.transactions
     }
 
     /**
      * Menampilkan form untuk mengedit transaksi (misal: status).
+     *
+     * === INI BAGIAN YANG DIPERBARUI ===
      */
     public function edit($id)
     {
-        $order = Order::findOrFail($id);
-        // Status yang diperbolehkan dari schema SQL Anda
-        $statuses = ['Diproses', 'Selesai', 'Dibatalkan'];
+        // 1. Ambil order DENGAN relasi 'user' DAN 'shippingAddress'
+        //    Kita butuh 'shippingAddress' untuk kartu profil pengguna
+        $order = Order::with('user', 'shippingAddress', 'items')->findOrFail($id);
 
+        // 2. Sesuaikan daftar status
+        $statuses = ['Pending', 'Diproses', 'Dikirim', 'Selesai', 'Dibatalkan'];
+
+        // 3. Kirim ke view 'admin.transactions.edit'
         return view('admin.transactions.edit', compact('order', 'statuses'));
     }
 
     /**
      * Memperbarui data transaksi di database.
      */
+    // DI TransactionController.php
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:Diproses,Selesai,Dibatalkan',
-            // Anda bisa tambahkan validasi untuk 'payment_status' dan 'shipping_status'
-            // jika Anda memodifikasi database di kemudian hari.
-        ]);
+    // Validasi untuk 2 status dari dropdown
+        $validated = $request->validate([
+            'payment_status' => 'required|in:Paid,Unpaid,Cancelled',
+            'shipping_status' => 'required|in:Pending,Shipped,Arrived,Cancelled',
+    ]);
 
         $order = Order::findOrFail($id);
-        $order->status = $request->input('status');
 
-        // Logika mapping status tunggal ke dua status (Payment & Shipping)
-        // Ini adalah asumsi untuk mengisi data.
-        // Jika status 'Selesai', anggap 'payment_status' = 'Paid' dan 'shipping_status' = 'Arrived'
-        // Jika Anda menambah kolom ini di DB, update di sini.
-
+    // Simpan kedua status
+        $order->payment_status = $validated['payment_status'];
+        $order->shipping_status = $validated['shipping_status'];
         $order->save();
 
+    // Redirect kembali ke index
         return redirect()->route('admin.transactions.index')->with('success', 'Status transaksi berhasil diperbarui.');
     }
 
@@ -84,9 +82,6 @@ class TransactionController extends Controller
     {
         $order = Order::findOrFail($id);
         $order->delete();
-
-        // Anda mungkin juga ingin menghapus order_items terkait jika tidak di-set ON DELETE CASCADE
-        // OrderItem::where('order_id', $id)->delete();
 
         return redirect()->route('admin.transactions.index')->with('success', 'Transaksi berhasil dihapus.');
     }

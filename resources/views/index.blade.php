@@ -68,11 +68,47 @@
             color: #074159;
             font-weight: 500;
             font-size: 1rem;
-            transition: color 0.3s ease;
+            position: relative;
+            transition: color 0.25s ease, transform 0.2s ease, text-shadow 0.2s ease;
         }
 
-        .navbar-menu li a:hover {
+        /* underline accent constructed via pseudo-element to avoid layout shift */
+        .navbar-menu li a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: #ff5722;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            transition: width 0.2s ease;
+        }
+
+        .navbar-menu li a:hover,
+        .navbar-menu li a:focus-visible {
             color: #053244;
+            transform: scale(1.06);
+            text-shadow: 0 0 0 rgba(0,0,0,0); /* prevent subpixel jitter */
+        }
+
+        .navbar-menu li a:hover::after,
+        .navbar-menu li a:focus-visible::after {
+            width: 60%;
+        }
+
+        /* touch-friendly hover class for mobile */
+        .navbar-menu li a.touch-hover {
+            color: #053244;
+            transform: scale(1.06);
+        }
+        .navbar-menu li a.touch-hover::after { width: 60%; }
+
+        /* tap feedback on touch devices */
+        .navbar-menu li a:active {
+            transform: scale(0.98);
+            color: #ff5722;
         }
 
         .navbar-profile {
@@ -1141,6 +1177,12 @@
                 border-bottom: 1px solid #f0f0f0;
             }
 
+            /* reduce scaling on narrow screens to avoid layout jumps */
+            .navbar-menu li a:hover,
+            .navbar-menu li a:focus-visible { transform: scale(1.02); }
+            .navbar-menu li a::after { bottom: 0; }
+            .navbar-menu li a.touch-hover { transform: scale(1.02); }
+
             .navbar-profile {
                 justify-content: center;
                 width: 100%;
@@ -1945,6 +1987,24 @@
                         requestButton.textContent = 'Konsultasi Gratis Sekarang';
                         requestButton.classList.remove('disabled');
                     }
+                });
+            }
+
+            // Enable touch-mimicked hover on mobile for navbar menu links
+            const navLinks = document.querySelectorAll('.navbar-menu a');
+            if (navLinks && navLinks.length) {
+                const addTouch = (e) => {
+                    e.currentTarget.classList.add('touch-hover');
+                };
+                const removeTouch = (e) => {
+                    e.currentTarget.classList.remove('touch-hover');
+                };
+                navLinks.forEach(a => {
+                    a.addEventListener('touchstart', addTouch, { passive: true });
+                    a.addEventListener('touchend', removeTouch, { passive: true });
+                    a.addEventListener('touchcancel', removeTouch, { passive: true });
+                    a.addEventListener('blur', removeTouch);
+                    a.addEventListener('click', removeTouch);
                 });
             }
         });

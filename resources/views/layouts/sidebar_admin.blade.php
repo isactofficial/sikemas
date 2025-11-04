@@ -71,10 +71,16 @@
 
 	/* Nav */
 	.skm-sidebar__nav { display: grid; gap: 14px; }
-	.skm-nav__link { display: block; color: #ff5722; text-decoration: none; font-weight: 700; font-size: 12.5px; padding: 12px 14px; border-radius: 18px; background: #ffffff; box-shadow: 0 6px 22px rgba(7,65,89,0.08); transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, color .15s ease; text-align: center; }
-	.skm-nav__link:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(7,65,89,0.12); background-color: #074159; color: #ffffff; }
+	.skm-nav__link { display: block; color: #ff5722; text-decoration: none; font-weight: 700; font-size: 12.5px; padding: 12px 14px; border-radius: 18px; background: #ffffff; box-shadow: 0 6px 22px rgba(7,65,89,0.08); transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, color .15s ease, letter-spacing .15s ease; text-align: center; position: relative; }
+	/* subtle underline accent */
+	.skm-nav__link::after { content: ""; position: absolute; left: 50%; bottom: 8px; width: 0; height: 2px; background: #FFA46E; transform: translateX(-50%); border-radius: 2px; transition: width .15s ease; }
+	.skm-nav__link:hover { transform: translateY(-1px) scale(1.02); box-shadow: 0 10px 28px rgba(7,65,89,0.12); background-color: #074159; color: #ffffff; letter-spacing: .2px; }
+	.skm-nav__link:hover::after { width: 44%; }
+	/* Touch-mimicked hover state */
+	.skm-nav__link.touch-hover { transform: translateY(-1px) scale(1.02); box-shadow: 0 10px 28px rgba(7,65,89,0.12); background-color: #074159; color: #ffffff; letter-spacing: .2px; }
+	.skm-nav__link.touch-hover::after { width: 44%; }
 	.skm-nav__link:focus-visible { outline: 2px solid #074159; outline-offset: 2px; background-color: #074159; color: #ffffff; }
-	.skm-nav__link:active { transform: translateY(0); background-color: #053244; color: #ffffff; }
+	.skm-nav__link:active { transform: translateY(0) scale(0.99); background-color: #053244; color: #ffffff; }
 	.skm-nav__link.is-active { background: #074159; color: #ffffff; box-shadow: 0 10px 28px rgba(7,65,89,0.18); }
 
 	/* Footer */
@@ -121,6 +127,9 @@
 
 		/* Smaller title size on narrow widths and ensure truncation */
 		.skm-brand__title { font-size: 20px; }
+		/* tone down hover scale on mobile */
+		.skm-nav__link:hover { transform: translateY(-1px) scale(1.005); }
+		.skm-nav__link.touch-hover { transform: translateY(-1px) scale(1.005); }
 	}
 </style>
 
@@ -129,7 +138,7 @@
 		const sidebar = document.getElementById('skmSidebar');
 	const toggle = document.querySelector('.skm-sidebar-toggle');
 		const overlay = document.querySelector('.skm-sidebar__overlay');
-		const links = sidebar ? sidebar.querySelectorAll('.skm-sidebar__nav a') : [];
+			const links = sidebar ? sidebar.querySelectorAll('.skm-sidebar__nav a') : [];
 
 		if (toggle && sidebar) {
 			toggle.addEventListener('click', () => {
@@ -149,7 +158,20 @@
 			});
 		}
 
-		links.forEach(a => a.addEventListener('click', () => {
+			// Touch-mimicked hover for sidebar links on mobile
+			if (links && links.length) {
+				const addTouch = (e) => e.currentTarget.classList.add('touch-hover');
+				const removeTouch = (e) => e.currentTarget.classList.remove('touch-hover');
+				links.forEach(a => {
+					a.addEventListener('touchstart', addTouch, { passive: true });
+					a.addEventListener('touchend', removeTouch, { passive: true });
+					a.addEventListener('touchcancel', removeTouch, { passive: true });
+					a.addEventListener('blur', removeTouch);
+					a.addEventListener('click', removeTouch);
+				});
+			}
+
+			links.forEach(a => a.addEventListener('click', () => {
 			sidebar.classList.remove('is-open');
 			if (toggle) {
 				toggle.classList.remove('is-open');

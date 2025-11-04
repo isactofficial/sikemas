@@ -86,7 +86,11 @@ class AuthController extends Controller
                 return redirect()->route('survey');
             }
 
-            return redirect('/');
+            // Redirect berdasarkan peran
+            if ($this->isAdmin(Auth::user())) {
+                return redirect()->route('admin.index');
+            }
+            return redirect()->route('home');
         }
 
         // Pesan error jika login gagal
@@ -105,5 +109,36 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         
         return redirect('/');
+    }
+
+    /**
+     * Determine if the authenticated user should be treated as admin.
+     * Priority:
+     * 1) If user has attribute 'role' and equals 'admin'
+     * 2) If user has boolean attribute 'is_admin' and it's truthy
+     * 3) If .env ADMIN_EMAILS contains the user's email (comma-separated)
+     */
+    private function isAdmin(User $user): bool
+    {
+        try {
+            // Case 1: role column
+            if (isset($user->role) && strtolower((string) $user->role) === 'admin') {
+                return true;
+            }
+            // Case 2: is_admin boolean
+            if (isset($user->is_admin) && (bool) $user->is_admin) {
+                return true;
+            }
+        } catch (\Throwable $e) {
+            // ignore dynamic attribute errors
+        }
+
+        // Case 3: env-based fallback
+        $list = env('ADMIN_EMAILS');
+        if ($list) {
+            $emails = array_filter(array_map('trim', explode(',', $list)));
+            return in_array(strtolower($user->email), array_map('strtolower', $emails), true);
+        }
+        return false;
     }
 }

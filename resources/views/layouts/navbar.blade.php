@@ -159,12 +159,34 @@
             font-weight: 500;          /* Samakan ketebalan font dengan index */
             font-size: 1rem;           /* Samakan ukuran teks dengan index */
             letter-spacing: 0.2px;
-            transition: color 0.2s ease;
+            position: relative;
+            transition: color 0.25s ease, transform 0.18s ease, text-shadow 0.18s ease;
+        }
+        /* underline accent without layout shift */
+        .skm-navbar .skm-links a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: #ff5722;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            transition: width 0.18s ease;
         }
         .skm-navbar .skm-links a:hover, 
-        .skm-navbar .skm-links a.active { 
+        .skm-navbar .skm-links a:focus-visible, 
+        .skm-navbar .skm-links a.active, 
+        .skm-navbar .skm-links a.touch-hover { 
             color: var(--skm-link-hover); 
+            transform: scale(1.06);
         }
+        .skm-navbar .skm-links a:hover::after,
+        .skm-navbar .skm-links a:focus-visible::after,
+        .skm-navbar .skm-links a.active::after,
+        .skm-navbar .skm-links a.touch-hover::after { width: 60%; }
+        .skm-navbar .skm-links a:active { transform: scale(0.98); color: #ff5722; }
 
         /* Right Icons Container */
         .skm-right-icons {
@@ -381,6 +403,11 @@
                 text-align: center; 
                 border-bottom: 1px solid #E6EEF0; 
             }
+            /* tone down transform on mobile to reduce layout jump */
+            .skm-navbar .skm-links a:hover,
+            .skm-navbar .skm-links a:focus-visible,
+            .skm-navbar .skm-links a.touch-hover { transform: scale(1.02); }
+            .skm-navbar .skm-links a::after { bottom: 0; }
             .skm-navbar .skm-links li:last-child a { border-bottom: 0; }
             
             /* Hide desktop cart and user dropdown */
@@ -502,6 +529,20 @@
             
             // Make updateCartBadge available globally
             window.updateCartBadge = updateCartBadge;
+
+            // Touch-mimicked hover for menu links on mobile
+            const menuLinks = document.querySelectorAll('.skm-navbar .skm-links a');
+            if (menuLinks && menuLinks.length) {
+                const addTouch = (e) => e.currentTarget.classList.add('touch-hover');
+                const removeTouch = (e) => e.currentTarget.classList.remove('touch-hover');
+                menuLinks.forEach(a => {
+                    a.addEventListener('touchstart', addTouch, { passive: true });
+                    a.addEventListener('touchend', removeTouch, { passive: true });
+                    a.addEventListener('touchcancel', removeTouch, { passive: true });
+                    a.addEventListener('blur', removeTouch);
+                    a.addEventListener('click', removeTouch);
+                });
+            }
         });
     </script>
 </nav>

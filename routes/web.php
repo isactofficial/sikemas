@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\ConsultationController;
 
 // ============================================
 // HOME ROUTE
@@ -40,6 +41,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cart/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
     Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+
+    Route::post('/consultation/request', [ConsultationController::class, 'store'])->name('consultation.request');
 
     // Checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');

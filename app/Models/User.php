@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
+// BARU: Impor model Consultation
+use App\Models\Consultation;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -69,68 +72,52 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    // ===========================================
+    // KODE BARU DIMULAI DI SINI
+    // ===========================================
+
     /**
-     * Get user's primary address
+     * Relationship: User has many consultations
      */
-    public function primaryAddress()
+    public function consultations()
     {
-        return $this->hasOne(UserAddress::class)->where('is_primary', true);
+        return $this->hasMany(Consultation::class);
     }
 
     /**
-     * Get formatted birth date
+     * Helper function untuk mengecek konsultasi aktif (pending atau scheduled)
      */
-    public function getFormattedBirthDateAttribute()
+    public function hasActiveConsultation(): bool
     {
-        if (!$this->birth_date) {
-            return '-';
-        }
-        return $this->birth_date->format('d F Y');
+        // Cek jika ada konsultasi dengan status 'pending' ATAU 'scheduled'
+        return $this->consultations()
+                    ->whereIn('status', ['pending', 'scheduled'])
+                    ->exists();
     }
 
-    /**
-     * Get profile photo URL with cache busting
-     * Updated to handle both local files and Google URLs
-     */
-    public function getProfilePhotoUrlAttribute()
-    {
-        if ($this->profile_photo) {
-            // Check if it's a URL (from Google)
-            if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
-                return $this->profile_photo;
-            }
-            
-            // Check if file exists in storage (local upload)
-            $path = 'public/profiles/' . $this->profile_photo;
-            
-            if (Storage::exists($path)) {
-                // Add timestamp to prevent caching issues
-                $timestamp = Storage::lastModified($path);
-                return asset('storage/profiles/' . $this->profile_photo . '?v=' . $timestamp);
-            }
-        }
-        
-        // Return default avatar with user initials
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=200&background=074159&color=fff&bold=true';
-    }
+    // ===========================================
+    // KODE BARU BERAKHIR DI SINI
+    // ===========================================
 
     /**
-     * Get profile photo path (for display without cache busting)
+     * Get user profile photo path
      */
     public function getProfilePhotoPathAttribute()
     {
-        if ($this->profile_photo) {
-            // Return URL as-is if it's from Google
-            if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
-                return $this->profile_photo;
-            }
-            
-            // Return local path if file exists
-            if (Storage::exists('public/profiles/' . $this->profile_photo)) {
-                return asset('storage/profiles/' . $this->profile_photo);
-            }
+        if (!$this->profile_photo) {
+            return null;
         }
-        
+
+        // Check if it's a URL (from Google)
+        if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
+            return $this->profile_photo;
+        }
+
+        // Check if local file exists and return local path if file exists
+        if (Storage::exists('public/profiles/' . $this->profile_photo)) {
+            return asset('storage/profiles/' . $this->profile_photo);
+        }
+
         return null;
     }
 
@@ -142,12 +129,12 @@ class User extends Authenticatable
         if (!$this->profile_photo) {
             return false;
         }
-        
+
         // Check if it's a URL (from Google)
         if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
             return true;
         }
-        
+
         // Check if local file exists
         return Storage::exists('public/profiles/' . $this->profile_photo);
     }
@@ -160,7 +147,7 @@ class User extends Authenticatable
         if (!$this->gender) {
             return '-';
         }
-        
+
         return $this->gender === 'Male' ? 'Laki-laki' : 'Perempuan';
     }
 
@@ -177,8 +164,8 @@ class User extends Authenticatable
      */
     public function hasCompletedProfile()
     {
-        return !empty($this->phone) && 
-               !empty($this->gender) && 
+        return !empty($this->phone) &&
+               !empty($this->gender) &&
                !empty($this->birth_date);
     }
 
@@ -187,6 +174,6 @@ class User extends Authenticatable
      */
     public function isGoogleUser()
     {
-        return !empty($this->google_id);
+        return !empty($this->google_id) && empty($this->password);
     }
 }

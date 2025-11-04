@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIKEMAS - Protect Your Value</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -1063,6 +1064,38 @@
             box-shadow: 0 6px 14px rgba(255, 87, 34, 0.45);
         }
 
+        .skm-alert {
+            padding: 15px;
+            margin: 20px 3rem; /* Sesuaikan margin */
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 16px;
+            position: relative;
+            z-index: 1001; /* Di atas navbar */
+            top: 80px; /* Di bawah navbar fixed */
+        }
+        .skm-alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .skm-alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        /* CSS untuk Tombol Disabled di Section BARU Anda (Rule #3) */
+        .free-design-button.disabled {
+            background-color: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .free-design-button.disabled:hover {
+            background-color: #ccc; /* Tetap sama saat di-hover */
+
+        }
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -1737,9 +1770,34 @@
             <p class="free-design-subtitle">konsultasi</p>
             <h2 class="free-design-title" id="free-design-title">DESAIN GRATIS</h2>
             <p class="free-design-description">Kami siap membuat ide desainmu menjadi nyata. Konsultasikan sekarang juga secara gratis!</p>
-            <a href="#" class="free-design-button">Konsultasi Gratis Sekarang</a>
+
+            @auth
+                {{-- Rule #3: Cek jika user punya konsultasi aktif --}}
+                {{-- Membutuhkan fungsi hasActiveConsultation() di model User.php Anda --}}
+                @if (Auth::user()->hasActiveConsultation())
+                    {{-- Tampilkan tombol nonaktif --}}
+                    <button class="free-design-button disabled" disabled
+                            title="Anda sudah memiliki permintaan konsultasi aktif. Satu pengguna hanya bisa melakukan 1 kali konsultasi sampai sesi konsultasi berakhir.">
+                        Menunggu Sesi Konsultasi
+                    </button>
+                @else
+                    {{-- Tombol aktif. Gunakan ID untuk JavaScript/AJAX --}}
+                    <button type="button" class="free-design-button" id="request-consultation-button" aria-label="Konsultasi Gratis Sekarang">
+                        Konsultasi Gratis Sekarang
+                    </button>
+                @endif
+            @endauth
+
+            @guest
+                {{-- Rule #1: User belum login. Tombol akan dihandle oleh JS untuk popup login --}}
+                <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button">
+                    Konsultasi Gratis Sekarang
+                </a>
+            @endguest
+
         </div>
     </section>
+
     <section class="skm-articles" aria-labelledby="articles-title">
         <div class="skm-a-wrap">
             <h2 id="articles-title">Artikel &amp; Berita</h2>
@@ -1827,6 +1885,68 @@
                     targetContent.classList.add('active');
                 });
             });
+
+            const loginButton = document.getElementById('login-prompt-button');
+            if (loginButton) {
+                loginButton.addEventListener('click', function (event) {
+                    // 1. Hentikan aksi default (pindah halaman)
+                    event.preventDefault();
+
+                    // 2. Tampilkan notifikasi popup (alert)
+                    alert('Anda harus login terlebih dahulu untuk melakukan konsultasi.');
+
+                    // 3. Arahkan ke halaman login
+                    window.location.href = this.href;
+                });
+            }
+
+            // =============================================
+            // KODE BARU UNTUK REQUEST KONSULTASI VIA POPUP (Rule #2, #3)
+            // =============================================
+            const requestButton = document.getElementById('request-consultation-button');
+            if (requestButton) {
+                requestButton.addEventListener('click', async function () {
+
+                    // Nonaktifkan visual tombol saat proses
+                    requestButton.disabled = true;
+                    requestButton.textContent = 'Memproses...';
+                    requestButton.classList.add('disabled');
+
+                    try {
+                        const response = await fetch('{{ route('consultation.request') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Pastikan Anda memiliki meta tag CSRF token di <head>
+                            },
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            // SUKSES (Rule #2: Notifikasi Popup sukses)
+                            alert(data.message);
+                            // Refresh halaman untuk menampilkan tombol disabled
+                            window.location.reload();
+                        } else {
+                            // ERROR (Rule #3: Notifikasi Popup error)
+                            alert('Gagal mengajukan konsultasi: ' + data.message);
+                            // Kembalikan tombol ke keadaan semula jika error selain status 409
+                            requestButton.disabled = false;
+                            requestButton.textContent = 'Konsultasi Gratis Sekarang';
+                            requestButton.classList.remove('disabled');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+
+                        // Kembalikan tombol ke keadaan semula
+                        requestButton.disabled = false;
+                        requestButton.textContent = 'Konsultasi Gratis Sekarang';
+                        requestButton.classList.remove('disabled');
+                    }
+                });
+            }
         });
     </script>
 </body>

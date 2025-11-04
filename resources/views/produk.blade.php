@@ -283,6 +283,29 @@
             margin-right: 8px;
         }
 
+        /* Tombol Lihat Semua Produk */
+        .btn-show-all {
+            background: var(--skm-accent);
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Besley', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+        }
+        .btn-show-all:hover {
+            background: #e64a19;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 87, 34, 0.4);
+        }
+        .btn-show-all:active {
+            transform: translateY(0);
+        }
+
         /* --- Responsive Grid --- */
         @media (max-width: 992px) {
             .grid-produk {
@@ -747,261 +770,46 @@
             </div>
 
             <div class="grid-produk">
-
-                <div class="card-produk" data-kategori="karton"
-                    data-title="Kotak Kemasan Khusus"
-                    data-img="{{ asset('assets/img/Product1.png') }}"
-                    data-deskripsi="Didesain untuk memenuhi kebutuhan spesifik produk Anda."
-                    data-harga="Rp 5.000 / pcs"
-                    data-price="5000"
-                    data-material="Karton B-Flute"
-                    data-size="20x10x30 cm"
-                    data-thumb1="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product2.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product3.png') }}"
-                    data-spek-lebar="20 cm"
-                    data-spek-tinggi="10 cm"
-                    data-spek-panjang="30 cm"
-                    data-spek-bahan="Karton B-Flute"
-                    data-spek-kapasitas="2 kg"
-                >
-                    <img src="{{ asset('assets/img/Product1.png') }}" alt="Kotak Kemasan Khusus">
-                    <div class="card-produk-content">
-                        <h3>Kotak Kemasan Khusus</h3>
-                        <p class="deskripsi">Didesain untuk memenuhi kebutuhan spesifik produk Anda.</p>
-                        <p class="harga">Rp 5.000 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
+                @if(isset($products) && $products->count())
+                    @foreach($products as $product)
+                        <div class="card-produk" data-kategori="{{ strtolower($product->category ?? 'lainnya') }}"
+                            data-title="{{ $product->name }}"
+                            data-img="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Article-image.png') }}"
+                            data-deskripsi="{{ $product->description ?? 'Produk berkualitas dari Sikemas' }}"
+                            data-harga="Rp {{ number_format($product->price ?? 0, 0, ',', '.') }}"
+                            data-price="{{ $product->price ?? 0 }}"
+                            data-material="{{ $product->category ?? 'Standard' }}"
+                            data-size="Standard"
+                            data-thumb1="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Article-image.png') }}"
+                            data-thumb2="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Article-image.png') }}"
+                            data-thumb3="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Article-image.png') }}"
+                            data-spek-lebar="Standard"
+                            data-spek-tinggi="Standard"
+                            data-spek-panjang="Standard"
+                            data-spek-bahan="{{ $product->category ?? 'Standard' }}"
+                            data-spek-kapasitas="Standard"
+                        >
+                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Article-image.png') }}" alt="{{ $product->name }}">
+                            <div class="card-produk-content">
+                                <h3>{{ strtoupper($product->name) }}</h3>
+                                <p class="deskripsi">{{ Str::limit($product->description ?? 'Produk berkualitas dari Sikemas', 80) }}</p>
+                                <p class="harga">Rp {{ number_format($product->price ?? 0, 0, ',', '.') }}</p>
+                                <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #6B8791;">
+                        Belum ada produk tersedia
                     </div>
-                </div>
+                @endif
+            </div>
 
-                <div class="card-produk" data-kategori="karton"
-                    data-title="Karton Bergelombang"
-                    data-img="{{ asset('assets/img/Product2.png') }}"
-                    data-deskripsi="Kekuatan dan ketahanan optimal untuk pengiriman yang aman."
-                    data-harga="Rp 8.000 / pcs"
-                    data-price="8000"
-                    data-material="Karton Bergelombang"
-                    data-size="25x20x35 cm"
-                    data-thumb1="{{ asset('assets/img/Product2.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product5.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product1.png') }}"
-                    data-spek-lebar="100 cm"
-                    data-spek-tinggi="1 mm"
-                    data-spek-panjang="100 cm"
-                    data-spek-bahan="Corrugated Sheet C-Flute"
-                    data-spek-kapasitas="N/A"
-                >
-                    <img src="{{ asset('assets/img/Product2.png') }}" alt="Karton Bergelombang">
-                    <div class="card-produk-content">
-                        <h3>Karton Bergelombang</h3>
-                        <p class="deskripsi">Kekuatan dan ketahanan optimal untuk pengiriman yang aman.</p>
-                        <p class="harga">Rp 8.000 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="karton"
-                    data-title="Kemasan Ramah Lingkungan"
-                    data-img="{{ asset('assets/img/Product3.png') }}"
-                    data-deskripsi="Solusi berkelanjutan yang terbuat dari bahan daur ulang."
-                    data-harga="Rp 12.000 / pcs"
-                    data-thumb1="{{ asset('assets/img/Product3.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product4.png') }}"
-                    data-spek-lebar="18 cm"
-                    data-spek-tinggi="12 cm"
-                    data-spek-panjang="25 cm"
-                    data-spek-bahan="Karton Daur Ulang"
-                    data-spek-kapasitas="3 kg"
-                >
-                    <img src="{{ asset('assets/img/Product3.png') }}" alt="Kemasan Ramah Lingkungan">
-                    <div class="card-produk-content">
-                        <h3>Kemasan Ramah Lingkungan</h3>
-                        <p class="deskripsi">Solusi berkelanjutan yang terbuat dari bahan daur ulang.</p>
-                        <p class="harga">Rp 12.000 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="karton"
-                    data-title="Display & Promosi"
-                    data-img="{{ asset('assets/img/Product4.png') }}"
-                    data-deskripsi="Buat kemasan yang menonjol di rak toko."
-                    data-harga="Rp 15.000 / pcs"
-                    data-thumb1="{{ asset('assets/img/Product4.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product3.png') }}"
-                    data-spek-lebar="30 cm"
-                    data-spek-tinggi="10 cm"
-                    data-spek-panjang="30 cm"
-                    data-spek-bahan="Partisi Karton Keras"
-                    data-spek-kapasitas="6 botol"
-                >
-                    <img src="{{ asset('assets/img/Product4.png') }}" alt="Display & Promosi">
-                    <div class="card-produk-content">
-                        <h3>Display & Promosi</h3>
-                        <p class="deskripsi">Buat kemasan yang menonjol di rak toko.</p>
-                        <p class="harga">Rp 15.000 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="karton"
-                    data-title="Kemasan Makanan"
-                    data-img="{{ asset('assets/img/Product5.png') }}"
-                    data-deskripsi="Aman dan kokoh untuk industri kuliner."
-                    data-harga="Rp 9.500 / pcs"
-                    data-price="8000"
-                    data-material="Food Grade Paper"
-                    data-size="15x15x5 cm"
-                    data-thumb1="{{ asset('assets/img/Product5.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product2.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product1.png') }}"
-                    data-spek-lebar="15 cm"
-                    data-spek-tinggi="5 cm"
-                    data-spek-panjang="20 cm"
-                    data-spek-bahan="Food Grade Paper"
-                    data-spek-kapasitas="1 porsi"
-                >
-                    <img src="{{ asset('assets/img/Product5.png') }}" alt="Kemasan Makanan">
-                    <div class="card-produk-content">
-                        <h3>Kemasan Makanan</h3>
-                        <p class="deskripsi">Aman dan kokoh untuk industri kuliner.</p>
-                        <p class="harga">Rp 9.500 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="karton"
-                    data-title="Kemasan Kosmetik"
-                    data-img="{{ asset('assets/img/Product6.png') }}"
-                    data-deskripsi="Elegan dan mewah untuk produk kecantikan."
-                    data-harga="Rp 18.000 / pcs"
-                    data-price="18000"
-                    data-material="Hard Cover Karton"
-                    data-size="8x5x3 cm"
-                    data-thumb1="{{ asset('assets/img/Product6.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product3.png') }}"
-                    data-spek-lebar="5 cm"
-                    data-spek-tinggi="15 cm"
-                    data-spek-panjang="5 cm"
-                    data-spek-bahan="Hard Cover Karton"
-                    data-spek-kapasitas="1 produk"
-                >
-                    <img src="{{ asset('assets/img/Product6.png') }}" alt="Kemasan Kosmetik">
-                    <div class="card-produk-content">
-                        <h3>Kemasan Kosmetik</h3>
-                        <p class="deskripsi">Elegan dan mewah untuk produk kecantikan.</p>
-                        <p class="harga">Rp 18.000 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="plastik"
-                    data-title="Botol Plastik PET"
-                    data-img="{{ asset('assets/img/Product1.png') }}"
-                    data-deskripsi="Kemasan plastik bening untuk minuman dan cairan."
-                    data-harga="Rp 2.000 / pcs"
-                    data-price="2000"
-                    data-material="Plastik PET"
-                    data-size="500 ml"
-                    data-thumb1="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product2.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product3.png') }}"
-                    data-spek-lebar="8 cm"
-                    data-spek-tinggi="15 cm"
-                    data-spek-panjang="8 cm"
-                    data-spek-bahan="Plastik PET"
-                    data-spek-kapasitas="500 ml"
-                >
-                    <img src="{{ asset('assets/img/Product1.png') }}" alt="Kemasan Plastik">
-                    <div class="card-produk-content">
-                        <h3>Botol Plastik PET</h3>
-                        <p class="deskripsi">Kemasan plastik bening untuk minuman dan cairan.</p>
-                        <p class="harga">Rp 2.000 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="kertas"
-                    data-title="Paper Bag Kertas"
-                    data-img="{{ asset('assets/img/Product1.png') }}"
-                    data-deskripsi="Tas kertas ramah lingkungan untuk belanja."
-                    data-harga="Rp 3.500 / pcs"
-                    data-price="3500"
-                    data-material="Kertas Kraft"
-                    data-size="25x30x10 cm"
-                    data-thumb1="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product2.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product3.png') }}"
-                    data-spek-lebar="25 cm"
-                    data-spek-tinggi="30 cm"
-                    data-spek-panjang="10 cm"
-                    data-spek-bahan="Kertas Kraft"
-                    data-spek-kapasitas="2 kg"
-                >
-                    <img src="{{ asset('assets/img/Product1.png') }}" alt="Kemasan Kertas">
-                    <div class="card-produk-content">
-                        <h3>Paper Bag Kertas</h3>
-                        <p class="deskripsi">Tas kertas ramah lingkungan untuk belanja.</p>
-                        <p class="harga">Rp 3.500 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="aluminium"
-                    data-title="Kaleng Aluminium"
-                    data-img="{{ asset('assets/img/Product1.png') }}"
-                    data-deskripsi="Kemasan kaleng untuk minuman bersoda."
-                    data-harga="Rp 4.000 / pcs"
-                    data-price="4000"
-                    data-material="Aluminium"
-                    data-size="330 ml"
-                    data-thumb1="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product2.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product3.png') }}"
-                    data-spek-lebar="6 cm"
-                    data-spek-tinggi="12 cm"
-                    data-spek-panjang="6 cm"
-                    data-spek-bahan="Aluminium"
-                    data-spek-kapasitas="330 ml"
-                >
-                    <img src="{{ asset('assets/img/Product1.png') }}" alt="Kemasan Aluminium">
-                    <div class="card-produk-content">
-                        <h3>Kaleng Aluminium</h3>
-                        <p class="deskripsi">Kemasan kaleng untuk minuman bersoda.</p>
-                        <p class="harga">Rp 4.000 / pcs</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
-                <div class="card-produk" data-kategori="lainnya"
-                    data-title="Bubble Wrap"
-                    data-img="{{ asset('assets/img/Product1.png') }}"
-                    data-deskripsi="Pelindung guncangan untuk pengiriman barang."
-                    data-harga="Rp 1.000 / meter"
-                    data-price="1000"
-                    data-material="Plastik Bubble"
-                    data-size="100x100 cm"
-                    data-thumb1="{{ asset('assets/img/Product1.png') }}"
-                    data-thumb2="{{ asset('assets/img/Product2.png') }}"
-                    data-thumb3="{{ asset('assets/img/Product3.png') }}"
-                    data-spek-lebar="100 cm"
-                    data-spek-tinggi="-"
-                    data-spek-panjang="100 cm"
-                    data-spek-bahan="Plastik Bubble"
-                    data-spek-kapasitas="N/A"
-                >
-                    <img src="{{ asset('assets/img/Product1.png') }}" alt="Kemasan Lainnya">
-                    <div class="card-produk-content">
-                        <h3>Bubble Wrap</h3>
-                        <p class="deskripsi">Pelindung guncangan untuk pengiriman barang.</p>
-                        <p class="harga">Rp 1.000 / meter</p>
-                        <button class="btn-keranjang"><i class="fas fa-shopping-cart"></i> Tambah ke Keranjang</button>
-                    </div>
-                </div>
-
+            <!-- Tombol Lihat Semua Produk -->
+            <div style="text-align: center; margin-top: 40px;">
+                <button id="showAllProducts" class="btn-show-all">
+                    <span id="showAllText">Lihat Semua Produk</span>
+                </button>
             </div>
         </section>
 
@@ -1319,6 +1127,76 @@
         const fileName = document.getElementById('file-name');
         const btnCustomizeDesign = document.getElementById('btn-customize-design');
         const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
+
+        // ═══════════════════════════════════════════════════════════
+        // LOGIKA LIHAT SEMUA PRODUK (BARU)
+        // ═══════════════════════════════════════════════════════════
+        const showAllBtn = document.getElementById('showAllProducts');
+        const showAllText = document.getElementById('showAllText');
+        const gridProduk = document.querySelector('.grid-produk');
+        let showingAll = false;
+        let currentFilter = 'karton'; // Default filter aktif
+        const itemsToShow = 3; // Jumlah produk yang ditampilkan awalnya
+
+        function filterProducts(category) {
+            const allCards = document.querySelectorAll('.card-produk');
+            let visibleCount = 0;
+
+            allCards.forEach(card => {
+                const cardCategory = card.dataset.kategori;
+                if (cardCategory === category) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                    // Sembunyikan card jika melebihi itemsToShow dan tidak dalam mode showAll
+                    if (!showingAll && visibleCount > itemsToShow) {
+                        card.style.display = 'none';
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Tampilkan/sembunyikan tombol berdasarkan jumlah produk
+            if (visibleCount > itemsToShow) {
+                showAllBtn.style.display = 'inline-block';
+            } else {
+                showAllBtn.style.display = 'none';
+            }
+        }
+
+        // Event listener untuk tombol filter
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active state
+                filterButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Reset showAll state
+                showingAll = false;
+                showAllText.textContent = 'Lihat Semua Produk';
+                
+                // Filter produk
+                currentFilter = this.dataset.filter;
+                filterProducts(currentFilter);
+            });
+        });
+
+        // Event listener untuk tombol Lihat Semua
+        showAllBtn.addEventListener('click', function() {
+            showingAll = !showingAll;
+            
+            if (showingAll) {
+                showAllText.textContent = 'Tampilkan Lebih Sedikit';
+            } else {
+                showAllText.textContent = 'Lihat Semua Produk';
+            }
+            
+            filterProducts(currentFilter);
+        });
+
+        // Inisialisasi filter pertama kali
+        filterProducts(currentFilter);
 
         // --- Variabel untuk menyimpan data produk saat modal dibuka ---
         let currentProductCard = null;

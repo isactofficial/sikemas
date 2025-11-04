@@ -284,12 +284,12 @@
 
         /* === Business Line Section === */
         .business-line-section {
-            background-color: #074159; /* Sesuai permintaan */
+            background-color: #074159;
             padding: 80px 20px;
         }
 
         .business-line-wrapper {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
         }
@@ -297,14 +297,13 @@
         .business-line-title {
             font-size: 3.5rem;
             font-weight: 700;
-            color: #ffffff; /* Teks putih */
+            color: #ffffff;
             text-align: center;
             margin-bottom: 80px;
             position: relative;
             padding-bottom: 20px;
         }
 
-        /* Garis Oranye di bawah Judul */
         .business-line-title::after {
             content: '';
             position: absolute;
@@ -313,50 +312,56 @@
             transform: translateX(-50%);
             width: 100px;
             height: 4px;
-            background-color: #FF6600; /* Warna oranye */
+            background-color: #FF6600;
         }
 
         .business-line-cards {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .business-line-card {
-            background-color: #2A6179; /* Warna kotak lebih terang, sesuai gambar */
-            padding: 30px;
-            border-radius: 15px;
-            color: #ffffff;
-            display: flex; 
-            flex-direction: column;
+            background: rgba(42, 97, 121, 0.5);
+            border-radius: 16px;
+            padding: 18px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .business-line-card h3 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
+        .business-line-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .business-line-card .card-image {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/10;
+            object-fit: cover;
+            display: block;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
         .business-line-card .card-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* Vertikal center */
-            gap: 20px;
-            flex-grow: 1; 
+            padding: 0;
+        }
+
+        .business-line-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
         }
 
         .business-line-card p {
-            font-size: 1.0rem;
-            line-height: 1.7;
-            color: #C0C0C0; /* Warna abu-abu */
-            flex: 1; /* Teks mengambil sisa ruang */
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.75);
         }
 
-        .business-line-card .card-icon {
-            width: 80px; /* Ukuran ikon */
-            height: 80px;
-            object-fit: contain; /* Pastikan SVG pas */
-        }
 
         /* === Values & FAQ Section (NEW) === */
         .values-faq-section {
@@ -785,7 +790,7 @@
                 font-size: 2.5rem;
             }
             .business-line-cards {
-                grid-template-columns: 1fr; /* Stack di tablet */
+                grid-template-columns: 1fr;
                 gap: 30px;
             }
 
@@ -894,8 +899,8 @@
             .business-line-title {
                 font-size: 2rem;
             }
-            .business-line-card h3 {
-                font-size: 1.5rem;
+            .business-line-cards {
+                gap: 20px;
             }
 
             /* Responsive for Values/FAQ Section */
@@ -1022,7 +1027,7 @@
             </div>
 
             <div class="portfolio-image-container">
-                <img src="{{ asset('assets/img/ kardus.png') }}" alt="Produksi Kemasan Karton SIKEMAS" class="portfolio-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                <img src="{{ asset('assets/img/kardus.png') }}" alt="Produksi Kemasan Karton SIKEMAS" class="portfolio-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
             </div>
         </div>
     </section>
@@ -1030,7 +1035,7 @@
     <section class="profile-section">
         <div class="profile-wrapper">
             <div class="profile-image-container">
-                <img src="{{ asset('assets/img/ pabrik.png') }}" alt="Profil Perusahaan SIKEMAS" class="profile-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                <img src="{{ asset('assets/img/pabrik.png') }}" alt="Profil Perusahaan SIKEMAS" class="profile-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
             </div>
             
             <div class="profile-text">
@@ -1069,7 +1074,7 @@
                     </div>
                     <div class="history-dot"></div>
                     <div class="history-image-container">
-                        <img src="{{ asset('assets/img/ awalperusahaan.png') }}" alt="Awal Mula Perusahaan SIKEMAS" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                        <img src="{{ asset('assets/img/awalperusahaan.png') }}" alt="Awal Mula Perusahaan SIKEMAS" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
                 </div>
 
@@ -1120,26 +1125,26 @@
             <div class="business-line-cards">
                 
                 <div class="business-line-card">
-                    <h3>Solusi Produk Khusus</h3>
+                    <img src="{{ asset('assets/img/Container.png') }}" alt="Solusi Produk Khusus" class="card-image">
                     <div class="card-content">
+                        <h3>Solusi Produk Khusus</h3>
                         <p>Kami menyediakan kemasan yang dirancang secara unik untuk menonjolkan keunggulan produk Anda.</p>
-                        <img src="{{ asset('assets/img/produk.svg') }}" alt="Solusi Produk Khusus" class="card-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
                 </div>
 
                 <div class="business-line-card">
-                    <h3>Karton Bergelombang</h3>
+                    <img src="{{ asset('assets/img/karton_banyak.png') }}" alt="Kemasan Ramah Lingkungan" class="card-image">
                     <div class="card-content">
-                        <p>Produksi karton bergelombang dengan kekuatan dan ketahanan optimal untuk pengiriman aman.</p>
-                        <img src="{{ asset('assets/img/karton.svg') }}" alt="Karton Bergelombang" class="card-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
-                    </div>
-                </div>
-
-                <div class="business-line-card">
-                    <h3>Kemasan Ramah Lingkungan</h3>
-                    <div class="card-content">
+                        <h3>Kemasan Ramah Lingkungan</h3>
                         <p>Komitmen kami pada keberlanjutan dengan menyediakan kemasan dari bahan daur ulang.</p>
-                        <img src="{{ asset('assets/img/lingkungan.svg') }}" alt="Kemasan Ramah Lingkungan" class="card-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                    </div>
+                </div>
+
+                <div class="business-line-card">
+                    <img src="{{ asset('assets/img/karton_buka.png') }}" alt="Karton Bergelombang" class="card-image">
+                    <div class="card-content">
+                        <h3>Karton Bergelombang</h3>
+                        <p>Produksi karton bergelombang dengan kekuatan dan ketahanan optimal untuk pengiriman aman.</p>
                     </div>
                 </div>
 
@@ -1178,21 +1183,41 @@
 
                     <div class="faq-item active">
                         <button class="faq-question">
-                            <span>Bagaimana cara memesan kemasan kustom?</span>
+                            <span>Apa itu SIKEMAS?</span>
                             <span class="faq-toggle">+</span>
                         </button>
                         <div class="faq-answer">
-                            <p>laoreet dolor bibendum. Vestibulum turpis mi, vulputate a est ut, facilisis tincidunt sapien. Curabitur quis ultrices dolor. Nam pellentesque, neque sit amet dapibus viverra</p>
+                            <p>SIKEMAS adalah penyedia solusi kemasan karton berkualitas tinggi yang berfokus pada inovasi dan keberlanjutan.</p>
                         </div>
                     </div>
 
                     <div class="faq-item">
                         <button class="faq-question">
-                            <span>Apakah ada minimum order?</span>
+                            <span>Produk apa saja yang tersedia?</span>
                             <span class="faq-toggle">+</span>
                         </button>
                         <div class="faq-answer">
-                            <p>Jawaban untuk pertanyaan minimum order akan muncul di sini saat diklik.</p>
+                            <p>Kami menyediakan berbagai jenis kemasan karton, termasuk kotak custom, karton bergelombang, dan kemasan ramah lingkungan.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Bagaimana cara memesan?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Anda dapat memesan melalui website kami dengan memilih produk, menambahkan ke keranjang, dan melakukan checkout.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Apakah bisa custom desain?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Ya, kami menerima custom desain. Anda dapat mengunggah desain Anda sendiri atau menggunakan layanan desain kami.</p>
                         </div>
                     </div>
 
@@ -1202,17 +1227,7 @@
                             <span class="faq-toggle">+</span>
                         </button>
                         <div class="faq-answer">
-                            <p>Jawaban untuk pertanyaan lama waktu produksi akan muncul di sini saat diklik.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question">
-                            <span>Apakah produk Anda ramah lingkungan?</span>
-                            <span class="faq-toggle">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Jawaban untuk pertanyaan ramah lingkungan akan muncul di sini saat diklik.</p>
+                            <p>Waktu produksi bervariasi tergantung jenis dan jumlah pesanan. Biasanya membutuhkan 7-14 hari kerja.</p>
                         </div>
                     </div>
 
@@ -1364,6 +1379,8 @@
             });
         });
     </script>
+
+    @include('layouts.footer')
 
 </body>
 </html>

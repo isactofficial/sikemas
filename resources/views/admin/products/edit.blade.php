@@ -79,7 +79,13 @@
 			</div>
 			<div>
 				<label for="category">Category</label>
-				<input class="skm-input" type="text" name="category" id="category" value="{{ old('category', $product->category) }}">
+				<select class="skm-input" name="category" id="category" style="cursor:pointer;">
+					<option value="">-- Pilih Kategori --</option>
+					<option value="karton" {{ old('category', $product->category) === 'karton' ? 'selected' : '' }}>Karton</option>
+					<option value="plastik" {{ old('category', $product->category) === 'plastik' ? 'selected' : '' }}>Plastik</option>
+					<option value="kertas" {{ old('category', $product->category) === 'kertas' ? 'selected' : '' }}>Kertas</option>
+					<option value="aluminium" {{ old('category', $product->category) === 'aluminium' ? 'selected' : '' }}>Aluminium</option>
+				</select>
 				@error('category')<div style="color:#e53935; font-size:12px;">{{ $message }}</div>@enderror
 			</div>
 			<div>

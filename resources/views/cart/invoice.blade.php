@@ -547,5 +547,32 @@ Setelah pembayaran, harap konfirmasi ke nomor berikut: 0812-3456-7890</p>
             });
         });
     </script>
-</body>
+    
+    <script>
+        // Jalankan skrip ini setelah semua elemen halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Ambil parameter dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // 2. Cek apakah parameter 'download' ada dan nilainya 'true'
+            if (urlParams.get('download') === 'true') {
+                
+                // 3. Tampilkan pesan di console (opsional)
+                console.log('Perintah download terdeteksi. Memulai download otomatis...');
+                
+                // 4. Cari tombol download yang sudah ada di halaman ini
+                // Pastikan ID-nya 'btn-download-pdf'
+                const downloadButton = document.getElementById('btn-download-pdf');
+                
+                if (downloadButton) {
+                    // 5. "Klik" tombol itu secara otomatis
+                    downloadButton.click();
+                } else {
+                    console.error('Tombol download (#btn-download-pdf) tidak ditemukan untuk auto-download.');
+                }
+            }
+        });
+    </script>
+    </body>
 </html>

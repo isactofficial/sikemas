@@ -508,6 +508,34 @@
             transform: scale(1.05);
         }
 
+        /* Tombol Lihat Semua Produk & Artikel */
+        .btn-lihat-semua-produk,
+        .btn-lihat-semua-artikel {
+            display: inline-block;
+            background-color: #ff5722;
+            color: white;
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 999px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+            font-family: 'Besley', serif;
+        }
+
+        .btn-lihat-semua-produk:hover,
+        .btn-lihat-semua-artikel:hover {
+            background-color: #e64a19;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 87, 34, 0.4);
+        }
+
+        .btn-lihat-semua-produk:active,
+        .btn-lihat-semua-artikel:active {
+            transform: translateY(0);
+        }
+
         /* Start Project CTA Section */
         .start-project {
             margin-top: 56px;
@@ -1585,32 +1613,52 @@
             <h2 class="section-title">Produk Unggulan Kami</h2>
 
             <div class="products-grid">
-                <div class="product-card">
-                    <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
-                    <div class="product-content">
-                        <h3 class="product-title">Kotak Kemasan Khusus</h3>
-                        <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
-                        <a href="#" class="product-button">Pesan Sekarang</a>
+                @if(isset($products) && $products->count() > 0)
+                    @foreach($products->take(3) as $product)
+                    <div class="product-card">
+                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Rectangle12.png') }}" 
+                             alt="{{ $product->name }}" 
+                             class="product-image">
+                        <div class="product-content">
+                            <h3 class="product-title">{{ $product->name }}</h3>
+                            <p class="product-description">{{ Str::limit($product->description ?? 'Produk berkualitas dari Sikemas', 100) }}</p>
+                            <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                        </div>
                     </div>
-                </div>
+                    @endforeach
+                @else
+                    <div class="product-card">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
+                        <div class="product-content">
+                            <h3 class="product-title">Kotak Kemasan Khusus</h3>
+                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
+                            <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                        </div>
+                    </div>
 
-                <div class="product-card">
-                    <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang" class="product-image">
-                    <div class="product-content">
-                        <h3 class="product-title">Karton Bergelombang</h3>
-                        <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan penyimpanan yang aman.</p>
-                        <a href="#" class="product-button">Pesan Sekarang</a>
+                    <div class="product-card">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang" class="product-image">
+                        <div class="product-content">
+                            <h3 class="product-title">Karton Bergelombang</h3>
+                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan penyimpanan yang aman.</p>
+                            <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="product-card">
-                    <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan" class="product-image">
-                    <div class="product-content">
-                        <h3 class="product-title">Kemasan Ramah Lingkungan</h3>
-                        <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur ulang dan dapat didaur ulang.</p>
-                        <a href="#" class="product-button">Pesan Sekarang</a>
+                    <div class="product-card">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan" class="product-image">
+                        <div class="product-content">
+                            <h3 class="product-title">Kemasan Ramah Lingkungan</h3>
+                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur ulang dan dapat didaur ulang.</p>
+                            <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                        </div>
                     </div>
-                </div>
+                @endif
+            </div>
+
+            <!-- Tombol Lihat Semua Produk -->
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="{{ route('produk') }}" class="btn-lihat-semua-produk">Lihat Semua Produk</a>
             </div>
         </div>
     </section>
@@ -1844,36 +1892,72 @@
         <div class="skm-a-wrap">
             <h2 id="articles-title">Artikel &amp; Berita</h2>
             <div class="skm-a-grid">
-                <article class="skm-a-card">
-                    <div class="thumb">
-                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Trend Kemasan Ramah Lingkungan">
-                    </div>
-                    <div class="body">
-                        <h3 class="title">Trend Kemasan Ramah Lingkungan</h3>
-                        <p class="deskripsi">Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.</p>
-                        <a class="more" href="#" aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
-                    </div>
-                </article>
-                <article class="skm-a-card">
-                    <div class="thumb">
-                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Pentingnya Kemasan yang Tepat">
-                    </div>
-                    <div class="body">
-                        <h3 class="title">Pentingnya Kemasan yang Tepat</h3>
-                        <p class="deskripsi">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.</p>
-                        <a class="more" href="#" aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
-                    </div>
-                </article>
-                <article class="skm-a-card">
-                    <div class="thumb">
-                        <img src="{{ asset('assets/img/Article-image.png') }}" alt="Proses Produksi Kami">
-                    </div>
-                    <div class="body">
-                        <h3 class="title">Proses Produksi Kami</h3>
-                        <p class="deskripsi">Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.</p>
-                        <a class="more" href="#" aria-label="Baca selengkapnya Proses Produksi Kami">Baca Selengkapnya</a>
-                    </div>
-                </article>
+                @if(isset($articles) && $articles->count() > 0)
+                    @foreach($articles->take(3) as $article)
+                    <article class="skm-a-card">
+                        <div class="thumb">
+                            @php
+                                // Cek berbagai kemungkinan field gambar
+                                $articleImage = null;
+                                if (!empty($article->image)) {
+                                    $articleImage = asset('storage/' . $article->image);
+                                } elseif (!empty($article->featured_image)) {
+                                    $articleImage = asset('storage/' . $article->featured_image);
+                                } elseif (!empty($article->thumbnail)) {
+                                    $articleImage = asset('storage/' . $article->thumbnail);
+                                } else {
+                                    $articleImage = asset('assets/img/Article-image.png');
+                                }
+                            @endphp
+                            <img src="{{ $articleImage }}" 
+                                 alt="{{ $article->title }}"
+                                 onerror="this.onerror=null; this.src='{{ asset('assets/img/Article-image.png') }}';">
+                        </div>
+                        <div class="body">
+                            <h3 class="title">{{ $article->title }}</h3>
+                            <p class="deskripsi">{{ Str::limit(strip_tags($article->content), 100) }}</p>
+                            <a class="more" href="{{ route('detail_artikel', $article->slug) }}" 
+                               aria-label="Baca selengkapnya {{ $article->title }}">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+                    @endforeach
+                @else
+                    <article class="skm-a-card">
+                        <div class="thumb">
+                            <img src="{{ asset('assets/img/Article-image.png') }}" alt="Trend Kemasan Ramah Lingkungan">
+                        </div>
+                        <div class="body">
+                            <h3 class="title">Trend Kemasan Ramah Lingkungan</h3>
+                            <p class="deskripsi">Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.</p>
+                            <a class="more" href="{{ route('artikel') }}" aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+                    <article class="skm-a-card">
+                        <div class="thumb">
+                            <img src="{{ asset('assets/img/Article-image.png') }}" alt="Pentingnya Kemasan yang Tepat">
+                        </div>
+                        <div class="body">
+                            <h3 class="title">Pentingnya Kemasan yang Tepat</h3>
+                            <p class="deskripsi">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.</p>
+                            <a class="more" href="{{ route('artikel') }}" aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+                    <article class="skm-a-card">
+                        <div class="thumb">
+                            <img src="{{ asset('assets/img/Article-image.png') }}" alt="Proses Produksi Kami">
+                        </div>
+                        <div class="body">
+                            <h3 class="title">Proses Produksi Kami</h3>
+                            <p class="deskripsi">Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.</p>
+                            <a class="more" href="{{ route('artikel') }}" aria-label="Baca selengkapnya Proses Produksi Kami">Baca Selengkapnya</a>
+                        </div>
+                    </article>
+                @endif
+            </div>
+
+            <!-- Tombol Lihat Semua Artikel -->
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="{{ route('artikel') }}" class="btn-lihat-semua-artikel">Lihat Semua Artikel</a>
             </div>
         </div>
     </section>

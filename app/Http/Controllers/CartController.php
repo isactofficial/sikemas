@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage; // <-- PERBAIKAN: Ditambahkan
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf; // <-- DITAMBAHKAN: Import PDF Facade
 
 class CartController extends Controller
 {
@@ -287,5 +288,32 @@ class CartController extends Controller
             ->firstOrFail();
         
         return view('cart.invoice', compact('order'));
+    }
+
+    /**
+     * Download invoice as PDF
+     */
+    public function downloadInvoice($id)
+    {
+        // Load order dengan relasi yang dibutuhkan
+        $order = Order::with(['items', 'shippingAddress', 'user'])
+            ->where('id', $id)
+            // Security: Pastikan hanya pemilik order yang bisa download
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Generate PDF dari view invoice
+        $pdf = Pdf::loadView('cart.invoice', compact('order'))
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+        // Download dengan nama file yang sesuai
+        $filename = 'Invoice_' . $order->invoice_number . '.pdf';
+        
+        return $pdf->download($filename);
     }
 }

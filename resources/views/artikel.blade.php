@@ -84,29 +84,6 @@
 		.skm-page-btn[disabled] { background: #8AA2AD; color: #EAF1F3; cursor: not-allowed; }
 		.skm-page-btn[disabled]::before { border-color: #EAF1F3; }
 		.skm-page-label { color: #6B8791; font-size: 14px; white-space: nowrap; }
-
-		/* Tombol Lihat Semua Artikel */
-		.skm-show-all-btn {
-			background: var(--skm-accent);
-			color: #fff;
-			border: none;
-			padding: 12px 32px;
-			border-radius: 999px;
-			font-size: 15px;
-			font-weight: 700;
-			font-family: 'Besley', serif;
-			cursor: pointer;
-			transition: all 0.3s ease;
-			box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
-		}
-		.skm-show-all-btn:hover {
-			background: #e64a19;
-			transform: translateY(-2px);
-			box-shadow: 0 6px 16px rgba(255, 87, 34, 0.4);
-		}
-		.skm-show-all-btn:active {
-			transform: translateY(0);
-		}
 	</style>
 </head>
 <body class="skm-page">
@@ -131,13 +108,6 @@
 			<!-- Cards rendered by JS -->
 		</div>
 
-		<!-- Tombol Lihat Semua Artikel -->
-		<div style="text-align: center; margin-top: 24px;">
-			<button id="showAllBtn" class="skm-show-all-btn" type="button">
-				<span id="showAllText">Lihat Semua Artikel</span>
-			</button>
-		</div>
-
 		<nav class="skm-pager" aria-label="Navigasi halaman">
 			<button id="prevBtn" class="skm-page-btn is-prev" type="button" aria-label="Halaman sebelumnya"></button>
 			<span id="pageLabel" class="skm-page-label" aria-live="polite"></span>
@@ -157,10 +127,9 @@
 
 		const state = {
 			page: 1,
-			perPage: 3,
+			perPage: 6,
 			filter: 'Semua',
 			sort: 'Terbaru', // or 'Terpopuler'
-			showAll: false, // Flag untuk mode tampil semua
 			get filtered() {
 				if (this.filter === 'Semua') return ARTICLES;
 				return ARTICLES.filter(a => a.cat.includes(this.filter));
@@ -175,11 +144,9 @@
 				return arr;
 			},
 			get pages() { 
-				if (this.showAll) return 1; // Jika showAll aktif, hanya 1 halaman
 				return Math.max(1, Math.ceil(this.ordered.length / this.perPage)); 
 			},
 			get slice() {
-				if (this.showAll) return this.ordered; // Tampilkan semua artikel
 				const start = (this.page - 1) * this.perPage;
 				return this.ordered.slice(start, start + this.perPage);
 			}
@@ -191,9 +158,6 @@
 		const nextBtn = document.getElementById('nextBtn');
 		const pills = document.getElementById('filterPills');
 		const sortPills = document.getElementById('sortPills');
-		const showAllBtn = document.getElementById('showAllBtn');
-		const showAllText = document.getElementById('showAllText');
-		const pagerNav = document.querySelector('.skm-pager');
 
 		// Format tanggal ke Bahasa Indonesia, contoh: 10 Juli 2024
 		function formatDateID(ts) {
@@ -225,7 +189,6 @@
 				b.addEventListener('click', () => {
 					state.filter = cat;
 					state.page = 1;
-					state.showAll = false; // Reset showAll saat filter berubah
 					renderAll();
 				});
 				pills.appendChild(b);
@@ -244,7 +207,6 @@
 				s.addEventListener('click', () => {
 					state.sort = opt;
 					state.page = 1;
-					state.showAll = false; // Reset showAll saat sort berubah
 					renderAll();
 				});
 				sortPills.appendChild(s);
@@ -278,34 +240,6 @@
 			nextBtn.disabled = state.page >= state.pages;
 			// Center label "Halaman X dari Y"
 			pageLabel.textContent = `Halaman ${state.page} dari ${state.pages}`;
-			
-			// Sembunyikan pager jika showAll aktif
-			if (state.showAll) {
-				pagerNav.style.display = 'none';
-			} else {
-				pagerNav.style.display = 'flex';
-			}
-		}
-
-		function updateShowAllButton() {
-			const totalArticles = state.ordered.length;
-			if (state.showAll) {
-				showAllText.textContent = 'Tampilkan Lebih Sedikit';
-				// Sembunyikan tombol jika artikel kurang dari perPage
-				if (totalArticles <= state.perPage) {
-					showAllBtn.style.display = 'none';
-				} else {
-					showAllBtn.style.display = 'inline-block';
-				}
-			} else {
-				showAllText.textContent = 'Lihat Semua Artikel';
-				// Tampilkan tombol hanya jika ada lebih dari perPage artikel
-				if (totalArticles > state.perPage) {
-					showAllBtn.style.display = 'inline-block';
-				} else {
-					showAllBtn.style.display = 'none';
-				}
-			}
 		}
 
 		function updatePillStates() {
@@ -320,18 +254,8 @@
 		function renderAll(resetPills = true) {
 			renderGrid();
 			renderPager();
-			updateShowAllButton();
 			if (resetPills) updatePillStates();
 		}
-
-		// Event listener untuk tombol Lihat Semua
-		showAllBtn.addEventListener('click', () => {
-			state.showAll = !state.showAll;
-			if (!state.showAll) {
-				state.page = 1; // Reset ke halaman 1 saat kembali ke mode pagination
-			}
-			renderAll(false);
-		});
 
 		prevBtn.addEventListener('click', () => { if (state.page > 1) { state.page--; renderAll(false); } });
 		nextBtn.addEventListener('click', () => { if (state.page < state.pages) { state.page++; renderAll(false); } });

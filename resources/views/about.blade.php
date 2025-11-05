@@ -1177,62 +1177,7 @@
                 </div>
             </div>
 
-            <div class="faq-container">
-                <h1 class="faq-section-title">Pertanyaan yang Sering Diajukan</h1>
-                <div class="faq-list">
-
-                    <div class="faq-item active">
-                        <button class="faq-question">
-                            <span>Apa itu SIKEMAS?</span>
-                            <span class="faq-toggle">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>SIKEMAS adalah penyedia solusi kemasan karton berkualitas tinggi yang berfokus pada inovasi dan keberlanjutan.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question">
-                            <span>Produk apa saja yang tersedia?</span>
-                            <span class="faq-toggle">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Kami menyediakan berbagai jenis kemasan karton, termasuk kotak custom, karton bergelombang, dan kemasan ramah lingkungan.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question">
-                            <span>Bagaimana cara memesan?</span>
-                            <span class="faq-toggle">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Anda dapat memesan melalui website kami dengan memilih produk, menambahkan ke keranjang, dan melakukan checkout.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question">
-                            <span>Apakah bisa custom desain?</span>
-                            <span class="faq-toggle">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Ya, kami menerima custom desain. Anda dapat mengunggah desain Anda sendiri atau menggunakan layanan desain kami.</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question">
-                            <span>Berapa lama waktu produksi?</span>
-                            <span class="faq-toggle">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Waktu produksi bervariasi tergantung jenis dan jumlah pesanan. Biasanya membutuhkan 7-14 hari kerja.</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            @include('sections.faq')
 
         </div>
     </section>

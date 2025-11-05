@@ -762,7 +762,8 @@
             </div>
 
             <div class="filter-produk">
-                <button class="filter-btn active" data-filter="karton">Karton</button>
+                <button class="filter-btn active" data-filter="semua">Semua</button>
+                <button class="filter-btn" data-filter="karton">Karton</button>
                 <button class="filter-btn" data-filter="plastik">Plastik</button>
                 <button class="filter-btn" data-filter="kertas">Kertas</button>
                 <button class="filter-btn" data-filter="aluminium">Aluminium</button>
@@ -803,13 +804,6 @@
                         Belum ada produk tersedia
                     </div>
                 @endif
-            </div>
-
-            <!-- Tombol Lihat Semua Produk -->
-            <div style="text-align: center; margin-top: 40px;">
-                <button id="showAllProducts" class="btn-show-all">
-                    <span id="showAllText">Lihat Semua Produk</span>
-                </button>
             </div>
         </section>
 
@@ -1129,39 +1123,23 @@
         const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
 
         // ═══════════════════════════════════════════════════════════
-        // LOGIKA LIHAT SEMUA PRODUK (BARU)
+        // LOGIKA FILTER PRODUK (UPDATED: Tambah filter "Semua")
         // ═══════════════════════════════════════════════════════════
-        const showAllBtn = document.getElementById('showAllProducts');
-        const showAllText = document.getElementById('showAllText');
         const gridProduk = document.querySelector('.grid-produk');
-        let showingAll = false;
-        let currentFilter = 'karton'; // Default filter aktif
-        const itemsToShow = 3; // Jumlah produk yang ditampilkan awalnya
+        let currentFilter = 'semua'; // Default filter semua
 
         function filterProducts(category) {
             const allCards = document.querySelectorAll('.card-produk');
-            let visibleCount = 0;
 
             allCards.forEach(card => {
                 const cardCategory = card.dataset.kategori;
-                if (cardCategory === category) {
+                // Jika filter "semua" atau kategori cocok, tampilkan
+                if (category === 'semua' || cardCategory === category) {
                     card.style.display = 'block';
-                    visibleCount++;
-                    // Sembunyikan card jika melebihi itemsToShow dan tidak dalam mode showAll
-                    if (!showingAll && visibleCount > itemsToShow) {
-                        card.style.display = 'none';
-                    }
                 } else {
                     card.style.display = 'none';
                 }
             });
-
-            // Tampilkan/sembunyikan tombol berdasarkan jumlah produk
-            if (visibleCount > itemsToShow) {
-                showAllBtn.style.display = 'inline-block';
-            } else {
-                showAllBtn.style.display = 'none';
-            }
         }
 
         // Event listener untuk tombol filter
@@ -1172,27 +1150,10 @@
                 filterButtons.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 
-                // Reset showAll state
-                showingAll = false;
-                showAllText.textContent = 'Lihat Semua Produk';
-                
                 // Filter produk
                 currentFilter = this.dataset.filter;
                 filterProducts(currentFilter);
             });
-        });
-
-        // Event listener untuk tombol Lihat Semua
-        showAllBtn.addEventListener('click', function() {
-            showingAll = !showingAll;
-            
-            if (showingAll) {
-                showAllText.textContent = 'Tampilkan Lebih Sedikit';
-            } else {
-                showAllText.textContent = 'Lihat Semua Produk';
-            }
-            
-            filterProducts(currentFilter);
         });
 
         // Inisialisasi filter pertama kali

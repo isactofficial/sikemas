@@ -306,6 +306,40 @@
             border-top: 1px solid #f0f0f0;
         }
         
+        /* ORDER ACTION BUTTONS */
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .order-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #fff;
+            color: #074159;
+            border: 2px solid #074159;
+        }
+        
+        .order-btn:hover {
+            background: #074159;
+            color: #fff;
+        }
+        
+        .order-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+        
         .back-button {
             display: inline-block;
             background: white;
@@ -397,6 +431,16 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 0.5rem;
+            }
+            
+            .order-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .order-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -530,6 +574,23 @@
                         @endforeach
                     </ul>
                     <div class="order-total">Total Pembayaran: {{ $order->formatted_total }}</div>
+                    
+                    <div class="order-actions">
+                        <a href="{{ route('invoice.show', $order->id) }}" class="order-btn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z"/>
+                                <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd"/>
+                            </svg>
+                            Bayar Sekarang
+                        </a>
+                        
+                        <a href="{{ route('invoice.show', $order->id) }}?download=true" class="order-btn" target="_blank">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12 2.25a.75.75 0 01.75.75v11.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06l3.22 3.22V3a.75.75 0 01.75-.75zm-9 13.5a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z" clip-rule="evenodd"/>
+                            </svg>
+                            Download PDF
+                        </a>
+                        </div>
                 </div>
                 @empty
                 <p style="color: #666; text-align: center; padding: 2rem 0;">Belum ada riwayat pesanan</p>
@@ -557,6 +618,5 @@
             @endif
         </div>
         
-        </div>
-</body>
+    </div> </body>
 </html>

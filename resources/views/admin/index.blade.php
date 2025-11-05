@@ -88,35 +88,7 @@
             margin-top: 1rem;
         }
 
-        /* Progress bar */
-        .skm-summary-card .card-bar {
-            height: 6px;
-            border-radius: 3px;
-            margin-top: 1.25rem;
-            background-color: #f39c12;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Bar progres di dalam card */
-        .skm-summary-card .card-bar::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            border-radius: 3px;
-            background-color: #34495e;
-        }
-
-        /* Atur lebar bar sesuai data (hardcoded sesuai desain) */
-        .skm-summary-card.card-1 .card-bar::after { width: 80%; }
-        .skm-summary-card.card-2 .card-bar::after { width: 60%; }
-        .skm-summary-card.card-3 .card-bar::after { width: 50%; }
-        .skm-summary-card.card-4 .card-bar::after { width: 40%; }
-        .skm-summary-card.card-5 .card-bar::after { width: 90%; }
-        .skm-summary-card.card-6 .card-bar::after { width: 70%; }
+        /* Remove progress bar styles (not used) */
 
 
         /*
@@ -339,32 +311,28 @@
                         <span>Total Artikel</span>
                         <span class="icon"><i class="fas fa-file-alt"></i></span>
                     </div>
-                    <span class="card-value">105</span>
-                    <div class="card-bar"></div>
+                    <span class="card-value">{{ number_format($metrics['articles'] ?? 0) }}</span>
                 </div>
                 <div class="skm-summary-card card-2">
                     <div class="card-header">
-                        <span>Total Upload Artikel</span>
+                        <span>Total Produk</span>
                         <span class="icon"><i class="fas fa-check-square"></i></span>
                     </div>
-                    <span class="card-value">89</span>
-                    <div class="card-bar"></div>
+                    <span class="card-value">{{ number_format($metrics['products'] ?? 0) }}</span>
                 </div>
                 <div class="skm-summary-card card-3">
                     <div class="card-header">
-                        <span>Total Galeri</span>
+                        <span>Total Testimoni</span>
                         <span class="icon"><i class="fas fa-images"></i></span>
                     </div>
-                    <span class="card-value">67</span>
-                    <div class="card-bar"></div>
+                    <span class="card-value">{{ number_format($metrics['testimonies'] ?? 0) }}</span>
                 </div>
                 <div class="skm-summary-card card-4">
                     <div class="card-header">
-                        <span>Total Upload Galeri</span>
+                        <span>Total Transaksi</span>
                         <span class="icon"><i class="fas fa-upload"></i></span>
                     </div>
-                    <span class="card-value">52</span>
-                    <div class="card-bar"></div>
+                    <span class="card-value">{{ number_format($metrics['transactions'] ?? 0) }}</span>
                 </div>
             </div>
 
@@ -375,16 +343,14 @@
                         <span>Total Views</span>
                         <span class="icon"><i class="fas fa-eye"></i></span>
                     </div>
-                    <span class="card-value">15,420</span>
-                    <div class="card-bar"></div>
+                    <span class="card-value">{{ number_format($totalVisitsBreakdown['totalHomeAllTime'] ?? 0) }}</span>
                 </div>
                 <div class="skm-summary-card card-6">
                     <div class="card-header">
-                        <span>Total Views (Galleries)</span>
+                        <span>Total Views (Articles)</span>
                         <span class="icon"><i class="fas fa-eye"></i></span>
                     </div>
-                    <span class="card-value">8,930</span>
-                    <div class="card-bar"></div>
+                    <span class="card-value">{{ number_format($totalViewsArticles ?? 0) }}</span>
                 </div>
             </div>
         </section>
@@ -397,23 +363,25 @@
                 <div class="skm-stats-card">
                     <h3><span class="icon"><i class="fas fa-chart-line"></i></span> Page Visits</h3>
                     <ul>
-                        <li><span class="icon"><i class="fas fa-home fa-fw"></i></span> Homepage:<strong>140</strong> visits</li>
-                        <li><span class="icon"><i class="fas fa-newspaper fa-fw"></i></span> Articles:<strong>28</strong> visits</li>
-                        <li><span class="icon"><i class="fas fa-images fa-fw"></i></span> Galleries:<strong>23</strong> visits</li>
-                        <li><span class="icon"><i class="fas fa-envelope fa-fw"></i></span> Contact:<strong>29</strong> visits</li>
+                        <li><span class="icon"><i class="fas fa-home fa-fw"></i></span> Homepage:<strong>{{ $pageVisits['home'] ?? 0 }}</strong> visits</li>
+                        <li><span class="icon"><i class="fas fa-newspaper fa-fw"></i></span> Article:<strong>{{ $pageVisits['article'] ?? 0 }}</strong> visits</li>
+                        <li><span class="icon"><i class="fas fa-box-open fa-fw"></i></span> Produk:<strong>{{ $pageVisits['produk'] ?? 0 }}</strong> visits</li>
+                        <li><span class="icon"><i class="fas fa-briefcase fa-fw"></i></span> Portofolio:<strong>{{ $pageVisits['portofolio'] ?? 0 }}</strong> visits</li>
+                        <li><span class="icon"><i class="fas fa-info-circle fa-fw"></i></span> About Us:<strong>{{ $pageVisits['about'] ?? 0 }}</strong> visits</li>
+                        <li><span class="icon"><i class="fas fa-envelope fa-fw"></i></span> Contact:<strong>{{ $pageVisits['contact'] ?? 0 }}</strong> visits</li>
                     </ul>
                 </div>
 
                 <div class="skm-stats-card">
                     <h3><span class="icon icon-total"><i class="fas fa-users"></i></span> Total Visits</h3>
-                    <span class="total-visits-value">220</span>
+                    <span class="total-visits-value">{{ number_format($totalVisitsBreakdown['totalHomeAllTime'] ?? 0) }}</span>
                     <h4>Homepage Stats</h4>
                     <ul>
                         {{-- menggunakan ikon fa-calendar-alt --}}
-                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> Today:<strong>0</strong></li>
-                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> This Week:<strong>0</strong></li>
-                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> This Month:<strong>0</strong></li>
-                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> This Year:<strong>140</strong></li>
+                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> Today:<strong>{{ $totalVisitsBreakdown['homeToday'] ?? 0 }}</strong></li>
+                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> This Week:<strong>{{ $totalVisitsBreakdown['homeWeek'] ?? 0 }}</strong></li>
+                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> This Month:<strong>{{ $totalVisitsBreakdown['homeMonth'] ?? 0 }}</strong></li>
+                        <li><span class="icon"><i class="fas fa-calendar-alt fa-fw"></i></span> This Year:<strong>{{ $totalVisitsBreakdown['homeYear'] ?? 0 }}</strong></li>
                     </ul>
                 </div>
             </div>
@@ -427,38 +395,20 @@
             {{-- Header Section Artikel --}}
             <div class="skm-articles-header">
                 <h2>Artikel Terbaru</h2>
-                <a href="#" class="skm-articles-view-all">Lihat semuanya</a>
+                <a href="{{ route('admin.articles.index') }}" class="skm-articles-view-all">Lihat semuanya</a>
             </div>
 
             {{-- Grid Artikel --}}
             <div class="skm-articles-grid">
-
-                {{-- Card Artikel 1 --}}
-                <div class="skm-article-card">
-                    <img src="{{ asset('assets/img/box1.png') }}" alt="Trend Kemasan">
-                    <div class="skm-article-card-content">
-                        <h3>Trend Kemasan Ramah Lingkungan</h3>
-                        <p>Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan...</p>
+                @foreach(($latestArticles ?? []) as $a)
+                    <div class="skm-article-card">
+                        <img src="{{ $a->thumbnail_url ?? asset('assets/img/box1.png') }}" alt="{{ $a->title }}">
+                        <div class="skm-article-card-content">
+                            <h3>{{ $a->title }}</h3>
+                            <p>{{ \Illuminate\Support\Str::limit($a->deskripsi ?? $a->excerpt ?? '', 120) }}</p>
+                        </div>
                     </div>
-                </div>
-
-                {{-- Card Artikel 2 --}}
-                <div class="skm-article-card">
-                    <img src="{{ asset('assets/img/box1.png') }}" alt="Trend Kemasan">
-                    <div class="skm-article-card-content">
-                        <h3>Trend Kemasan Ramah Lingkungan</h3>
-                        <p>Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan...</p>
-                    </div>
-                </div>
-
-                {{-- Card Artikel 3 --}}
-                <div class="skm-article-card">
-                    <img src="{{ asset('assets/img/box1.png') }}" alt="Trend Kemasan">
-                    <div class="skm-article-card-content">
-                        <h3>Trend Kemasan Ramah Lingkungan</h3>
-                        <p>Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan...</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
 
@@ -466,38 +416,20 @@
             {{-- Header Section Produk --}}
             <div class="skm-products-header">
                 <h2>Produk Terbaru</h2>
-                <a href="#" class="skm-articles-view-all">Lihat semuanya</a>
+                <a href="{{ route('admin.products.index') }}" class="skm-articles-view-all">Lihat semuanya</a>
             </div>
 
             {{-- Grid Produk --}}
             <div class="skm-articles-grid">
-
-                {{-- Card Produk 1 --}}
-                <div class="skm-article-card">
-                    <img src="{{ asset('assets/img/box2.png') }}" alt="Kotak Kemasan">
-                    <div class="skm-article-card-content">
-                        <h3>Kotak Kemasan Khusus</h3>
-                        <p>Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
+                @foreach(($latestProducts ?? []) as $p)
+                    <div class="skm-article-card">
+                        <img src="{{ $p->image_url ?? asset('assets/img/box2.png') }}" alt="{{ $p->name }}">
+                        <div class="skm-article-card-content">
+                            <h3>{{ $p->name }}</h3>
+                            <p>{{ \Illuminate\Support\Str::limit($p->description ?? '', 120) }}</p>
+                        </div>
                     </div>
-                </div>
-
-                {{-- Card Produk 2 --}}
-                <div class="skm-article-card">
-                    <img src="{{ asset('assets/img/box2.png') }}" alt="Kotak Kemasan">
-                    <div class="skm-article-card-content">
-                        <h3>Kotak Kemasan Khusus</h3>
-                        <p>Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
-                    </div>
-                </div>
-
-                {{-- Card Produk 3 --}}
-                <div class="skm-article-card">
-                    <img src="{{ asset('assets/img/box2.png') }}" alt="Kotak Kemasan">
-                    <div class="skm-article-card-content">
-                        <h3>Kotak Kemasan Khusus</h3>
-                        <p>Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </section>
 

@@ -23,7 +23,7 @@ Route::get('/', function () {
         ->take(12)
         ->get();
     return view('index', compact('articles'));
-})->name('home');
+})->middleware('track.page:home')->name('home');
 
 Route::get('/edit-design', function () {
     return view('edit-design');
@@ -103,7 +103,7 @@ Route::get('/beranda', function () {
         ->take(12)
         ->get();
     return view('index', compact('articles'));
-})->name('beranda');
+})->middleware('track.page:home')->name('beranda');
 
 use App\Models\Product;
 Route::get('/produk', function () {
@@ -111,12 +111,12 @@ Route::get('/produk', function () {
         ->orderByDesc('created_at')
         ->get();
     return view('produk', compact('products'));
-})->name('produk');
+})->middleware('track.page:produk')->name('produk');
 
 use App\Http\Controllers\ArticlePublicController;
 use App\Http\Controllers\CommentController;
 
-Route::get('/artikel', [ArticlePublicController::class, 'index'])->name('artikel');
+Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
 Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
 
 // =====================
@@ -134,11 +134,11 @@ use App\Models\Testimony;
 Route::get('/portofolio', function () {
     $testimonies = Testimony::orderByDesc('created_at')->get();
     return view('portofolio', compact('testimonies'));
-})->name('portofolio');
+})->middleware('track.page:portofolio')->name('portofolio');
 
 Route::get('/about', function () {
     return view('about');
-})->name('about');
+})->middleware('track.page:about')->name('about');
 
 // ============================================
 // ADMIN ROUTES (Protected)
@@ -146,7 +146,60 @@ Route::get('/about', function () {
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/', function () {
-        return view('admin.index');
+        $metrics = [
+            'articles'     => \App\Models\Article::count(),
+            'products'     => \App\Models\Product::count(),
+            'testimonies'  => \App\Models\Testimony::count(),
+            'transactions' => \App\Models\Order::count(),
+        ];
+
+        $totalViewsArticles = (int) \App\Models\Article::sum('views');
+
+        // Page visits aggregation
+        $pages = ['home','article','produk','portofolio','about','contact'];
+        try {
+            $visitTotals = \App\Models\PageVisit::selectRaw('page, SUM(count) as total')
+                ->groupBy('page')
+                ->pluck('total', 'page');
+        } catch (\Throwable $e) {
+            $visitTotals = collect();
+        }
+        $pageVisits = [];
+        foreach ($pages as $p) {
+            $pageVisits[$p] = (int) ($visitTotals[$p] ?? 0);
+        }
+
+        // Homepage breakdown: today, week, month, year
+        $today = \Carbon\Carbon::today();
+        $startOfWeek = (clone $today)->startOfWeek();
+        $startOfMonth = (clone $today)->startOfMonth();
+        $startOfYear = (clone $today)->startOfYear();
+
+        $homeToday = $homeWeek = $homeMonth = $homeYear = $totalHomeAllTime = 0;
+        try {
+            $homeToday = (int) \App\Models\PageVisit::where('page','home')->where('date', $today)->sum('count');
+            $homeWeek = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfWeek, $today])->sum('count');
+            $homeMonth = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfMonth, $today])->sum('count');
+            $homeYear = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfYear, $today])->sum('count');
+            $totalHomeAllTime = (int) \App\Models\PageVisit::where('page','home')->sum('count');
+        } catch (\Throwable $e) {
+            // leave as zeros if table not ready
+        }
+
+        $totalVisitsBreakdown = compact('homeToday','homeWeek','homeMonth','homeYear','totalHomeAllTime');
+
+        // Latest content
+        $latestArticles = \App\Models\Article::orderByDesc('created_at')->take(3)->get();
+        $latestProducts = \App\Models\Product::orderByDesc('created_at')->take(3)->get();
+
+        return view('admin.index', compact(
+            'metrics',
+            'totalViewsArticles',
+            'pageVisits',
+            'totalVisitsBreakdown',
+            'latestArticles',
+            'latestProducts'
+        ));
     })->name('index');
 
     // Article Management - CRUD (RESOURCE ROUTE)

@@ -31,4 +31,24 @@ class Product extends Model
             }
         });
     }
+
+    /**
+     * Get public URL for product image with safe fallback.
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if (!empty($this->image)) {
+            // If already an absolute URL or absolute path, return as-is
+            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://') || str_starts_with($this->image, '/')) {
+                return $this->image;
+            }
+            // If stored under assets/, use asset()
+            if (str_starts_with($this->image, 'assets/')) {
+                return asset($this->image);
+            }
+            // Otherwise assume it's a storage path
+            return \Illuminate\Support\Facades\Storage::url($this->image);
+        }
+        return asset('assets/img/box2.png');
+    }
 }

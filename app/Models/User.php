@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+// TAMBAHKAN INI UNTUK VERIFIKASI EMAIL
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +12,8 @@ use Illuminate\Support\Facades\Storage;
 // BARU: Impor model Consultation
 use App\Models\Consultation;
 
-class User extends Authenticatable
+// TAMBAHKAN 'implements MustVerifyEmail'
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -65,6 +68,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relationship: User has one cart
+     */
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    /**
      * Relationship: User has many orders
      */
     public function orders()
@@ -72,12 +83,36 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    // ===========================================
-    // KODE BARU DIMULAI DI SINI
-    // ===========================================
+    /**
+     * Relationship: User has many comments
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
     /**
-     * Relationship: User has many consultations
+     * Relationship: User has many replies
+     */
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
+
+    /**
+     * Relationship: User has many surveys
+     */
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
+
+    // ============================================\n
+    // <-- FUNGSI KONSULTASI BARU DITAMBAHKAN DI SINI -->
+    // ============================================\n
+
+    /**
+     * Mendapatkan semua konsultasi gratis milik user.
      */
     public function consultations()
     {
@@ -85,30 +120,25 @@ class User extends Authenticatable
     }
 
     /**
-     * Helper function untuk mengecek konsultasi aktif (pending atau scheduled)
+     * Cek apakah user memiliki konsultasi yang sedang aktif (belum selesai).
+     * Ini digunakan untuk Rule #3 di halaman depan.
      */
     public function hasActiveConsultation(): bool
     {
-        // Cek jika ada konsultasi dengan status 'pending' ATAU 'scheduled'
+        // Cek apakah ada konsultasi yang statusnya BUKAN 'completed'
+        // dan juga BUKAN 'cancelled'.
+        // Jika ada (pending/active), maka return true.
         return $this->consultations()
-                    ->whereIn('status', ['pending', 'scheduled'])
+                    ->whereNotIn('status', ['completed', 'cancelled'])
                     ->exists();
     }
 
-    // ===========================================
-    // KODE BARU BERAKHIR DI SINI
-    // ===========================================
-
     /**
-     * Get user profile photo path
+     * Get user's profile photo URL
      */
-    public function getProfilePhotoPathAttribute()
+    public function getProfilePhotoUrlAttribute()
     {
-        if (!$this->profile_photo) {
-            return null;
-        }
-
-        // Check if it's a URL (from Google)
+        // Check if profile_photo is a URL (from Google)
         if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
             return $this->profile_photo;
         }
@@ -174,6 +204,6 @@ class User extends Authenticatable
      */
     public function isGoogleUser()
     {
-        return !empty($this->google_id) && empty($this->password);
+        return !empty($this->google_id);
     }
 }

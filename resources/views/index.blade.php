@@ -1616,8 +1616,8 @@
                 @if(isset($products) && $products->count() > 0)
                     @foreach($products->take(3) as $product)
                     <div class="product-card">
-                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Rectangle12.png') }}" 
-                             alt="{{ $product->name }}" 
+                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Rectangle12.png') }}"
+                             alt="{{ $product->name }}"
                              class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">{{ $product->name }}</h3>
@@ -1909,14 +1909,14 @@
                                     $articleImage = asset('assets/img/Article-image.png');
                                 }
                             @endphp
-                            <img src="{{ $articleImage }}" 
+                            <img src="{{ $articleImage }}"
                                  alt="{{ $article->title }}"
                                  onerror="this.onerror=null; this.src='{{ asset('assets/img/Article-image.png') }}';">
                         </div>
                         <div class="body">
                             <h3 class="title">{{ $article->title }}</h3>
                             <p class="deskripsi">{{ Str::limit(strip_tags($article->content), 100) }}</p>
-                            <a class="more" href="{{ route('detail_artikel', $article->slug) }}" 
+                            <a class="more" href="{{ route('detail_artikel', $article->slug) }}"
                                aria-label="Baca selengkapnya {{ $article->title }}">Baca Selengkapnya</a>
                         </div>
                     </article>
@@ -1987,111 +1987,162 @@
     @include('layouts.footer')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerButton = document.getElementById('navbar-hamburger');
-            const mobileMenu = document.getElementById('navbar-mobile-menu');
+    document.addEventListener('DOMContentLoaded', function () {
+        // [TAMBAHAN] Definisi csrfToken agar bisa digunakan oleh 'fetch' di bawah
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            hamburgerButton.addEventListener('click', function () {
-                mobileMenu.classList.toggle('active');
+        const hamburgerButton = document.getElementById('navbar-hamburger');
+        const mobileMenu = document.getElementById('navbar-mobile-menu');
+
+        hamburgerButton.addEventListener('click', function () {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
+        const dominoTabs = document.querySelectorAll('.domino-tab');
+        const dominoContents = document.querySelectorAll('.domino-content');
+
+        dominoTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.dataset.target;
+                const targetContent = document.getElementById(targetId);
+
+                dominoTabs.forEach(t => t.classList.remove('active'));
+                dominoContents.forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+                targetContent.classList.add('active');
             });
+        });
 
-            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
-            const dominoTabs = document.querySelectorAll('.domino-tab');
-            const dominoContents = document.querySelectorAll('.domino-content');
+        const loginButton = document.getElementById('login-prompt-button');
+        if (loginButton) {
+            loginButton.addEventListener('click', function (event) {
+                // 1. Hentikan aksi default (pindah halaman)
+                event.preventDefault();
 
-            dominoTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const targetId = tab.dataset.target;
-                    const targetContent = document.getElementById(targetId);
+                // 2. Tampilkan notifikasi popup (alert)
+                alert('Anda harus login terlebih dahulu untuk melakukan konsultasi.');
 
-                    dominoTabs.forEach(t => t.classList.remove('active'));
-                    dominoContents.forEach(c => c.classList.remove('active'));
-
-                    tab.classList.add('active');
-                    targetContent.classList.add('active');
-                });
+                // 3. Arahkan ke halaman login
+                window.location.href = this.href;
             });
+        }
 
-            const loginButton = document.getElementById('login-prompt-button');
-            if (loginButton) {
-                loginButton.addEventListener('click', function (event) {
-                    // 1. Hentikan aksi default (pindah halaman)
-                    event.preventDefault();
+        // =============================================
+        // KODE BARU UNTUK REQUEST KONSULTASI VIA POPUP (Rule #2, #3)
+        // =============================================
+       const requestButton = document.getElementById('requestConsultationBtn');
+        if (requestButton) {
+            requestButton.addEventListener('click', async function () {
 
-                    // 2. Tampilkan notifikasi popup (alert)
-                    alert('Anda harus login terlebih dahulu untuk melakukan konsultasi.');
+                // 1. Ambil data dari tombol
+                const userPhone = requestButton.dataset.phone;
+                const profileUrl = requestButton.dataset.profileUrl;
 
-                    // 3. Arahkan ke halaman login
-                    window.location.href = this.href;
-                });
-            }
+                // ================================================================
+                // [PERUBAHAN SESUAI PERMINTAAN ANDA]
+                // 2. Cek nomor telepon (FRONTEND CHECK)
+                if (!userPhone || userPhone.trim() === '') {
+                    // Beri pemberitahuan menggunakan showAlert (bukan alert)
+                    showAlert(
+                        'Perhatian',
+                        'Anda harus melengkapi nomor telepon di profil Anda sebelum dapat meminta konsultasi.',
+                        'warning' // Tipe notifikasi
+                    ).then(() => {
+                        // Arahkan ke edit profile SETELAH popup ditutup
+                        window.location.href = profileUrl + '?redirect_to=consultation';
+                    });
 
-            // =============================================
-            // KODE BARU UNTUK REQUEST KONSULTASI VIA POPUP (Rule #2, #3)
-            // =============================================
-            const requestButton = document.getElementById('request-consultation-button');
-            if (requestButton) {
-                requestButton.addEventListener('click', async function () {
+                    // Hentikan eksekusi
+                    return;
+                }
+                // [AKHIR PERUBAHAN]
+                // ================================================================
 
-                    // Nonaktifkan visual tombol saat proses
-                    requestButton.disabled = true;
-                    requestButton.textContent = 'Memproses...';
-                    requestButton.classList.add('disabled');
+                // 3. Jika lolos, baru jalankan proses (BACKEND SUBMIT)
+                requestButton.disabled = true;
+                requestButton.textContent = 'Memproses...';
+                requestButton.classList.add('disabled');
 
-                    try {
-                        const response = await fetch('{{ route('consultation.request') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Pastikan Anda memiliki meta tag CSRF token di <head>
-                            },
-                        });
+                try {
+                    const response = await fetch("{{ route('consultation.request') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken, // Variabel ini sekarang sudah didefinisikan
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    });
 
-                        const data = await response.json();
+                    const data = await response.json();
 
-                        if (response.ok) {
-                            // SUKSES (Rule #2: Notifikasi Popup sukses)
-                            alert(data.message);
-                            // Refresh halaman untuk menampilkan tombol disabled
-                            window.location.reload();
-                        } else {
-                            // ERROR (Rule #3: Notifikasi Popup error)
-                            alert('Gagal mengajukan konsultasi: ' + data.message);
-                            // Kembalikan tombol ke keadaan semula jika error selain status 409
-                            requestButton.disabled = false;
-                            requestButton.textContent = 'Konsultasi Gratis Sekarang';
-                            requestButton.classList.remove('disabled');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+                    // Tampilkan popup hasil
+                    showAlert(
+                        data.status === 'success' ? 'Permintaan Terkirim' : 'Permintaan Gagal',
+                        data.message,
+                        data.status // 'success' or 'error'
+                    );
 
-                        // Kembalikan tombol ke keadaan semula
+                    // Handle jika backend (failsafe) juga me-redirect
+                    if (data.status === 'error' && data.redirect) {
+                        setTimeout(() => {
+                            window.location.href = data.redirect + '?redirect_to=consultation';
+                        }, 3000);
+                    }
+
+                    // Jika sukses, reload halaman setelah popup ditutup
+                    if(data.status === 'success') {
+                        // Pastikan variabel 'popupCloseBtn' dan 'popup'
+                        // memang tersedia secara global dari fungsi showAlert Anda
+                        const reloadPage = () => window.location.reload();
+                        popupCloseBtn.addEventListener('click', reloadPage, { once: true });
+                        popup.addEventListener('click', (e) => {
+                            if (e.target === popup) reloadPage();
+                        }, { once: true });
+                    } else if (!data.redirect) {
+                        // Jika gagal dan bukan redirect, aktifkan tombol kembali
                         requestButton.disabled = false;
                         requestButton.textContent = 'Konsultasi Gratis Sekarang';
                         requestButton.classList.remove('disabled');
                     }
-                });
-            }
 
-            // Enable touch-mimicked hover on mobile for navbar menu links
-            const navLinks = document.querySelectorAll('.navbar-menu a');
-            if (navLinks && navLinks.length) {
-                const addTouch = (e) => {
-                    e.currentTarget.classList.add('touch-hover');
-                };
-                const removeTouch = (e) => {
-                    e.currentTarget.classList.remove('touch-hover');
-                };
-                navLinks.forEach(a => {
-                    a.addEventListener('touchstart', addTouch, { passive: true });
-                    a.addEventListener('touchend', removeTouch, { passive: true });
-                    a.addEventListener('touchcancel', removeTouch, { passive: true });
-                    a.addEventListener('blur', removeTouch);
-                    a.addEventListener('click', removeTouch);
-                });
-            }
-        });
-    </script>
+                } catch (error) {
+                    console.error('Error:', error);
+                    // Ganti alert lama dengan popup baru
+                    showAlert(
+                        'Terjadi Kesalahan',
+                        'Gagal terhubung ke server. Silakan coba lagi nanti.',
+                        'error'
+                    );
+
+                    // Kembalikan tombol ke keadaan semula
+                    requestButton.disabled = false;
+                    requestButton.textContent = 'Konsultasi Gratis Sekarang';
+                    requestButton.classList.remove('disabled');
+                }
+            });
+        }
+
+        // Enable touch-mimicked hover on mobile for navbar menu links
+        const navLinks = document.querySelectorAll('.navbar-menu a');
+        if (navLinks && navLinks.length) {
+            const addTouch = (e) => {
+                e.currentTarget.classList.add('touch-hover');
+            };
+            const removeTouch = (e) => {
+                e.currentTarget.classList.remove('touch-hover');
+            };
+            navLinks.forEach(a => {
+                a.addEventListener('touchstart', addTouch, { passive: true });
+                a.addEventListener('touchend', removeTouch, { passive: true });
+                a.addEventListener('touchcancel', removeTouch, { passive: true });
+                a.addEventListener('blur', removeTouch);
+                a.addEventListener('click', removeTouch);
+            });
+        }
+    });
+</script>
 </body>
 </html>

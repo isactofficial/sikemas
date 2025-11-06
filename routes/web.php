@@ -204,6 +204,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Article Management - CRUD (RESOURCE ROUTE)
     Route::resource('articles', ArticleController::class);
+    // Quick status update for articles
+    Route::patch('articles/{article}/status', [ArticleController::class, 'updateStatus'])->name('articles.updateStatus');
 
     // Products CRUD
     Route::resource('products', ProductController::class)->names('products');

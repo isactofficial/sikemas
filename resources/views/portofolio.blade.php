@@ -159,14 +159,16 @@
         .t-wrap{max-width:1100px;margin:0 auto}
         .t-wrap h2{color:#074159;text-align:center;font-size:28px;font-weight:800;margin:4px 0 18px}
 
-        /* Carousel */
-        .t-carousel{position:relative; --per:3}
+    /* Carousel */
+    .t-carousel{position:relative; --per:3; --nav-size:38px; --nav-gap:10px}
     .t-viewport{overflow:hidden}
         .t-track{display:flex; gap:16px; transition:transform .45s ease}
         .t-slide{flex:0 0 calc(100% / var(--per))}
-    .t-nav{position:absolute; top:50%; transform:translateY(-50%); background:#fff; color:#074159; border:1px solid #d7e3e0; box-shadow:0 4px 14px rgba(7,65,89,.08); width:38px; height:38px; border-radius:50%; display:grid; place-items:center; cursor:pointer; z-index:3}
-        .t-prev{left:-6px}
-        .t-next{right:-6px}
+    .t-nav{position:absolute; top:50%; transform:translateY(-50%); background:#fff; color:#074159; border:1px solid #d7e3e0; box-shadow:0 4px 14px rgba(7,65,89,.08); width:var(--nav-size); height:var(--nav-size); border-radius:50%; display:grid; place-items:center; cursor:pointer; z-index:3}
+    /* Place arrows fully outside the image with a consistent gap */
+    .t-prev{left: calc((var(--nav-size) + var(--nav-gap)) * -1)}
+    .t-next{right: calc((var(--nav-size) + var(--nav-gap)) * -1)}
+    @media (max-width:560px){ .t-carousel{ --nav-size:34px; --nav-gap:8px } }
         .t-nav[disabled]{opacity:.5; cursor:not-allowed}
         .t-dots{display:flex; justify-content:center; gap:6px; margin-top:12px}
         .t-dots button{width:8px; height:8px; border-radius:50%; border:0; background:#c9d9d5; cursor:pointer}

@@ -175,6 +175,34 @@ class ArticleController extends Controller
     }
 
     /**
+     * Update only the status of an article (draft|published).
+     */
+    public function updateStatus(Request $request, Article $article)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:draft,published',
+        ]);
+
+        $newStatus = $validated['status'];
+
+        // Adjust published_at accordingly
+        $article->status = $newStatus;
+        if ($newStatus === 'published') {
+            // set published_at if not already set
+            if (!$article->published_at) {
+                $article->published_at = now();
+            }
+        } else {
+            // draft: clear published_at to indicate not live
+            $article->published_at = null;
+        }
+
+        $article->save();
+
+        return back()->with('success', 'Status artikel diperbarui.');
+    }
+
+    /**
      * Helper: Save article contents (subheadings and paragraphs)
      */
     private function saveArticleContents(Article $article, Request $request)

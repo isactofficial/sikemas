@@ -12,6 +12,17 @@ class ConsultationController extends Controller
     {
         $user = Auth::user();
 
+        // Validasi #1: Cek apakah nomor telepon sudah diisi
+        if (empty($user->phone)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda harus melengkapi nomor telepon di profil Anda sebelum melanjutkan konsultasi.',
+                // Memberi tahu front-end ke mana harus redirect jika diperlukan
+                'redirect' => route('profile.edit')
+            ], 403); // 403 Forbidden
+        }
+
+        // Validasi #2: Cek konsultasi aktif (dari kode asli Anda)
         if ($user->hasActiveConsultation()) {
              // HASIL ERROR untuk Rule #3
             return response()->json([
@@ -20,7 +31,7 @@ class ConsultationController extends Controller
             ], 409); // 409 Conflict
         }
 
-        // Jika tidak ada, buat permintaan konsultasi baru
+        // Jika lolos, buat permintaan konsultasi baru
         $consultation = $user->consultations()->create([
             'status' => 'pending', // Atur status awal
             'konfirmasi' => 'waiting', // Atur status konfirmasi awal

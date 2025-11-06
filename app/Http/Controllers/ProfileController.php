@@ -57,18 +57,6 @@ class ProfileController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        if ($request->filled('redirect_to') && $request->redirect_to == 'consultation') {
-
-            // Jika ada, kembalikan ke homepage + anchor/hash ke section
-            // Gunakan url('/') untuk homepage dan tambahkan anchor
-            return redirect(url('/#free-consultation'))
-                   ->with('success', 'Profil berhasil diperbarui!');
-        }
-
-        // Jika tidak ada, lakukan redirect default (kembali ke halaman edit profil)
-        return redirect()->route('profile.edit')
-               ->with('success', 'Profil berhasil diperbarui.');
-
         // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
             // Delete old photo if exists

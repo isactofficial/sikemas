@@ -12,24 +12,8 @@ class ConsultationController extends Controller
     {
         $user = Auth::user();
 
-        // ==========================================================
-        // Validasi Nomor Telepon (Rule #1 - BACKEND FAILSAFE)
-        // ==========================================================
-        if (empty($user->no_telepon)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Anda harus melengkapi nomor telepon di profil Anda sebelum dapat meminta konsultasi.',
-                // Kirim URL redirect agar JS bisa mengarahkan user
-                'redirect' => route('profile.edit')
-            ], 422); // 422 Unprocessable Entity
-        }
-        // ==========================================================
-        // AKHIR PERUBAHAN
-        // ==========================================================
-
-
-        // Rule #3: Cek apakah user sudah memiliki konsultasi yang sedang berjalan
         if ($user->hasActiveConsultation()) {
+             // HASIL ERROR untuk Rule #3
             return response()->json([
                 'status' => 'error',
                 'message' => 'Anda sudah memiliki permintaan konsultasi aktif. Satu pengguna hanya bisa melakukan 1 kali konsultasi sampai sesi konsultasi berakhir.'

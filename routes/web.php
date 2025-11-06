@@ -12,7 +12,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Admin\FreeConsultationController;
-use Illuminate\Support\Facades\Auth;
+
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -103,7 +103,6 @@ Route::get('/beranda', function () {
         ->orderByDesc('created_at')
         ->take(12)
         ->get();
-    $user = Auth::user();
     return view('index', compact('articles'));
 })->middleware('track.page:home')->name('beranda');
 

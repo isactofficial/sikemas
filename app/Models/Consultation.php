@@ -14,7 +14,7 @@ class Consultation extends Model
      *
      * @var string
      */
-    protected $table = 'free_consultations'; // Diubah dari 'consultations'
+    protected $table = 'free_consultations'; 
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +24,7 @@ class Consultation extends Model
     protected $fillable = [
         'user_id',
         'status',
-        'konfirmasi', // Kolom baru ditambahkan
+        'konfirmasi',
         'consultation_date',
         'notes',
     ];

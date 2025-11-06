@@ -1616,12 +1616,25 @@
                 @if(isset($products) && $products->count() > 0)
                     @foreach($products->take(3) as $product)
                     <div class="product-card">
-                        <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Rectangle12.png') }}"
+                        @php
+                            $productImage = null;
+                            if (!empty($product->image)) {
+                                $productImage = asset('storage/' . $product->image);
+                            } elseif (!empty($product->featured_image)) {
+                                $productImage = asset('storage/' . $product->featured_image);
+                            } elseif (!empty($product->thumbnail)) {
+                                $productImage = asset('storage/' . $product->thumbnail);
+                            } else {
+                                $productImage = asset('assets/img/Rectangle12.png');
+                            }
+                        @endphp
+                        <img src="{{ $productImage }}"
                              alt="{{ $product->name }}"
-                             class="product-image">
+                             class="product-image"
+                             onerror="this.onerror=null; this.src='{{ asset('assets/img/Rectangle12.png') }}';">
                         <div class="product-content">
                             <h3 class="product-title">{{ $product->name }}</h3>
-                            <p class="product-description">{{ Str::limit($product->description ?? 'Produk berkualitas dari Sikemas', 100) }}</p>
+                            <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>

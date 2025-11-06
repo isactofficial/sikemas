@@ -17,13 +17,16 @@ use App\Http\Controllers\Admin\FreeConsultationController;
 // HOME ROUTE
 // ============================================
 use App\Models\Article;
+use App\Models\Product;
+
 Route::get('/', function () {
+    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(12)
+        ->take(3)
         ->get();
-    return view('index', compact('articles'));
+    return view('index', compact('products', 'articles'));
 })->middleware('track.page:home')->name('home');
 
 Route::get('/edit-design', function () {
@@ -98,15 +101,16 @@ Route::middleware(['auth'])->group(function () {
 // PUBLIC PAGES
 // ============================================
 Route::get('/beranda', function () {
+    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(12)
+        ->take(3)
         ->get();
-    return view('index', compact('articles'));
+    return view('index', compact('products', 'articles'));
 })->middleware('track.page:home')->name('beranda');
 
-use App\Models\Product;
+
 Route::get('/produk', function () {
     $products = Product::query()
         ->orderByDesc('created_at')

@@ -14,14 +14,14 @@ class HomeController extends Controller
     public function index()
     {
         // Ambil 3 produk terbaru
-        $products = Product::orderBy('created_at', 'desc')
+        $products = Product::latest()
             ->take(3)
             ->get();
 
         // Ambil 3 artikel terbaru yang sudah published
         $articles = Article::published()
-            ->orderByDesc('published_at')
-            ->orderByDesc('created_at')
+            ->latest('published_at')
+            ->latest('created_at')
             ->take(3)
             ->get();
 

@@ -248,7 +248,7 @@
             height: 14px;
         }
         
-        /* STATUS WARNA SOLID */
+        /* STATUS WARNA SOLID - 3 TOMBOL */
         .status-selesai { 
             background: #074159; 
             color: #FFFFFF;     
@@ -545,14 +545,30 @@
             <h3 class="section-title">Riwayat Belanja</h3>
             <div>
                 @forelse($orders as $order)
-                <div class="order-card {{ strtolower($order->status) }}">
+                <div class="order-card 
+                    @if($order->shipping_status === 'Arrived')
+                        selesai
+                    @elseif($order->shipping_status === 'Shipped' || $order->shipping_status === 'Pending')
+                        diproses
+                    @else
+                        dibatalkan
+                    @endif
+                ">
                     <div class="order-header">
                         <span class="invoice-number">{{ $order->invoice_number }}</span>
-                        <span class="order-status status-{{ strtolower($order->status) }}">
-                            @if($order->status === 'Selesai')
+                        <span class="order-status 
+                            @if($order->shipping_status === 'Arrived')
+                                status-selesai
+                            @elseif($order->shipping_status === 'Shipped' || $order->shipping_status === 'Pending')
+                                status-diproses
+                            @else
+                                status-dibatalkan
+                            @endif
+                        ">
+                            @if($order->shipping_status === 'Arrived')
                                 <img src="{{ asset('assets/img/centang.svg') }}" alt="Selesai">
                                 Selesai
-                            @elseif($order->status === 'Diproses')
+                            @elseif($order->shipping_status === 'Shipped' || $order->shipping_status === 'Pending')
                                 <img src="{{ asset('assets/img/time.svg') }}" alt="Diproses">
                                 Diproses
                             @else

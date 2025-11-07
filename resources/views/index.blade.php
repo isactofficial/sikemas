@@ -10,7 +10,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        :root {
+        /* Mengubah warna background tombol alert */
+        --swal2-confirm-button-background-color: #ff5722;
+        /* Mengubah warna teks tombol konfirmasi */
+        --swal2-confirm-button-text-color: #ffffff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -2349,9 +2358,20 @@
             const loginButton = document.getElementById('login-prompt-button');
             if (loginButton) {
                 loginButton.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    alert('Anda harus login terlebih dahulu untuk melakukan konsultasi.');
-                    window.location.href = this.href;
+                    event.preventDefault(); // Mencegah link langsung berpindah
+                    const loginUrl = this.href;
+
+                    // Ganti alert() dengan Swal.fire()
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Login Diperlukan',
+                        text: 'Anda harus login terlebih dahulu untuk melakukan konsultasi.',
+                        confirmButtonText: 'Login Sekarang',
+                        allowOutsideClick: false
+                    }).then(() => {
+                        // Arahkan ke halaman login setelah popup ditutup
+                        window.location.href = loginUrl;
+                    });
                 });
             }
 
@@ -2361,22 +2381,27 @@
             const requestButton = document.getElementById('request-consultation-button');
             if (requestButton) {
                 requestButton.addEventListener('click', async function() {
-                    // Ambil data dari attribute tombol yang kita tambahkan di HTML
+                    // Ambil data dari attribute
                     const isPhoneFilled = requestButton.dataset.phoneFilled === 'true';
                     const profileUrl = requestButton.dataset.profileUrl;
 
                     // Cek apakah nomor telepon sudah diisi
                     if (!isPhoneFilled) {
-                        // Jika belum, tampilkan alert dan arahkan ke edit profil
-                        alert(
-                            'Anda harus melengkapi nomor telepon Anda di halaman Profil Saya sebelum dapat melakukan konsultasi.'
-                        );
-                        window.location.href = profileUrl; // Arahkan ke halaman profil
-                        return;
+                        // Ganti alert() dengan Swal.fire()
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Data Belum Lengkap',
+                            text: 'Anda harus melengkapi nomor telepon Anda di halaman Profil Saya sebelum dapat melakukan konsultasi.',
+                            confirmButtonText: 'Lengkapi Profil',
+                            allowOutsideClick: false
+                        }).then(() => {
+                            // Arahkan ke halaman profil setelah popup ditutup
+                            window.location.href = profileUrl;
+                        });
+                        return; // Hentikan eksekusi
                     }
 
-
-                    // Nonaktifkan visual tombol saat proses
+                    // Nonaktifkan visual tombol saat proses (Ini sudah bagus, tetap pertahankan)
                     requestButton.disabled = true;
                     requestButton.textContent = 'Memproses...';
                     requestButton.classList.add('disabled');
@@ -2394,20 +2419,37 @@
                         const data = await response.json();
 
                         if (response.ok) {
-                            // SUKSES (Rule #2)
-                            alert(data.message);
-                            // Refresh halaman
-                            window.location.reload();
+                            // SUKSES: Ganti alert() dengan Swal.fire()
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Permintaan Terkirim!',
+                                text: data.message,
+                                timer: 25000,
+                                timerProgressBar: true
+                            }).then(() => {
+                                // Refresh halaman setelah popup sukses
+                                window.location.reload();
+                            });
+
                         } else {
-                            // ERROR (Rule #3 atau error validasi No. HP dari backend)
+                            // ERROR (Rule #3 atau error validasi)
 
                             // Cek jika ini adalah error 'redirect' dari controller
                             if (response.status === 403 && data.redirect) {
-                                alert(data.message);
-                                window.location.href = data.redirect;
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: data.message,
+                                }).then(() => {
+                                    window.location.href = data.redirect;
+                                });
                             } else {
-                                // Tampilkan error lain (misal: sudah ada konsultasi aktif)
-                                alert('Gagal mengajukan konsultasi: ' + data.message);
+                                // Tampilkan error lain
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal Mengajukan Konsultasi',
+                                    text: data.message,
+                                });
                             }
 
                             // Kembalikan tombol ke keadaan semula jika error
@@ -2417,7 +2459,13 @@
                         }
                     } catch (error) {
                         console.error('Error:', error);
-                        alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+
+                        // ERROR KONEKSI: Ganti alert() dengan Swal.fire()
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Koneksi Gagal',
+                            text: 'Terjadi kesalahan koneksi. Silakan coba lagi.',
+                        });
 
                         // Kembalikan tombol ke keadaan semula
                         requestButton.disabled = false;

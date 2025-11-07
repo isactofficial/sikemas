@@ -50,6 +50,17 @@
 		.skm-filters select, .skm-filters input { padding: 8px 12px; border: 1.5px solid #E5E7EB; border-radius: 8px; font-size: 13px; font-family: inherit; }
 		.skm-filters input { min-width: 200px; }
 
+		/* Status select in table */
+		.skm-status-select {
+			padding: 6px 10px;
+			border: 1.5px solid #E5E7EB;
+			border-radius: 8px;
+			font-size: 12px;
+			font-family: inherit;
+			background: #fff;
+			color: #074159;
+		}
+
 		/* Container for table title and filters */
 		.skm-table-header-bar {
 			display: flex;
@@ -310,8 +321,13 @@
 				color: #666;
 			}
 
-			/* Action buttons - Full width at bottom */
+			/* Status cell */
 			.skm-table td:nth-child(4) {
+				padding: 0 16px 16px 16px;
+			}
+
+			/* Action buttons - Full width at bottom */
+			.skm-table td:nth-child(5) {
 				padding: 16px;
 				background: #F9FAFB;
 				border-top: 1px solid #E5E7EB;
@@ -479,6 +495,7 @@
 							<th>Thumbnail</th>
 							<th>Title</th>
 							<th>Date</th>
+							<th>Status</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -498,7 +515,17 @@
 								<strong>{{ Str::limit($article->title, 50) }}</strong>
 							</td>
 							<td>{{ $article->created_at->format('d - m - Y') }}</td>
-							
+							<td>
+								<form action="{{ route('admin.articles.updateStatus', $article->id) }}" method="POST">
+									@csrf
+									@method('PATCH')
+									<select name="status" class="skm-status-select" onchange="this.form.submit()">
+										<option value="draft" {{ strtolower($article->status) === 'draft' ? 'selected' : '' }}>Draft</option>
+										<option value="published" {{ strtolower($article->status) === 'published' ? 'selected' : '' }}>Published</option>
+									</select>
+								</form>
+							</td>
+
 							<td>
 								<div class="skm-action-btns">
 									
@@ -522,7 +549,7 @@
 						</tr>
 						@empty
 						<tr>
-							<td colspan="4" style="text-align:center; padding: 40px; color: #6B8791;">
+							<td colspan="5" style="text-align:center; padding: 40px; color: #6B8791;">
 								No articles found. <a href="{{ route('admin.articles.create') }}">Create your first article</a>
 							</td>
 						</tr>

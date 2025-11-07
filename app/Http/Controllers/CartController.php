@@ -224,13 +224,20 @@ class CartController extends Controller
             // Generate invoice number
             $invoiceNumber = 'INV-' . date('ymd') . '-' . strtoupper(Str::random(6));
             
+            // Hitung total dengan pajak
+            $subtotal = $cart->total_amount;
+            $pajak = $subtotal * 0.11; // Pajak 11%
+            $shipping = $cart->shipping_cost;
+            $grandTotal = $subtotal + $pajak + $shipping;
+            
             // Create order
             $order = Order::create([
                 'user_id' => $user->id,
                 // 'cart_id' => $cart->id, // Lihat Catatan di bawah
                 'invoice_number' => $invoiceNumber,
                 'order_date' => now(),
-                'total_amount' => $cart->grand_total, // Asumsi grand_total termasuk ongkir
+                'total_amount' => $grandTotal, // Total keseluruhan (subtotal + pajak + ongkir)
+                'shipping_cost' => $shipping, // Simpan biaya pengiriman
                 'status' => 'Diproses', // Status awal
                 'payment_method' => 'Transfer Bank', // Bisa dibuat dinamis
                 'shipping_address_id' => $address->id,

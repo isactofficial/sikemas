@@ -116,6 +116,20 @@
 		<div class="skm-form-container">
 			<h1 style="color: var(--skm-blue); font-size: 28px; margin-bottom: 24px;">Add New Article</h1>
 			
+			{{-- Alert untuk error umum --}}
+			@if(session('error'))
+				<div style="background:#FFE5E5; border:1px solid #FF5252; color:#C62828; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px;">
+					<strong>Error:</strong> {{ session('error') }}
+				</div>
+			@endif
+
+			{{-- Alert untuk success --}}
+			@if(session('success'))
+				<div style="background:#E8F5E9; border:1px solid #4CAF50; color:#2E7D32; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px;">
+					<strong>Berhasil!</strong> {{ session('success') }}
+				</div>
+			@endif
+			
 			<form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
 				@csrf
 				

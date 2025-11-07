@@ -16,13 +16,16 @@ use App\Http\Controllers\ConsultationController;
 // HOME ROUTE
 // ============================================
 use App\Models\Article;
+use App\Models\Product;
+
 Route::get('/', function () {
+    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(12)
+        ->take(3)
         ->get();
-    return view('index', compact('articles'));
+    return view('index', compact('products', 'articles'));
 })->middleware('track.page:home')->name('home');
 
 Route::get('/edit-design', function () {
@@ -97,15 +100,16 @@ Route::middleware(['auth'])->group(function () {
 // PUBLIC PAGES
 // ============================================
 Route::get('/beranda', function () {
+    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(12)
+        ->take(3)
         ->get();
-    return view('index', compact('articles'));
+    return view('index', compact('products', 'articles'));
 })->middleware('track.page:home')->name('beranda');
 
-use App\Models\Product;
+
 Route::get('/produk', function () {
     $products = Product::query()
         ->orderByDesc('created_at')
@@ -204,6 +208,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Article Management - CRUD (RESOURCE ROUTE)
     Route::resource('articles', ArticleController::class);
+    // Quick status update for articles
+    Route::patch('articles/{article}/status', [ArticleController::class, 'updateStatus'])->name('articles.updateStatus');
 
     // Products CRUD
     Route::resource('products', ProductController::class)->names('products');

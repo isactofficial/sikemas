@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 // BARU: Impor model Consultation
 use App\Models\Consultation;
@@ -89,10 +90,20 @@ class User extends Authenticatable
      */
     public function hasActiveConsultation(): bool
     {
-        // Cek jika ada konsultasi dengan status 'pending' ATAU 'scheduled'
-        return $this->consultations()
-                    ->whereIn('status', ['pending', 'scheduled'])
-                    ->exists();
+        // Jika tabel consultations belum ada (mis. environment dev/belum migrasi), anggap tidak ada konsultasi aktif
+        try {
+            if (!Schema::hasTable('consultations')) {
+                return false;
+            }
+
+            // Cek jika ada konsultasi dengan status 'pending' ATAU 'scheduled'
+            return $this->consultations()
+                        ->whereIn('status', ['pending', 'scheduled'])
+                        ->exists();
+        } catch (\Throwable $e) {
+            // Fail-safe: jangan gagalkan halaman hanya karena tabel/kolom belum siap
+            return false;
+        }
     }
 
     // ===========================================

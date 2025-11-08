@@ -11,7 +11,6 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
-use App\Http\Controllers\Admin\FreeConsultationController;
 
 // ============================================
 // HOME ROUTE
@@ -209,6 +208,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Article Management - CRUD (RESOURCE ROUTE)
     Route::resource('articles', ArticleController::class);
+    // Quick status update for articles
+    Route::patch('articles/{article}/status', [ArticleController::class, 'updateStatus'])->name('articles.updateStatus');
 
     // Products CRUD
     Route::resource('products', ProductController::class)->names('products');
@@ -216,7 +217,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Testimonies CRUD
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
-    // Transactions CRUD
+    // Transactions CRUD (BARU)
     Route::resource('transactions', TransactionController::class)->except([
         'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
     ]);

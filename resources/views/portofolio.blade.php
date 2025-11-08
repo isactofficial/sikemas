@@ -154,19 +154,21 @@
     </div>
 
     <style>
-        /* Section wrapper */
-        .t-section{background:#eef3f1;padding:28px 12px}
+    /* Section wrapper */
+    .t-section{background:#eef3f1; --nav-size:38px; --nav-gap:10px; padding:28px calc(12px + var(--nav-size) + var(--nav-gap))}
         .t-wrap{max-width:1100px;margin:0 auto}
         .t-wrap h2{color:#074159;text-align:center;font-size:28px;font-weight:800;margin:4px 0 18px}
 
-        /* Carousel */
-        .t-carousel{position:relative; --per:3}
+    /* Carousel */
+    .t-carousel{position:relative; --per:3; --nav-size:38px; --nav-gap:10px}
     .t-viewport{overflow:hidden}
         .t-track{display:flex; gap:16px; transition:transform .45s ease}
         .t-slide{flex:0 0 calc(100% / var(--per))}
-    .t-nav{position:absolute; top:50%; transform:translateY(-50%); background:#fff; color:#074159; border:1px solid #d7e3e0; box-shadow:0 4px 14px rgba(7,65,89,.08); width:38px; height:38px; border-radius:50%; display:grid; place-items:center; cursor:pointer; z-index:3}
-        .t-prev{left:-6px}
-        .t-next{right:-6px}
+    .t-nav{position:absolute; top:50%; transform:translateY(-50%); background:#fff; color:#074159; border:1px solid #d7e3e0; box-shadow:0 4px 14px rgba(7,65,89,.08); width:var(--nav-size); height:var(--nav-size); border-radius:50%; display:grid; place-items:center; cursor:pointer; z-index:3}
+    /* Place arrows fully outside the image with a consistent gap */
+    .t-prev{left: calc((var(--nav-size) + var(--nav-gap)) * -1)}
+    .t-next{right: calc((var(--nav-size) + var(--nav-gap)) * -1)}
+    @media (max-width:560px){ .t-carousel{ --nav-size:34px; --nav-gap:8px } }
         .t-nav[disabled]{opacity:.5; cursor:not-allowed}
         .t-dots{display:flex; justify-content:center; gap:6px; margin-top:12px}
         .t-dots button{width:8px; height:8px; border-radius:50%; border:0; background:#c9d9d5; cursor:pointer}
@@ -182,9 +184,11 @@
         .t-card:hover img{transform:scale(1.04)}
         .t-card:hover .t-overlay{opacity:1;background:rgba(0,0,0,.6);justify-items:center;text-align:center}
 
-        /* Responsive: adjust items per view */
-        @media (max-width:900px){ .t-carousel{ --per:2 } }
-        @media (max-width:560px){ .t-carousel{ --per:1 } .t-section{padding:22px 10px} }
+    /* Responsive: adjust items per view */
+    @media (max-width:900px){ .t-carousel{ --per:2; --nav-size:36px; --nav-gap:10px } .t-section{ --nav-size:36px; --nav-gap:10px; } }
+    @media (max-width:560px){ .t-carousel{ --per:1; --nav-size:34px; --nav-gap:8px } .t-section{ --nav-size:34px; --nav-gap:8px; padding:22px calc(10px + var(--nav-size) + var(--nav-gap)); } }
+    @media (max-width:400px){ .t-carousel{ --nav-size:30px; --nav-gap:6px } .t-section{ --nav-size:30px; --nav-gap:6px } }
+    @media (max-width:340px){ .t-carousel{ --nav-size:28px; --nav-gap:4px } .t-section{ --nav-size:28px; --nav-gap:4px } }
     </style>
 
     <script>

@@ -1885,14 +1885,18 @@
                     </button>
                 @else
                     {{-- Tombol aktif. Gunakan ID untuk JavaScript/AJAX --}}
-
-                    <button type="button" class="free-design-button" id="request-consultation-button" aria-label="Konsultasi Gratis Sekarang"
-                            data-phone-filled="{{ Auth::user()->phone ? 'true' : 'false' }}"
-                            data-profile-url="{{ route('profile.index') }}">
-                    Konsultasi Gratis Sekarang
+                    <button type="button" class="free-design-button" id="request-consultation-button" aria-label="Konsultasi Gratis Sekarang">
+                        Konsultasi Gratis Sekarang
                     </button>
                 @endif
             @endauth
+
+            @guest
+                {{-- Rule #1: User belum login. Tombol akan dihandle oleh JS untuk popup login --}}
+                <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button">
+                    Konsultasi Gratis Sekarang
+                </a>
+            @endguest
 
         </div>
     </section>
@@ -1918,14 +1922,14 @@
                                     $articleImage = asset('assets/img/Article-image.png');
                                 }
                             @endphp
-                            <img src="{{ $articleImage }}"
+                            <img src="{{ $articleImage }}" 
                                  alt="{{ $article->title }}"
                                  onerror="this.onerror=null; this.src='{{ asset('assets/img/Article-image.png') }}';">
                         </div>
                         <div class="body">
                             <h3 class="title">{{ $article->title }}</h3>
                             <p class="deskripsi">{{ Str::limit(strip_tags($article->content), 100) }}</p>
-                            <a class="more" href="{{ route('detail_artikel', $article->slug) }}"
+                            <a class="more" href="{{ route('detail_artikel', $article->slug) }}" 
                                aria-label="Baca selengkapnya {{ $article->title }}">Baca Selengkapnya</a>
                         </div>
                     </article>
@@ -1996,129 +2000,145 @@
     @include('layouts.footer')
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // --- Script Hamburger---
-        const hamburgerButton = document.getElementById('navbar-hamburger');
-        const mobileMenu = document.getElementById('navbar-mobile-menu');
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerButton = document.getElementById('navbar-hamburger');
+            const mobileMenu = document.getElementById('navbar-mobile-menu');
 
-        hamburgerButton.addEventListener('click', function () {
-            mobileMenu.classList.toggle('active');
-        });
-
-        // --- SCRIPT KOMITMEN 2 ---
-        const dominoTabs = document.querySelectorAll('.domino-tab');
-        const dominoContents = document.querySelectorAll('.domino-content');
-
-        dominoTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetId = tab.dataset.target;
-                const targetContent = document.getElementById(targetId);
-
-                dominoTabs.forEach(t => t.classList.remove('active'));
-                dominoContents.forEach(c => c.classList.remove('active'));
-
-                tab.classList.add('active');
-                targetContent.classList.add('active');
+            // Toggle open/close on hamburger
+            hamburgerButton.addEventListener('click', function () {
+                mobileMenu.classList.toggle('active');
+                const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
+                hamburgerButton.setAttribute('aria-expanded', String(!expanded));
             });
-        });
 
-        // --- Script Login Prompt ---
-        const loginButton = document.getElementById('login-prompt-button');
-        if (loginButton) {
-            loginButton.addEventListener('click', function (event) {
-                event.preventDefault();
-                alert('Anda harus login terlebih dahulu untuk melakukan konsultasi.');
-                window.location.href = this.href;
-            });
-        }
-
-        // =======================
-        // KODE REQUEST KONSULTASI
-        // =======================
-        const requestButton = document.getElementById('request-consultation-button');
-        if (requestButton) {
-            requestButton.addEventListener('click', async function () {
-                // Ambil data dari attribute tombol yang kita tambahkan di HTML
-                const isPhoneFilled = requestButton.dataset.phoneFilled === 'true';
-                const profileUrl = requestButton.dataset.profileUrl;
-
-                // Cek apakah nomor telepon sudah diisi
-                if (!isPhoneFilled) {
-                    // Jika belum, tampilkan alert dan arahkan ke edit profil
-                    alert('Anda harus melengkapi nomor telepon Anda di halaman Profil Saya sebelum dapat melakukan konsultasi.');
-                    window.location.href = profileUrl; // Arahkan ke halaman profil
-                    return;
+            // Helper to close the mobile menu safely
+            function closeMobileMenu() {
+                if (mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    hamburgerButton.setAttribute('aria-expanded', 'false');
                 }
+            }
 
+            // 1) Click outside closes the menu (mobile)
+            document.addEventListener('click', function (e) {
+                const clickInsideMenu = mobileMenu.contains(e.target);
+                const clickOnHamburger = hamburgerButton.contains(e.target);
+                if (!clickInsideMenu && !clickOnHamburger) {
+                    closeMobileMenu();
+                }
+            });
 
-                // Nonaktifkan visual tombol saat proses
-                requestButton.disabled = true;
-                requestButton.textContent = 'Memproses...';
-                requestButton.classList.add('disabled');
+            // 2) Pressing Escape closes the menu
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeMobileMenu();
+                }
+            });
 
-                try {
-                    const response = await fetch('{{ route('consultation.request') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                    });
+            // 3) Clicking a link inside the menu closes it
+            mobileMenu.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', function () {
+                    closeMobileMenu();
+                });
+            });
 
-                    const data = await response.json();
+            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
+            const dominoTabs = document.querySelectorAll('.domino-tab');
+            const dominoContents = document.querySelectorAll('.domino-content');
 
-                    if (response.ok) {
-                        // SUKSES (Rule #2)
-                        alert(data.message);
-                        // Refresh halaman
-                        window.location.reload();
-                    } else {
-                        // ERROR (Rule #3 atau error validasi No. HP dari backend)
+            dominoTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.dataset.target;
+                    const targetContent = document.getElementById(targetId);
 
-                        // Cek jika ini adalah error 'redirect' dari controller
-                        if (response.status === 403 && data.redirect) {
+                    dominoTabs.forEach(t => t.classList.remove('active'));
+                    dominoContents.forEach(c => c.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    targetContent.classList.add('active');
+                });
+            });
+
+            const loginButton = document.getElementById('login-prompt-button');
+            if (loginButton) {
+                loginButton.addEventListener('click', function (event) {
+                    // 1. Hentikan aksi default (pindah halaman)
+                    event.preventDefault();
+
+                    // 2. Tampilkan notifikasi popup (alert)
+                    alert('Anda harus login terlebih dahulu untuk melakukan konsultasi.');
+
+                    // 3. Arahkan ke halaman login
+                    window.location.href = this.href;
+                });
+            }
+
+            // =============================================
+            // KODE BARU UNTUK REQUEST KONSULTASI VIA POPUP (Rule #2, #3)
+            // =============================================
+            const requestButton = document.getElementById('request-consultation-button');
+            if (requestButton) {
+                requestButton.addEventListener('click', async function () {
+
+                    // Nonaktifkan visual tombol saat proses
+                    requestButton.disabled = true;
+                    requestButton.textContent = 'Memproses...';
+                    requestButton.classList.add('disabled');
+
+                    try {
+                        const response = await fetch('{{ route('consultation.request') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Pastikan Anda memiliki meta tag CSRF token di <head>
+                            },
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            // SUKSES (Rule #2: Notifikasi Popup sukses)
                             alert(data.message);
-                            window.location.href = data.redirect;
+                            // Refresh halaman untuk menampilkan tombol disabled
+                            window.location.reload();
                         } else {
-                            // Tampilkan error lain (misal: sudah ada konsultasi aktif)
+                            // ERROR (Rule #3: Notifikasi Popup error)
                             alert('Gagal mengajukan konsultasi: ' + data.message);
+                            // Kembalikan tombol ke keadaan semula jika error selain status 409
+                            requestButton.disabled = false;
+                            requestButton.textContent = 'Konsultasi Gratis Sekarang';
+                            requestButton.classList.remove('disabled');
                         }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
 
-                        // Kembalikan tombol ke keadaan semula jika error
+                        // Kembalikan tombol ke keadaan semula
                         requestButton.disabled = false;
                         requestButton.textContent = 'Konsultasi Gratis Sekarang';
                         requestButton.classList.remove('disabled');
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+                });
+            }
 
-                    // Kembalikan tombol ke keadaan semula
-                    requestButton.disabled = false;
-                    requestButton.textContent = 'Konsultasi Gratis Sekarang';
-                    requestButton.classList.remove('disabled');
-                }
-            });
-        }
-
-        // --- Script Touch Hover Navbar ---
-        const navLinks = document.querySelectorAll('.navbar-menu a');
-        if (navLinks && navLinks.length) {
-            const addTouch = (e) => {
-                e.currentTarget.classList.add('touch-hover');
-            };
-            const removeTouch = (e) => {
-                e.currentTarget.classList.remove('touch-hover');
-            };
-            navLinks.forEach(a => {
-                a.addEventListener('touchstart', addTouch, { passive: true });
-                a.addEventListener('touchend', removeTouch, { passive: true });
-                a.addEventListener('touchcancel', removeTouch, { passive: true });
-                a.addEventListener('blur', removeTouch);
-                a.addEventListener('click', removeTouch);
-            });
-        }
-    });
-</script>
+            // Enable touch-mimicked hover on mobile for navbar menu links
+            const navLinks = document.querySelectorAll('.navbar-menu a');
+            if (navLinks && navLinks.length) {
+                const addTouch = (e) => {
+                    e.currentTarget.classList.add('touch-hover');
+                };
+                const removeTouch = (e) => {
+                    e.currentTarget.classList.remove('touch-hover');
+                };
+                navLinks.forEach(a => {
+                    a.addEventListener('touchstart', addTouch, { passive: true });
+                    a.addEventListener('touchend', removeTouch, { passive: true });
+                    a.addEventListener('touchcancel', removeTouch, { passive: true });
+                    a.addEventListener('blur', removeTouch);
+                    a.addEventListener('click', removeTouch);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1888,47 +1888,6 @@
     @include('layouts.footer')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerButton = document.getElementById('navbar-hamburger');
-            const mobileMenu = document.getElementById('navbar-mobile-menu');
-
-            // Toggle open/close on hamburger
-            hamburgerButton.addEventListener('click', function () {
-                mobileMenu.classList.toggle('active');
-                const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
-                hamburgerButton.setAttribute('aria-expanded', String(!expanded));
-            });
-
-            // Helper to close the mobile menu safely
-            function closeMobileMenu() {
-                if (mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    hamburgerButton.setAttribute('aria-expanded', 'false');
-                }
-            }
-
-            // 1) Click outside closes the menu (mobile)
-            document.addEventListener('click', function (e) {
-                const clickInsideMenu = mobileMenu.contains(e.target);
-                const clickOnHamburger = hamburgerButton.contains(e.target);
-                if (!clickInsideMenu && !clickOnHamburger) {
-                    closeMobileMenu();
-                }
-            });
-
-            // 2) Pressing Escape closes the menu
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeMobileMenu();
-                }
-            });
-
-            // 3) Clicking a link inside the menu closes it
-            mobileMenu.querySelectorAll('a').forEach(a => {
-                a.addEventListener('click', function () {
-                    closeMobileMenu();
-                });
-            });
 
             // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
             const dominoTabs = document.querySelectorAll('.domino-tab');
@@ -2077,23 +2036,7 @@
             });
         }
 
-            // --- Script Touch Hover Navbar ---
-            const navLinks = document.querySelectorAll('.navbar-menu a');
-            if (navLinks && navLinks.length) {
-                const addTouch = (e) => {
-                    e.currentTarget.classList.add('touch-hover');
-                };
-                const removeTouch = (e) => {
-                    e.currentTarget.classList.remove('touch-hover');
-                };
-                navLinks.forEach(a => {
-                    a.addEventListener('touchstart', addTouch, { passive: true });
-                    a.addEventListener('touchend', removeTouch, { passive: true });
-                    a.addEventListener('touchcancel', removeTouch, { passive: true });
-                    a.addEventListener('blur', removeTouch);
-                    a.addEventListener('click', removeTouch);
-                });
-            }
+            
         });
     </script>
 </body>

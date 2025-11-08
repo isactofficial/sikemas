@@ -16,6 +16,11 @@
 			--skm-blue-2: #053244;
 			--skm-accent: #ff5722;
 			--skm-bg: #F4F7F6;
+			/* Status colors */
+			--skm-success: #16A34A; /* green */
+			--skm-success-100: #EAF7EE;
+			--skm-danger: #E53935;  /* red */
+			--skm-danger-100: #FDECEE;
 		}
 		* { box-sizing: border-box; margin: 0; padding: 0; }
 		/* */
@@ -60,6 +65,21 @@
 			background: #fff;
 			color: #074159;
 		}
+
+		/* Colored templates to match action emphasis */
+		.skm-status-select.is-published {
+			background: var(--skm-success-100);
+			border-color: var(--skm-success);
+			color: var(--skm-teal);
+			box-shadow: 0 0 0 2px rgba(22,163,74,0.08);
+		}
+		.skm-status-select.is-draft {
+			background: var(--skm-danger-100);
+			border-color: var(--skm-danger);
+			color: #7A1C1C;
+			box-shadow: 0 0 0 2px rgba(229,57,53,0.08);
+		}
+		.skm-status-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(35,200,184,0.2); }
 
 		/* Container for table title and filters */
 		.skm-table-header-bar {
@@ -519,7 +539,8 @@
 								<form action="{{ route('admin.articles.updateStatus', $article->id) }}" method="POST">
 									@csrf
 									@method('PATCH')
-									<select name="status" class="skm-status-select" onchange="this.form.submit()">
+									@php($statusClass = strtolower($article->status) === 'published' ? 'is-published' : 'is-draft')
+									<select name="status" class="skm-status-select {{ $statusClass }}" onchange="this.form.submit()">
 										<option value="draft" {{ strtolower($article->status) === 'draft' ? 'selected' : '' }}>Draft</option>
 										<option value="published" {{ strtolower($article->status) === 'published' ? 'selected' : '' }}>Published</option>
 									</select>

@@ -14,8 +14,8 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil data order dengan relasi user
-        $query = Order::with('user');
+        // Ambil data order dengan relasi user dan items
+        $query = Order::with(['user', 'items']);
 
         // Logika sorting dari request
         $sort = $request->get('sort');

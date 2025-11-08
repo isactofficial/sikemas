@@ -1477,37 +1477,32 @@
                             <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
+                    </div>
                     @endforeach
                 @else
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus"
-                            class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kotak Kemasan Khusus</h3>
-                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari
-                                ukuran hingga finishing.</p>
+                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang"
-                            class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang" class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Karton Bergelombang</h3>
-                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan
-                                penyimpanan yang aman.</p>
+                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan penyimpanan yang aman.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan"
-                            class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan" class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kemasan Ramah Lingkungan</h3>
-                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur
-                                ulang dan dapat didaur ulang.</p>
+                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur ulang dan dapat didaur ulang.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
@@ -1893,10 +1888,51 @@
     @include('layouts.footer')
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // --- SCRIPT KOMITMEN 2 ---
-        const dominoTabs = document.querySelectorAll('.domino-tab');
-        const dominoContents = document.querySelectorAll('.domino-content');
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerButton = document.getElementById('navbar-hamburger');
+            const mobileMenu = document.getElementById('navbar-mobile-menu');
+
+            // Toggle open/close on hamburger
+            hamburgerButton.addEventListener('click', function () {
+                mobileMenu.classList.toggle('active');
+                const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
+                hamburgerButton.setAttribute('aria-expanded', String(!expanded));
+            });
+
+            // Helper to close the mobile menu safely
+            function closeMobileMenu() {
+                if (mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    hamburgerButton.setAttribute('aria-expanded', 'false');
+                }
+            }
+
+            // 1) Click outside closes the menu (mobile)
+            document.addEventListener('click', function (e) {
+                const clickInsideMenu = mobileMenu.contains(e.target);
+                const clickOnHamburger = hamburgerButton.contains(e.target);
+                if (!clickInsideMenu && !clickOnHamburger) {
+                    closeMobileMenu();
+                }
+            });
+
+            // 2) Pressing Escape closes the menu
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeMobileMenu();
+                }
+            });
+
+            // 3) Clicking a link inside the menu closes it
+            mobileMenu.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', function () {
+                    closeMobileMenu();
+                });
+            });
+
+            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
+            const dominoTabs = document.querySelectorAll('.domino-tab');
+            const dominoContents = document.querySelectorAll('.domino-content');
 
         dominoTabs.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -2041,8 +2077,25 @@
             });
         }
 
-    });
-</script>
+            // --- Script Touch Hover Navbar ---
+            const navLinks = document.querySelectorAll('.navbar-menu a');
+            if (navLinks && navLinks.length) {
+                const addTouch = (e) => {
+                    e.currentTarget.classList.add('touch-hover');
+                };
+                const removeTouch = (e) => {
+                    e.currentTarget.classList.remove('touch-hover');
+                };
+                navLinks.forEach(a => {
+                    a.addEventListener('touchstart', addTouch, { passive: true });
+                    a.addEventListener('touchend', removeTouch, { passive: true });
+                    a.addEventListener('touchcancel', removeTouch, { passive: true });
+                    a.addEventListener('blur', removeTouch);
+                    a.addEventListener('click', removeTouch);
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

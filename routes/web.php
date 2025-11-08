@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
+use App\Http\Controllers\Admin\FreeConsultationController;
 
 // ============================================
 // HOME ROUTE
@@ -221,4 +222,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('transactions', TransactionController::class)->except([
         'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
     ]);
+    // Free Consultations CRUD (Admin)
+    Route::resource('free-consultations', FreeConsultationController::class)
+        ->only(['index', 'edit', 'update','destroy'])
+        ->names('free-consultations');
 });

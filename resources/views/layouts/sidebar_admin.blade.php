@@ -41,7 +41,12 @@
 			   class="skm-nav__link {{ request()->is('admin/transactions*') ? 'is-active' : '' }}">
 				Manage Transactions
 			</a>
-		</nav>
+
+            <a href="{{ route('admin.free-consultations.index') }}"
+               class="skm-nav__link {{ request()->is('admin/free-consultations*') ? 'is-active' : '' }}">
+                Manajemen Konsultasi
+            </a>
+            </nav>
 
 		<div class="skm-sidebar__footer">
 			<form action="{{ route('logout') }}" method="POST">
@@ -176,4 +181,3 @@
 		}));
 	});
 </script>
-</style>

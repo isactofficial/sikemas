@@ -420,10 +420,11 @@
         </div>
 
         @php
-            // Algoritma Pajak:
+            // Hitung Subtotal, Pajak, Biaya Pengiriman, dan Total
             $subtotal = $order->items->sum('subtotal');
-            $pajak = $subtotal * 0.11;
-            $total_keseluruhan = $subtotal + $pajak;
+            $pajak = $subtotal * 0.11; // Pajak 11%
+            $biaya_pengiriman = $order->shipping_cost ?? 20000; // Ambil dari database atau default
+            $total_keseluruhan = $subtotal + $pajak + $biaya_pengiriman;
         @endphp
 
         <table class="invoice-table">
@@ -457,6 +458,12 @@
                     <td class="no-border"></td>
                     <td class="no-border"></td>
                     <td class="total-value">Rp {{ number_format($pajak, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Biaya Pengiriman</td>
+                    <td class="no-border"></td>
+                    <td class="no-border"></td>
+                    <td class="total-value">Rp {{ number_format($biaya_pengiriman, 0, ',', '.') }}</td>
                 </tr>
                 <tr class="grand-total">
                     <td>Total Keseluruhan</td>

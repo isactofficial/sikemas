@@ -354,6 +354,7 @@
                         <tr>
                             <th>No Invoice</th>
                             <th>Pemesan</th>
+                            <th>Nama Barang</th>
                             <th>Harga Akhir</th>
                             <th>Pembayaran</th>
                             <th>Status Barang</th>
@@ -365,6 +366,15 @@
                             <tr>
                                 <td data-label="No Invoice">{{ $order->invoice_number }}</td>
                                 <td data-label="Pemesan">{{ $order->user->name ?? 'User Dihapus' }}</td>
+                                <td data-label="Nama Barang">
+                                    @if($order->items->count() > 0)
+                                        @foreach($order->items as $item)
+                                            {{ $item->product_name }}@if(!$loop->last), @endif
+                                        @endforeach
+                                    @else
+                                        <span style="color: #999;">-</span>
+                                    @endif
+                                </td>
                                 <td data-label="Harga Akhir">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</td>
 
                                 <td data-label="Pembayaran">
@@ -417,7 +427,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 40px; color: #6B8791;">
+                                <td colspan="7" style="text-align: center; padding: 40px; color: #6B8791;">
                                     Belum ada data transaksi.
                                 </td>
                             </tr>

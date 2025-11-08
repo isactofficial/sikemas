@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
-// TAMBAHKAN INI UNTUK VERIFIKASI EMAIL
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 // BARU: Impor model Consultation
 use App\Models\Consultation;
 
-// TAMBAHKAN 'implements MustVerifyEmail'
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -68,14 +66,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Relationship: User has one cart
-     */
-    public function cart()
-    {
-        return $this->hasOne(Cart::class);
-    }
-
-    /**
      * Relationship: User has many orders
      */
     public function orders()
@@ -83,36 +73,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Order::class);
     }
 
-    /**
-     * Relationship: User has many comments
-     */
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
+    // ===========================================
+    // KODE BARU DIMULAI DI SINI
+    // ===========================================
 
     /**
-     * Relationship: User has many replies
-     */
-    public function replies()
-    {
-        return $this->hasMany(Reply::class);
-    }
-
-    /**
-     * Relationship: User has many surveys
-     */
-    public function surveys()
-    {
-        return $this->hasMany(Survey::class);
-    }
-
-    // ============================================\n
-    // <-- FUNGSI KONSULTASI BARU DITAMBAHKAN DI SINI -->
-    // ============================================\n
-
-    /**
-     * Mendapatkan semua konsultasi gratis milik user.
+     * Relationship: User has many consultations
      */
     public function consultations()
     {
@@ -120,25 +86,40 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Cek apakah user memiliki konsultasi yang sedang aktif (belum selesai).
-     * Ini digunakan untuk Rule #3 di halaman depan.
+     * Helper function untuk mengecek konsultasi aktif (pending atau scheduled)
      */
     public function hasActiveConsultation(): bool
     {
-        // Cek apakah ada konsultasi yang statusnya BUKAN 'completed'
-        // dan juga BUKAN 'cancelled'.
-        // Jika ada (pending/active), maka return true.
-        return $this->consultations()
-                    ->whereNotIn('status', ['completed', 'cancelled'])
-                    ->exists();
+        // Jika tabel consultations belum ada (mis. environment dev/belum migrasi), anggap tidak ada konsultasi aktif
+        try {
+            if (!Schema::hasTable('consultations')) {
+                return false;
+            }
+
+            // Cek jika ada konsultasi dengan status 'pending' ATAU 'scheduled'
+            return $this->consultations()
+                        ->whereIn('status', ['pending', 'scheduled'])
+                        ->exists();
+        } catch (\Throwable $e) {
+            // Fail-safe: jangan gagalkan halaman hanya karena tabel/kolom belum siap
+            return false;
+        }
     }
 
+    // ===========================================
+    // KODE BARU BERAKHIR DI SINI
+    // ===========================================
+
     /**
-     * Get user's profile photo URL
+     * Get user profile photo path
      */
-    public function getProfilePhotoUrlAttribute()
+    public function getProfilePhotoPathAttribute()
     {
-        // Check if profile_photo is a URL (from Google)
+        if (!$this->profile_photo) {
+            return null;
+        }
+
+        // Check if it's a URL (from Google)
         if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
             return $this->profile_photo;
         }
@@ -204,6 +185,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isGoogleUser()
     {
-        return !empty($this->google_id);
+        return !empty($this->google_id) && empty($this->password);
     }
 }

@@ -34,8 +34,7 @@ class ConsultationController extends Controller
         // Jika lolos, buat permintaan konsultasi baru
         $consultation = $user->consultations()->create([
             'status' => 'pending', // Atur status awal
-            'konfirmasi' => 'waiting', // Atur status konfirmasi awal
-            'user_id' => $user->id // Pastikan user_id diisi
+            // Tambahkan field lain yang mungkin dibutuhkan
         ]);
 
         // HASIL SUKSES untuk Rule #2

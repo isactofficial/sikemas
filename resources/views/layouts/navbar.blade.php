@@ -478,6 +478,35 @@
                     const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
                     hamburgerButton.setAttribute('aria-expanded', String(!expanded));
                 });
+
+                // Helper to close the mobile menu
+                function closeMobileMenu() {
+                    if (mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        hamburgerButton.setAttribute('aria-expanded', 'false');
+                    }
+                }
+
+                // Close when clicking outside menu/hamburger
+                document.addEventListener('click', function (e) {
+                    const clickInside = mobileMenu.contains(e.target);
+                    const clickHamburger = hamburgerButton.contains(e.target);
+                    if (!clickInside && !clickHamburger) {
+                        closeMobileMenu();
+                    }
+                });
+
+                // Close on Escape key
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        closeMobileMenu();
+                    }
+                });
+
+                // Close after choosing a link
+                mobileMenu.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', closeMobileMenu);
+                });
             }
 
             // Desktop dropdown toggle

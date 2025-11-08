@@ -1899,18 +1899,29 @@
             <h2 class="section-title">Produk Unggulan Kami</h2>
 
             <div class="products-grid">
-                @if (isset($products) && $products->count() > 0)
-                    @foreach ($products->take(3) as $product)
-                        <div class="product-card">
-                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('assets/img/Rectangle12.png') }}"
-                                alt="{{ $product->name }}" class="product-image">
-                            <div class="product-content">
-                                <h3 class="product-title">{{ $product->name }}</h3>
-                                <p class="product-description">
-                                    {{ Str::limit($product->description ?? 'Produk berkualitas dari Sikemas', 100) }}
-                                </p>
-                                <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
-                            </div>
+                @if(isset($products) && $products->count() > 0)
+                    @foreach($products->take(3) as $product)
+                    <div class="product-card">
+                        @php
+                            $productImage = null;
+                            if (!empty($product->image)) {
+                                $productImage = asset('storage/' . $product->image);
+                            } elseif (!empty($product->featured_image)) {
+                                $productImage = asset('storage/' . $product->featured_image);
+                            } elseif (!empty($product->thumbnail)) {
+                                $productImage = asset('storage/' . $product->thumbnail);
+                            } else {
+                                $productImage = asset('assets/img/Rectangle12.png');
+                            }
+                        @endphp
+                        <img src="{{ $productImage }}"
+                             alt="{{ $product->name }}"
+                             class="product-image"
+                             onerror="this.onerror=null; this.src='{{ asset('assets/img/Rectangle12.png') }}';">
+                        <div class="product-content">
+                            <h3 class="product-title">{{ $product->name }}</h3>
+                            <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}</p>
+                            <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     @endforeach
                 @else
@@ -2219,6 +2230,13 @@
                 @endif
             @endauth
 
+            @guest
+                {{-- Rule #1: User belum login. Tombol akan dihandle oleh JS untuk popup login --}}
+                <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button">
+                    Konsultasi Gratis Sekarang
+                </a>
+            @endguest
+
         </div>
     </section>
 
@@ -2328,16 +2346,49 @@
     @include('layouts.footer')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- Script Hamburger---
+        document.addEventListener('DOMContentLoaded', function () {
             const hamburgerButton = document.getElementById('navbar-hamburger');
             const mobileMenu = document.getElementById('navbar-mobile-menu');
 
-            hamburgerButton.addEventListener('click', function() {
+            // Toggle open/close on hamburger
+            hamburgerButton.addEventListener('click', function () {
                 mobileMenu.classList.toggle('active');
+                const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
+                hamburgerButton.setAttribute('aria-expanded', String(!expanded));
             });
 
-            // --- SCRIPT KOMITMEN 2 ---
+            // Helper to close the mobile menu safely
+            function closeMobileMenu() {
+                if (mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    hamburgerButton.setAttribute('aria-expanded', 'false');
+                }
+            }
+
+            // 1) Click outside closes the menu (mobile)
+            document.addEventListener('click', function (e) {
+                const clickInsideMenu = mobileMenu.contains(e.target);
+                const clickOnHamburger = hamburgerButton.contains(e.target);
+                if (!clickInsideMenu && !clickOnHamburger) {
+                    closeMobileMenu();
+                }
+            });
+
+            // 2) Pressing Escape closes the menu
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeMobileMenu();
+                }
+            });
+
+            // 3) Clicking a link inside the menu closes it
+            mobileMenu.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', function () {
+                    closeMobileMenu();
+                });
+            });
+
+            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
             const dominoTabs = document.querySelectorAll('.domino-tab');
             const dominoContents = document.querySelectorAll('.domino-content');
 
@@ -2485,15 +2536,9 @@
                     e.currentTarget.classList.remove('touch-hover');
                 };
                 navLinks.forEach(a => {
-                    a.addEventListener('touchstart', addTouch, {
-                        passive: true
-                    });
-                    a.addEventListener('touchend', removeTouch, {
-                        passive: true
-                    });
-                    a.addEventListener('touchcancel', removeTouch, {
-                        passive: true
-                    });
+                    a.addEventListener('touchstart', addTouch, { passive: true });
+                    a.addEventListener('touchend', removeTouch, { passive: true });
+                    a.addEventListener('touchcancel', removeTouch, { passive: true });
                     a.addEventListener('blur', removeTouch);
                     a.addEventListener('click', removeTouch);
                 });

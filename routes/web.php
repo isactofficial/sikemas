@@ -11,19 +11,21 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
-use App\Http\Controllers\Admin\FreeConsultationController;
 
 // ============================================
 // HOME ROUTE
 // ============================================
 use App\Models\Article;
+use App\Models\Product;
+
 Route::get('/', function () {
+    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(12)
+        ->take(3)
         ->get();
-    return view('index', compact('articles'));
+    return view('index', compact('products', 'articles'));
 })->middleware('track.page:home')->name('home');
 
 Route::get('/edit-design', function () {
@@ -98,15 +100,16 @@ Route::middleware(['auth'])->group(function () {
 // PUBLIC PAGES
 // ============================================
 Route::get('/beranda', function () {
+    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(12)
+        ->take(3)
         ->get();
-    return view('index', compact('articles'));
+    return view('index', compact('products', 'articles'));
 })->middleware('track.page:home')->name('beranda');
 
-use App\Models\Product;
+
 Route::get('/produk', function () {
     $products = Product::query()
         ->orderByDesc('created_at')
@@ -205,6 +208,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Article Management - CRUD (RESOURCE ROUTE)
     Route::resource('articles', ArticleController::class);
+    // Quick status update for articles
+    Route::patch('articles/{article}/status', [ArticleController::class, 'updateStatus'])->name('articles.updateStatus');
 
     // Products CRUD
     Route::resource('products', ProductController::class)->names('products');
@@ -212,12 +217,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Testimonies CRUD
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
-    // Transactions CRUD
+    // Transactions CRUD (BARU)
     Route::resource('transactions', TransactionController::class)->except([
         'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
     ]);
-    // Free Consultations CRUD (Admin)
-    Route::resource('free-consultations', FreeConsultationController::class)
-        ->only(['index', 'edit', 'update','destroy'])
-        ->names('free-consultations');
 });

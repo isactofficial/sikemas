@@ -10,6 +10,13 @@ class Consultation extends Model
     use HasFactory;
 
     /**
+     * Menentukan nama tabel yang digunakan oleh model.
+     *
+     * @var string
+     */
+    protected $table = 'free_consultations'; 
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -17,6 +24,7 @@ class Consultation extends Model
     protected $fillable = [
         'user_id',
         'status',
+        'konfirmasi',
         'consultation_date',
         'notes',
     ];

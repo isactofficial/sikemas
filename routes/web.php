@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
+use App\Http\Controllers\Admin\FreeConsultationController;
 
 // ============================================
 // HOME ROUTE

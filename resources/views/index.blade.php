@@ -356,7 +356,7 @@
 
         /* Hero Section */
         .hero-section {
-            margin-top: 80px;
+            /* margin-top: 80px; */
             height: calc(100vh - 80px);
             position: relative;
             display: flex;
@@ -1780,72 +1780,7 @@
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="navbar-logo">
-                <a href="{{ url('/') }}">
-                    <img src="{{ asset('assets/img/Rectangle.png') }}" alt="SIKEMAS Logo">
-                </a>
-            </div>
-
-            <div class="navbar-right" id="navbar-mobile-menu">
-                <ul class="navbar-menu">
-                    <li><a href="{{ url('/beranda') }}">Beranda</a></li>
-                    <li><a href="{{ url('/produk') }}">Produk</a></li>
-                    <li><a href="{{ url('/artikel') }}">Artikel</a></li>
-                    <li><a href="{{ url('/portofolio') }}">Portofolio</a></li>
-                    <li><a href="{{ url('/about') }}">About Us</a></li>
-
-                    @guest
-                        <li><a href="{{ route('login') }}">Profile</a></li>
-                    @endguest
-                </ul>
-
-                <div class="navbar-profile">
-                    <div class="profile-dropdown">
-
-                        <button class="profile-icon profile-dropdown-toggle" aria-label="User Menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </button>
-
-                        <div class="profile-dropdown-menu">
-                            @auth
-                                <div class="dropdown-header">
-                                    <span>{{ Auth::user()->name }}</span>
-                                    <small>{{ Auth::user()->email }}</small>
-                                </div>
-                                <a href="{{ route('profile.index') }}">Profil Saya</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
-                                    @csrf
-                                </form>
-                            @else
-                                <a href="{{ route('login') }}">Login</a>
-                                <a href="{{ route('register') }}" class="dropdown-button-primary">Daftar</a>
-                            @endauth
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="navbar-toggle" id="navbar-hamburger" aria-label="Toggle menu">
-                <div class="hamburger-icon">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
-            </button>
-
-        </div>
-    </nav>
+    @include('layouts.navbar')
 
     <section class="hero-section">
         <img src="{{ asset('assets/img/Section.png') }}" alt="Background" class="hero-background">
@@ -1923,37 +1858,32 @@
                             <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
+                    </div>
                     @endforeach
                 @else
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus"
-                            class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kotak Kemasan Khusus</h3>
-                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari
-                                ukuran hingga finishing.</p>
+                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang"
-                            class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang" class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Karton Bergelombang</h3>
-                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan
-                                penyimpanan yang aman.</p>
+                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan penyimpanan yang aman.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan"
-                            class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan" class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kemasan Ramah Lingkungan</h3>
-                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur
-                                ulang dan dapat didaur ulang.</p>
+                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur ulang dan dapat didaur ulang.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
@@ -2230,13 +2160,6 @@
                 @endif
             @endauth
 
-            @guest
-                {{-- Rule #1: User belum login. Tombol akan dihandle oleh JS untuk popup login --}}
-                <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button">
-                    Konsultasi Gratis Sekarang
-                </a>
-            @endguest
-
         </div>
     </section>
 
@@ -2346,47 +2269,6 @@
     @include('layouts.footer')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerButton = document.getElementById('navbar-hamburger');
-            const mobileMenu = document.getElementById('navbar-mobile-menu');
-
-            // Toggle open/close on hamburger
-            hamburgerButton.addEventListener('click', function () {
-                mobileMenu.classList.toggle('active');
-                const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
-                hamburgerButton.setAttribute('aria-expanded', String(!expanded));
-            });
-
-            // Helper to close the mobile menu safely
-            function closeMobileMenu() {
-                if (mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    hamburgerButton.setAttribute('aria-expanded', 'false');
-                }
-            }
-
-            // 1) Click outside closes the menu (mobile)
-            document.addEventListener('click', function (e) {
-                const clickInsideMenu = mobileMenu.contains(e.target);
-                const clickOnHamburger = hamburgerButton.contains(e.target);
-                if (!clickInsideMenu && !clickOnHamburger) {
-                    closeMobileMenu();
-                }
-            });
-
-            // 2) Pressing Escape closes the menu
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeMobileMenu();
-                }
-            });
-
-            // 3) Clicking a link inside the menu closes it
-            mobileMenu.querySelectorAll('a').forEach(a => {
-                a.addEventListener('click', function () {
-                    closeMobileMenu();
-                });
-            });
 
             // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
             const dominoTabs = document.querySelectorAll('.domino-tab');
@@ -2526,23 +2408,7 @@
                 });
             }
 
-            // --- Script Touch Hover Navbar ---
-            const navLinks = document.querySelectorAll('.navbar-menu a');
-            if (navLinks && navLinks.length) {
-                const addTouch = (e) => {
-                    e.currentTarget.classList.add('touch-hover');
-                };
-                const removeTouch = (e) => {
-                    e.currentTarget.classList.remove('touch-hover');
-                };
-                navLinks.forEach(a => {
-                    a.addEventListener('touchstart', addTouch, { passive: true });
-                    a.addEventListener('touchend', removeTouch, { passive: true });
-                    a.addEventListener('touchcancel', removeTouch, { passive: true });
-                    a.addEventListener('blur', removeTouch);
-                    a.addEventListener('click', removeTouch);
-                });
-            }
+            
         });
     </script>
 </body>

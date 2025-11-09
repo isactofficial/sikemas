@@ -1,277 +1,759 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Add Article - Sikemas Admin</title>
-	
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Add New Transaction - Admin</title>
 
-	<style>
-		:root {
-			--skm-teal: #1F6D72;
-			--skm-blue: #074159;
-			--skm-accent: #ff5722;
-			--skm-green: #20C8B5;
-			--skm-bg: #F4F7F6;
-		}
-		* { box-sizing: border-box; margin: 0; padding: 0; }
-		body { font-family: 'Besley', system-ui, sans-serif; background: var(--skm-bg); min-height: 100vh; }
-		
-		.skm-admin-main { margin-left: 240px; padding: 24px; }
-		
-		.skm-form-container { max-width: 900px; background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
-		
-		.skm-form-row {
-			display: flex;
-			gap: 24px;
-			align-items: flex-start;
-		}
-		.skm-form-row .skm-form-group {
-			flex: 1;
-		}
-		
-		.skm-form-group { margin-bottom: 24px; }
-		.skm-form-label { display: block; color: var(--skm-green); font-weight: 700; font-size: 14px; margin-bottom: 8px; }
-		.skm-form-input, .skm-form-textarea, .skm-form-select { width: 100%; padding: 12px 16px; border: 2px solid var(--skm-accent); border-radius: 10px; font-size: 14px; font-family: inherit; transition: border-color .15s ease; }
-		.skm-form-input:focus, .skm-form-textarea:focus, .skm-form-select:focus { outline: none; border-color: var(--skm-blue); }
-		.skm-form-textarea { min-height: 100px; resize: vertical; }
-		
-		.skm-upload-box { 
-			border: 2px dashed var(--skm-accent); 
-			border-radius: 10px; 
-			padding: 40px; 
-			text-align: center; 
-			cursor: pointer; 
-			transition: all .15s ease; 
-			position: relative; 
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			min-height: 150px;
-		}
-		.skm-upload-box:hover { border-color: var(--skm-blue); background: #F9FAFB; }
-		.skm-upload-box input[type="file"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; top: 0; left: 0; }
-		
-		.skm-upload-plus {
-			font-size: 60px;
-			color: var(--skm-green);
-			font-weight: 400;
-			line-height: 1;
-			transition: all .15s ease;
-		}
-		.skm-upload-box:hover .skm-upload-plus {
-			color: var(--skm-blue);
-		}
-		
-		.skm-radio-group { display: flex; gap: 24px; margin-top: 8px; }
-		.skm-radio-item { display: flex; align-items: center; gap: 8px; }
-		.skm-radio-item input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
-		.skm-radio-item label { font-size: 14px; cursor: pointer; color: #374151; font-weight: 600; }
-		
-		.skm-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; transition: all .15s ease; text-decoration: none; }
-		.skm-btn-primary { background: var(--skm-accent); color: #fff; box-shadow: 0 4px 12px rgba(255,87,34,.3); }
-		.skm-btn-primary:hover { background: #e64a19; transform: translateY(-1px); }
-		.skm-btn-secondary { background: var(--skm-green); color: #fff; box-shadow: 0 4px 12px rgba(32,200,181,.3); }
-		.skm-btn-secondary:hover { background: #1BA89A; transform: translateY(-1px); }
-		
-		.skm-add-buttons {
-			display: flex;
-			flex-direction: column;
-			gap: 12px;
-			align-items: center;
-			margin-top: 24px;
-			margin-bottom: 32px;
-		}
-		
-		.skm-form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 32px; }
-		
-		.skm-error { color: #E53935; font-size: 12px; margin-top: 4px; }
-		
-		.skm-remove-btn {
-			font-size: 12px;
-			color: var(--skm-accent);
-			background: none;
-			border: none;
-			cursor: pointer;
-			margin-top: 8px;
-			padding: 0;
-			font-family: inherit;
-			font-weight: 700;
-		}
-		
-		@media (max-width: 767px) {
-			.skm-admin-main { margin-left: 0; margin-top: 72px; padding: 16px; }
-			.skm-form-container { padding: 20px; }
-			.skm-form-row { flex-direction: column; gap: 0; }
-		}
-	</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --skm-teal: #1F6D72;
+            --skm-blue: #074159;
+            --skm-blue-2: #053244;
+            --skm-accent: #ff5722;
+            --skm-bg: #F4F7F6;
+            --skm-border: #E5E7EB;
+            --skm-text-label: #6B7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Besley', system-ui, sans-serif;
+            background: var(--skm-bg);
+            min-height: 100vh;
+        }
+
+        .skm-admin-main {
+            margin-left: 240px;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .skm-header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.04);
+        }
+
+        .skm-header h1 {
+            color: var(--skm-blue);
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .skm-header p {
+            color: #23C8B8;
+            font-size: 14px;
+        }
+
+        .skm-form-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.04);
+            border: 1px solid var(--skm-border);
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            color: var(--skm-blue);
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--skm-border);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-grid.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--skm-blue);
+        }
+
+        .form-group label .required {
+            color: var(--skm-accent);
+        }
+
+        .form-control {
+            padding: 12px 16px;
+            border: 1.5px solid var(--skm-border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Besley', serif;
+            color: var(--skm-blue-2);
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--skm-teal);
+            box-shadow: 0 0 0 3px rgba(31, 109, 114, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #9CA3AF;
+        }
+
+        .form-control:disabled {
+            background-color: #F3F4F6;
+            cursor: not-allowed;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23074159' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .item-card {
+            border: 2px solid var(--skm-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            background: #FAFBFC;
+        }
+
+        .item-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--skm-border);
+        }
+
+        .item-number {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--skm-blue);
+        }
+
+        .remove-item-btn {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-item-btn:hover {
+            background: #FDD2D2;
+        }
+
+        .add-item-btn {
+            background: var(--skm-teal);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            margin-top: 16px;
+        }
+
+        .add-item-btn:hover {
+            background: var(--skm-blue);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-row.two-cols {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group.half {
+            grid-column: span 1;
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FDD2D2;
+        }
+
+        .alert i {
+            font-size: 18px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 24px;
+            border-top: 2px solid var(--skm-border);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            font-family: 'Besley', serif;
+        }
+
+        .btn-primary {
+            background: var(--skm-teal);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--skm-blue);
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: var(--skm-blue-2);
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: var(--skm-text-label);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 1024px) {
+            .skm-admin-main {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row.two-cols {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-@include('layouts.sidebar_admin')
-	
-	<main class="skm-admin-main">
-		<div class="skm-form-container">
-			<h1 style="color: var(--skm-blue); font-size: 28px; margin-bottom: 24px;">Add New Article</h1>
-			
-			{{-- Alert untuk error umum --}}
-			@if(session('error'))
-				<div style="background:#FFE5E5; border:1px solid #FF5252; color:#C62828; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px;">
-					<strong>Error:</strong> {{ session('error') }}
-				</div>
-			@endif
+    @include('layouts.sidebar_admin')
 
-			{{-- Alert untuk success --}}
-			@if(session('success'))
-				<div style="background:#E8F5E9; border:1px solid #4CAF50; color:#2E7D32; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px;">
-					<strong>Berhasil!</strong> {{ session('success') }}
-				</div>
-			@endif
-			
-			<form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
-				@csrf
-				
-				<div class="skm-form-group">
-					<label class="skm-form-label">Thumbnail</label>
-					<div class="skm-upload-box" id="uploadBox">
-						<input type="file" name="thumbnail" accept="image/*" id="thumbnailInput">
-						<span class="skm-upload-plus" id="uploadPlus">+</span>
-					</div>
-					@error('thumbnail')
-					<span class="skm-error">{{ $message }}</span>
-					@enderror
-				</div>
-				
-				<div class="skm-form-row">
-					<div class="skm-form-group">
-						<label class="skm-form-label">Title</label>
-						<input type="text" name="title" class="skm-form-input" value="{{ old('title') }}" required>
-						@error('title')
-						<span class="skm-error">{{ $message }}</span>
-						@enderror
-					</div>
-					
-					<div class="skm-form-group">
-						<label class="skm-form-label">Editor</label>
-						<select name="editor_id" class="skm-form-select">
-							<option value="">Select </option>
-							@foreach($users as $user)
-							<option value="{{ $user->id }}" {{ old('editor_id') == $user->id ? 'selected' : '' }}>
-								{{ $user->name }}
-							</option>
-							@endforeach
-						</select>
-						@error('editor_id')
-						<span class="skm-error">{{ $message }}</span>
-						@enderror
-					</div>
-				</div>
-				
-				<div class="skm-form-group">
-					<label class="skm-form-label">Description</label>
-					<textarea name="deskripsi" class="skm-form-textarea" required>{{ old('deskripsi') }}</textarea>
-					@error('deskripsi')
-					<span class="skm-error">{{ $message }}</span>
-					@enderror
-				</div>
-				
-				<!-- Status -->
-				<div class="skm-form-group">
-					<label class="skm-form-label">Status</label>
-					<div class="skm-radio-group">
-						<div class="skm-radio-item">
-							<input type="radio" name="status" value="draft" id="statusDraft" 
-								{{ old('status', 'draft') == 'draft' ? 'checked' : '' }}>
-							<label for="statusDraft">Draft</label>
-						</div>
-						<div class="skm-radio-item">
-							<input type="radio" name="status" value="published" id="statusPublished"
-								{{ old('status') == 'published' ? 'checked' : '' }}>
-							<label for="statusPublished">Published</label>
-						</div>
-					</div>
-					@error('status')
-					<span class="skm-error">{{ $message }}</span>
-					@enderror
-				</div>
-				
-				<div id="contentContainer">
-					<div class="skm-form-group">
-						<label class="skm-form-label">Sub Heading</label>
-						<input type="text" name="subheadings[]" class="skm-form-input" placeholder="e.g., Introduction">
-					</div>
-					<div class="skm-form-group">
-						<label class="skm-form-label">Paragraph</label>
-						<textarea name="paragraphs[]" class="skm-form-textarea" placeholder="Write paragraph content..."></textarea>
-					</div>
-				</div>
-				
-				<div class="skm-add-buttons">
-					<button type="button" class="skm-btn skm-btn-primary" id="addParagraphBtn">
-						Add Paragraph
-					</button>
-					<button type="button" class="skm-btn skm-btn-secondary" id="addSubheadingBtn">
-						Add Subheading
-					</button>
-				</div>
-			
-				<div class="skm-form-actions">
-					<button type="submit" class="skm-btn skm-btn-primary">Submit</button>
-				</div>
-			</form>
-		</div>
-	</main>
-	
-	<script>
-		const container = document.getElementById('contentContainer');
-		
-		document.getElementById('addParagraphBtn').addEventListener('click', function() {
-			const newItem = document.createElement('div');
-			newItem.className = 'skm-form-group';
-			
-			newItem.innerHTML = `
-				<label class="skm-form-label">Paragraph</label>
-				<textarea name="paragraphs[]" class="skm-form-textarea" placeholder="Write paragraph content..."></textarea>
-				<button type="button" class="skm-remove-btn" onclick="this.parentElement.remove()">Remove Paragraph</button>
-			`;
-			
-			container.appendChild(newItem);
-		});
-		
-		document.getElementById('addSubheadingBtn').addEventListener('click', function() {
-			const newItem = document.createElement('div');
-			newItem.className = 'skm-form-group';
-			
-			newItem.innerHTML = `
-				<label class="skm-form-label">Sub Heading</label>
-				<input type="text" name="subheadings[]" class="skm-form-input" placeholder="e.g., Next Step">
-				<button type="button" class="skm-remove-btn" onclick="this.parentElement.remove()">Remove Subheading</button>
-			`;
-			
-			container.appendChild(newItem);
-		});
-		
-		document.getElementById('thumbnailInput').addEventListener('change', function(e) {
-			const file = e.target.files[0];
-			if (file) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					const uploadBox = document.getElementById('uploadBox');
-					const plusSign = document.getElementById('uploadPlus');
-					
-					uploadBox.style.backgroundImage = `url(${e.target.result})`;
-					uploadBox.style.backgroundSize = 'cover';
-					uploadBox.style.backgroundPosition = 'center';
-					
-					if (plusSign) {
-						plusSign.style.display = 'none';
-					}
-				}
-				reader.readAsDataURL(file);
-			}
-		});
-	</script>
+    <main class="skm-admin-main">
+        <div class="skm-header">
+            <h1>Tambah Transaksi Baru</h1>
+            <p>Isi form di bawah untuk menambah transaksi baru</p>
+        </div>
+
+        <form action="{{ route('admin.transactions.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            
+            <div class="skm-form-container">
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div>
+                            <strong>Terjadi kesalahan:</strong>
+                            <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Customer Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Informasi Customer</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="user_id">
+                                Pilih Customer <span class="required">*</span>
+                            </label>
+                            <select name="user_id" id="user_id" class="form-control" required>
+                                <option value="" disabled {{ !old('user_id') ? 'selected' : '' }}>Pilih Customer</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }} ({{ $user->email }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="address-wrapper" style="display: none;">
+                            <label for="shipping_address_id">
+                                Alamat Pengiriman <span class="required">*</span>
+                            </label>
+                            <select name="shipping_address_id" id="shipping_address_id" class="form-control" required disabled>
+                                <option value="">Pilih User Terlebih Dahulu</option>
+                            </select>
+                            <span class="help-text">Alamat pengiriman akan muncul setelah memilih customer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Details -->
+                <div class="form-section">
+                    <h2 class="section-title">Detail Pengiriman</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="shipping_cost">
+                                Biaya Pengiriman (Rp)
+                            </label>
+                            <input 
+                                type="number" 
+                                name="shipping_cost" 
+                                id="shipping_cost" 
+                                class="form-control" 
+                                value="{{ old('shipping_cost', 0) }}" 
+                                min="0" 
+                                step="0.01"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="payment_method">
+                                Metode Pembayaran
+                            </label>
+                            <input 
+                                type="text" 
+                                name="payment_method" 
+                                id="payment_method" 
+                                class="form-control" 
+                                placeholder="Contoh: Transfer Bank, COD, E-Wallet"
+                                value="{{ old('payment_method') }}"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="form-section">
+                    <h2 class="section-title">Item Pesanan</h2>
+                    <div id="order-items-container">
+                        @if(old('items'))
+                            @foreach(old('items') as $index => $item)
+                                <div class="item-card">
+                                    <div class="item-header">
+                                        <span class="item-number">Item #{{ $index + 1 }}</span>
+                                        <button type="button" class="remove-item-btn" onclick="removeItem(this)">
+                                            <i class="fas fa-times"></i> Hapus
+                                        </button>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group half">
+                                            <label for="items[{{ $index }}][product_name]">Nama Produk/Layanan <span class="required">*</span></label>
+                                            <input type="text" name="items[{{ $index }}][product_name]" class="form-control" value="{{ $item['product_name'] ?? '' }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row two-cols">
+                                        <div class="form-group">
+                                            <label for="items[{{ $index }}][quantity]">Kuantitas <span class="required">*</span></label>
+                                            <input type="number" name="items[{{ $index }}][quantity]" class="form-control" value="{{ $item['quantity'] ?? 1 }}" min="1" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="items[{{ $index }}][unit_price]">Harga Satuan (Rp) <span class="required">*</span></label>
+                                            <input type="number" name="items[{{ $index }}][unit_price]" class="form-control" value="{{ $item['unit_price'] ?? 0 }}" min="0" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group full">
+                                            <label for="items[{{ $index }}][custom_design_file]">
+                                                File Desain Kustom
+                                            </label>
+                                            <input type="file" name="items[{{ $index }}][custom_design_file]" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.ai,.psd,.cdr">
+                                            <span class="help-text">Format yang diperbolehkan: JPG, PNG, PDF, AI, PSD, CDR (Maks. 10MB)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="item-card">
+                                <div class="item-header">
+                                    <span class="item-number">Item #1</span>
+                                    <button type="button" class="remove-item-btn" onclick="removeItem(this)" style="display: none;">
+                                        <i class="fas fa-times"></i> Hapus
+                                    </button>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label for="items[0][product_name]">Nama Produk/Layanan <span class="required">*</span></label>
+                                        <input type="text" name="items[0][product_name]" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-row two-cols">
+                                    <div class="form-group">
+                                        <label for="items[0][quantity]">Kuantitas <span class="required">*</span></label>
+                                        <input type="number" name="items[0][quantity]" class="form-control" value="1" min="1" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="items[0][unit_price]">Harga Satuan (Rp) <span class="required">*</span></label>
+                                        <input type="number" name="items[0][unit_price]" class="form-control" value="0.00" min="0" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group full">
+                                        <label for="items[0][custom_design_file]">
+                                            File Desain Kustom
+                                        </label>
+                                        <input type="file" name="items[0][custom_design_file]" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.ai,.psd,.cdr">
+                                        <span class="help-text">Format yang diperbolehkan: JPG, PNG, PDF, AI, PSD, CDR (Maks. 10MB)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    <button type="button" class="add-item-btn" onclick="addItem()">
+                        <i class="fas fa-plus"></i> Tambah Item
+                    </button>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-section">
+                    <h2 class="section-title">Catatan</h2>
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label for="notes">
+                                Catatan Tambahan
+                            </label>
+                            <textarea 
+                                name="notes" 
+                                id="notes" 
+                                class="form-control" 
+                                placeholder="Catatan atau instruksi khusus untuk pesanan ini..."
+                            >{{ old('notes') }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="form-section">
+                    <h2 class="section-title">Status Pesanan</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="payment_status">
+                                Status Pembayaran <span class="required">*</span>
+                            </label>
+                            <select name="payment_status" id="payment_status" class="form-control" required>
+                                <option value="Unpaid" {{ old('payment_status') == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
+                                <option value="Paid" {{ old('payment_status') == 'Paid' ? 'selected' : '' }}>Paid</option>
+                                <option value="Cancelled" {{ old('payment_status') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="shipping_status">
+                                Status Pengiriman <span class="required">*</span>
+                            </label>
+                            <select name="shipping_status" id="shipping_status" class="form-control" required>
+                                <option value="Pending" {{ old('shipping_status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="Shipped" {{ old('shipping_status') == 'Shipped' ? 'selected' : '' }}>Shipped</option>
+                                <option value="Arrived" {{ old('shipping_status') == 'Arrived' ? 'selected' : '' }}>Arrived</option>
+                                <option value="Cancelled" {{ old('shipping_status') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skm-form-container">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Simpan Transaksi
+                    </button>
+                    <a href="{{ route('admin.transactions.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Batal
+                    </a>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userSelect = document.getElementById('user_id');
+        const addressSelect = document.getElementById('shipping_address_id');
+        const addressWrapper = document.getElementById('address-wrapper');
+
+        // Event listener untuk perubahan user
+        userSelect.addEventListener('change', function() {
+            const userId = this.value;
+            
+            // Clear existing options dan tampilkan loading
+            addressSelect.innerHTML = '<option value="" disabled selected>Memuat alamat...</option>';
+            addressSelect.disabled = true;
+
+            if (userId) {
+                // Fetch alamat dari server
+                fetch(`/admin/users/${userId}/addresses`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data alamat');
+                    }
+                    return response.json();
+                })
+                .then(addresses => {
+                    // Clear loading message
+                    addressSelect.innerHTML = '';
+                    
+                    if (addresses && addresses.length > 0) {
+                        // Enable select dan tampilkan wrapper
+                        addressSelect.disabled = false;
+                        addressWrapper.style.display = 'block';
+
+                        // Tambah option default
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = '';
+                        defaultOption.textContent = 'Pilih Alamat Pengiriman';
+                        defaultOption.disabled = true;
+                        defaultOption.selected = true;
+                        addressSelect.appendChild(defaultOption);
+
+                        // Tambahkan setiap alamat ke dropdown
+                        addresses.forEach(address => {
+                            const option = document.createElement('option');
+                            option.value = address.id;
+                            
+                            // Gunakan full_address dari accessor
+                            let addressText = address.full_address || buildAddressText(address);
+                            
+                            // Tambahkan label "(Utama)" jika alamat utama
+                            if (address.is_primary) {
+                                addressText += ' (Utama)';
+                            }
+                            
+                            option.textContent = addressText;
+                            
+                            // Auto-select alamat utama
+                            if (address.is_primary) {
+                                option.selected = true;
+                            }
+                            
+                            addressSelect.appendChild(option);
+                        });
+                    } else {
+                        // Tidak ada alamat
+                        addressSelect.innerHTML = '<option value="">User ini belum memiliki alamat</option>';
+                        addressSelect.disabled = true;
+                        addressWrapper.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    addressSelect.innerHTML = '<option value="">Gagal memuat alamat. Silakan coba lagi.</option>';
+                    addressSelect.disabled = true;
+                    addressWrapper.style.display = 'block';
+                });
+            } else {
+                // Tidak ada user yang dipilih
+                addressSelect.innerHTML = '<option value="">Pilih Customer Terlebih Dahulu</option>';
+                addressSelect.disabled = true;
+                addressWrapper.style.display = 'none';
+            }
+        });
+
+        // Fungsi helper untuk membangun teks alamat jika full_address tidak ada
+        function buildAddressText(address) {
+            const parts = [];
+            
+            if (address.address_line) parts.push(address.address_line);
+            if (address.city) parts.push(address.city);
+            if (address.province) parts.push(address.province);
+            if (address.postal_code) parts.push(address.postal_code);
+            if (address.country) parts.push(address.country);
+            
+            return parts.join(', ');
+        }
+
+        // --- Fungsi untuk menambah dan menghapus item ---
+        let itemCount = {{ old('items') ? count(old('items')) : 1 }};
+        if (itemCount === 0) itemCount = 1;
+
+        window.addItem = function() {
+            const container = document.getElementById('order-items-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'item-card';
+            newItem.innerHTML = `
+                <div class="item-header">
+                    <span class="item-number">Item #${itemCount + 1}</span>
+                    <button type="button" class="remove-item-btn" onclick="removeItem(this)">
+                        <i class="fas fa-times"></i> Hapus
+                    </button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="items[${itemCount}][product_name]">Nama Produk/Layanan <span class="required">*</span></label>
+                        <input type="text" name="items[${itemCount}][product_name]" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="items[${itemCount}][quantity]">Kuantitas <span class="required">*</span></label>
+                        <input type="number" name="items[${itemCount}][quantity]" class="form-control" value="1" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="items[${itemCount}][unit_price]">Harga Satuan (Rp) <span class="required">*</span></label>
+                        <input type="number" name="items[${itemCount}][unit_price]" class="form-control" value="0.00" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full">
+                        <label for="items[${itemCount}][custom_design_file]">
+                            File Desain Kustom
+                        </label>
+                        <input type="file" name="items[${itemCount}][custom_design_file]" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.ai,.psd,.cdr">
+                        <span class="help-text">Format yang diperbolehkan: JPG, PNG, PDF, AI, PSD, CDR (Maks. 10MB)</span>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(newItem);
+            itemCount++;
+            updateRemoveButtons();
+        }
+
+        window.removeItem = function(button) {
+            const itemCard = button.closest('.item-card');
+            itemCard.remove();
+            
+            // Renumber items
+            const items = document.querySelectorAll('.item-card');
+            itemCount = items.length;
+            
+            items.forEach((item, index) => {
+                const itemNumber = item.querySelector('.item-number');
+                itemNumber.textContent = `Item #${index + 1}`;
+                
+                // Update name attributes
+                item.querySelectorAll('input, select, textarea').forEach(input => {
+                    if (input.name) {
+                        input.name = input.name.replace(/items\[\d+\]/, `items[${index}]`);
+                    }
+                    if (input.id) {
+                        input.id = input.id.replace(/items\[\d+\]/, `items[${index}]`);
+                    }
+                });
+                
+                // Update label for attributes
+                item.querySelectorAll('label').forEach(label => {
+                    if (label.htmlFor) {
+                        label.htmlFor = label.htmlFor.replace(/items\[\d+\]/, `items[${index}]`);
+                    }
+                });
+            });
+            
+            updateRemoveButtons();
+        }
+
+        function updateRemoveButtons() {
+            const items = document.querySelectorAll('.item-card');
+            items.forEach(item => {
+                const removeBtn = item.querySelector('.remove-item-btn');
+                if (items.length > 1) {
+                    removeBtn.style.display = 'inline-flex';
+                } else {
+                    removeBtn.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize remove buttons
+        updateRemoveButtons();
+
+        // Trigger change event jika ada old value
+        @if(old('user_id'))
+            userSelect.dispatchEvent(new Event('change'));
+        @endif
+    });
+    </script>
 </body>
 </html>

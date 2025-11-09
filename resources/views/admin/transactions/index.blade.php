@@ -186,82 +186,75 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            line-height: 1;
+            border: 1.5px solid #E5E7EB;
+            background: #ffffff;
+            color: var(--skm-blue);
+        }
+
+        /* State hover untuk page-link */
+        .skm-pagination .page-link:hover {
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
-            color: var(--skm-blue-2, #6B7280);
+            border-color: var(--skm-teal);
+            color: var(--skm-teal);
         }
 
-        /* State Hover (Hanya untuk yang tidak aktif/disabled) */
-        .skm-pagination .page-item:not(.active):not(.disabled) .page-link:hover {
-            background: #F3F4F6;
-            border-color: #D1D5DB;
-            color: var(--skm-blue, #074159);
-        }
-
+        /* State active (halaman yang sedang dipilih) */
         .skm-pagination .page-item.active .page-link {
-            background: #23C8B8;
+            background: var(--skm-accent);
+            border-color: var(--skm-accent);
             color: #fff;
-            border-color: #23C8B8;
-            font-weight: 700;
+            font-weight: 800;
         }
 
+        /* State disabled (prev/next yang tidak bisa diklik) */
         .skm-pagination .page-item.disabled .page-link {
-            color: #9CA3AF;
             background: #F9FAFB;
             border-color: #E5E7EB;
-            opacity: 1;
+            color: #9CA3AF;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
+        /* Hilangkan outline bawaan Bootstrap */
+        .skm-pagination .page-link:focus {
+            box-shadow: none;
+            outline: none;
+        }
 
         /* Alert */
-        .skm-alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
-        .skm-alert.success { background: #D4EDDA; color: #155724; border: 1px solid #C3E6CB; }
+        .skm-alert {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        .skm-alert.success {
+            background: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
 
-        @media (max-width: 767px) {
-            .skm-admin-main {
-                margin-left: 0;
-                margin-top: 72px;
-                padding: 12px;
-            }
-            .skm-content-wrapper { border-radius: 8px; }
-            .skm-header { padding: 16px; }
-            .skm-header h1 { font-size: 22px; }
-            .skm-header p { font-size: 13px; }
-            .skm-controls-card {
-                padding: 16px;
-                padding-top: 0; /* Terapkan juga di mobile */
-            }
-            .skm-actions { flex-direction: column; align-items: stretch; margin-bottom: 16px; }
-            .skm-btn { width: 100%; justify-content: center; padding: 12px 16px; }
-            .skm-table-header-bar { flex-direction: column; align-items: stretch; gap: 12px; }
-            .skm-table-title { font-size: 18px; }
-            .skm-filters { flex-direction: column; align-items: stretch; width: 100%; }
-            .skm-filters select { width: 100%; }
-
-            .skm-table-wrap { overflow: visible; }
+        @media (max-width: 768px) {
+            .skm-admin-main { margin-left: 0; padding: 16px; }
+            .skm-table { display: block; }
             .skm-table thead { display: none; }
-            .skm-table, .skm-table tbody, .skm-table tr {
-                display: block;
-                width: 100%;
-            }
+            .skm-table tbody { display: block; }
             .skm-table tr {
-                margin-bottom: 16px;
-                border: 1px solid #E5E7EB;
-                border-radius: 12px;
-                overflow: hidden;
-                background: white;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                display: block;
+                margin-bottom: 20px;
+                padding-bottom: 20px;
+                border-bottom: 2px solid #E5E7EB;
+                position: relative;
             }
             .skm-table td {
                 display: block;
-                width: 100%;
-                border-bottom: 1px solid #E5E7EB;
-                padding: 12px 16px;
                 text-align: right;
+                padding: 10px 16px;
+                padding-left: 50%;
+                border: none;
                 position: relative;
             }
-            .skm-table td:last-child { border-bottom: none; }
             .skm-table td:before {
                 content: attr(data-label);
                 position: absolute;
@@ -335,6 +328,13 @@
             </div>
 
             <div class="skm-controls-card">
+                <div class="skm-actions">
+                    <a href="{{ route('admin.transactions.create') }}" class="skm-btn skm-btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add New Transaction
+                    </a>
+                </div>
+
                 <div class="skm-table-header-bar">
                     <h2 class="skm-table-title">All Transactions</h2>
 

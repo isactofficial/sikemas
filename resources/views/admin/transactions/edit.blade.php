@@ -153,99 +153,124 @@
             padding: 4px 8px;
             font-weight: 700;
             font-size: 13px;
-            font-family: 'Besley', serif;
             border: none;
-            border-radius: 0;
-            background-color: transparent;
-            text-transform: capitalize;
+            background: transparent;
+            outline: none;
+            appearance: none;
+            cursor: pointer;
             color: inherit;
             width: 100%;
-        }
-        .status-select:focus {
-            outline: none;
-            box-shadow: none;
+            font-family: 'Besley', serif;
         }
 
-        .status-grid .row:not(:last-of-type) .label,
-        .status-grid .row:not(:last-of-type) .status-select-wrapper {
-            padding-bottom: 9px;
-            margin-bottom: 14px;
-            border-bottom: 1px solid var(--skm-border);
-        }
-
-        .status-select-wrapper.status-paid,
-        .status-select-wrapper.status-arrived {
+        .status-select-wrapper.status-paid {
             background-color: #D4EDDA;
+            color: #155724;
             border-color: #C3E6CB;
         }
-        .status-select-wrapper.status-paid .status-select,
-        .status-select-wrapper.status-arrived .status-select {
-            color: #155724;
-        }
-
-        .status-select-wrapper.status-unpaid,
-        .status-select-wrapper.status-pending,
-        .status-select-wrapper.status-shipped {
+        .status-select-wrapper.status-unpaid {
             background-color: #FEF3C7;
+            color: #92400E;
             border-color: #FDE68A;
         }
-        .status-select-wrapper.status-unpaid .status-select,
-        .status-select-wrapper.status-pending .status-select,
-        .status-select-wrapper.status-shipped .status-select {
-            color: #92400E;
-        }
-
         .status-select-wrapper.status-cancelled {
             background-color: #FEE2E2;
+            color: #991B1B;
             border-color: #FDD2D2;
         }
-        .status-select-wrapper.status-cancelled .status-select {
-            color: #991B1B;
+
+        .status-select-wrapper.status-pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+            border-color: #FDE68A;
+        }
+        .status-select-wrapper.status-shipped {
+            background-color: #FEF3C7;
+            color: #92400E;
+            border-color: #FDE68A;
+        }
+        .status-select-wrapper.status-arrived {
+            background-color: #D4EDDA;
+            color: #155724;
+            border-color: #C3E6CB;
         }
 
-        .submit-section {
-            margin-top: 12px;
-            text-align: right;
-        }
+
+        .submit-section { display: flex; justify-content: center; }
         .submit-btn {
-            width: auto;
-            padding: 14px 80px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 18px;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            cursor: pointer;
-            border: none;
-            transition: all .15s ease;
             background: var(--skm-accent);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(255,87,34,.3);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: 'Besley', serif;
+            transition: background .15s ease, transform .15s ease;
         }
         .submit-btn:hover {
             background: #e64a19;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255,87,34,.4);
+            transform: translateY(-1px);
         }
 
-        /* === Responsif === */
-        @media (max-width: 1024px) {
-            .skm-admin-main { margin-left: 0; width: 100%; padding: 10px; gap: 16px; }
+        /* === CSS FORM & TEXTAREA === */
+        .skm-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--skm-border);
+            border-radius: 12px;
+            font-family: 'Besley', system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--skm-teal-dark);
+            background: #fdfdfd;
+            box-sizing: border-box; /* Penting */
+            transition: border-color .15s ease, box-shadow .15s ease;
         }
-        @media (max-width: 767px) {
-            .skm-figma-container { padding: 16px; }
-            .order-items-section { padding: 16px; }
-
-            .new-profile-info-item { flex-direction: column; align-items: flex-start; gap: 4px; }
-            .new-profile-info-item .value { text-align: left; max-width: 100%; }
-            .order-item { flex-direction: column; align-items: stretch; gap: 10px; }
-            .order-item .item-image { width: 100%; height: 150px; }
-            .item-price-info { flex-direction: row; justify-content: space-between; align-items: center; margin-top: 10px; margin-left: 0; }
-            .item-price-info .item-total-price { margin-top: 0; }
-
-            .status-grid { grid-template-columns: 1fr auto; gap: 8px; }
-            .submit-section { text-align: center; }
-            .submit-btn { width: 100%; }
+        .skm-textarea:focus {
+            outline: none;
+            border-color: var(--skm-teal-light);
+            box-shadow: 0 0 0 3px rgba(31, 109, 114, 0.2);
         }
+        
+        /* === PERBAIKAN: CSS UNTUK DROPDOWN BARU === */
+        .skm-form-group {
+            margin-bottom: 20px;
+        }
+        .skm-form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--skm-text-label);
+        }
+        .skm-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--skm-border);
+            border-radius: 12px;
+            font-family: 'Besley', system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--skm-teal-dark);
+            background: #fdfdfd url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") right 0.75rem center/1.5em 1.5em no-repeat;
+            -webkit-appearance: none;
+            appearance: none;
+            box-sizing: border-box;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .skm-select:focus {
+            outline: none;
+            border-color: var(--skm-teal-light);
+            box-shadow: 0 0 0 3px rgba(31, 109, 114, 0.2);
+        }
+        .skm-select:disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+        }
+        /* ========================================= */
+
     </style>
 </head>
 <body>
@@ -253,6 +278,7 @@
 
     <main class="skm-admin-main">
 
+        {{-- Ini adalah data info user & alamat yang *saat ini* ada di order --}}
         <div class="skm-figma-container">
             <div class="profile-section-wrapper">
                 <a href="#" class="new-profile-edit-icon">
@@ -268,16 +294,12 @@
                     <div class="new-profile-role">Pengguna</div>
                 </div>
 
-                <h2 class="section-title" style="margin-top: 0;">Informasi Dasar</h2>
+                <h2 class="section-title" style="margin-top: 0;">Informasi Dasar (Saat Ini)</h2>
 
                 <div class="new-profile-info-list">
                     <div class="new-profile-info-item">
                         <span class="label">Nama</span>
                         <span class="value">{{ $order->user->name ?? 'N/A' }}</span>
-                    </div>
-                    <div class="new-profile-info-item">
-                        <span class="label">Tanggal Lahir</span>
-                        <span class="value">{{ $order->user->date_of_birth ?? 'N/A' }}</span>
                     </div>
                     <div class="new-profile-info-item">
                         <span class="label">Alamat Pengiriman</span>
@@ -296,22 +318,26 @@
         </div>
 
         <div class="order-items-section">
+            <h2 class="section-title" style="margin-top: 0;">Daftar Produk</h2>
+            
             @forelse($order->items as $item)
             <div class="order-item">
-                <img src="{{ $item->product->image_url ?? 'https://via.placeholder.com/80' }}"
-                     alt="{{ $item->product->name ?? 'Produk' }}"
+                <img src="{{ asset('assets/img/box2.png') }}"
+                     alt="{{ $item->product_name }}"
                      class="item-image"
                      onerror="this.src='https://via.placeholder.com/80';">
 
                 <div class="item-details">
-                    <span class="item-name">{{ $item->product->name ?? 'Produk Dihapus' }}</span>
+                    <span class="item-name">{{ $item->product_name }}</span>
+                    
+                    @if($item->custom_design_file)
                     <div class="item-attributes">
-                        <span><i class="fas fa-box-open"></i> Bahan: {{ $item->product->material ?? 'Karton' }}</span>
-                        <span><i class="fas fa-ruler-combined"></i> Ukuran: {{ $item->product->size ?? 'N/A' }}</span>
-                        <span><i class="fas fa-paint-brush"></i> {{ $item->product->design_type ?? 'Desain Kustom' }}</span>
+                        <span><i class="fas fa-file-image"></i> File Desain Kustom</span>
                     </div>
+                    @endif
+                    
                     <span class="item-price-label">
-                        Harga: Rp {{ number_format($item->product->price ?? 0, 0, ',', '.') }}
+                        Harga: Rp {{ number_format($item->unit_price, 0, ',', '.') }}
                     </span>
                     <div class="item-quantity-stepper">
                         <button type="button" class="stepper-btn" disabled>-</button>
@@ -321,10 +347,16 @@
                 </div>
 
                 <div class="item-price-info">
-                    <a href="#" class="item-delete-icon">
-                        <i class="fas fa-trash"></i>
+                    @if($item->custom_design_file)
+                    <a href="{{ Storage::url($item->custom_design_file) }}" 
+                       target="_blank" 
+                       class="item-delete-icon" 
+                       title="Lihat File Desain"
+                       style="color: var(--skm-teal-light);">
+                        <i class="fas fa-download"></i>
                     </a>
-                    <span class="item-total-price">Rp {{ number_format(($item->product->price ?? 0) * $item->quantity, 0, ',', '.') }}</span>
+                    @endif
+                    <span class="item-total-price">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
                 </div>
             </div>
             @empty
@@ -337,17 +369,56 @@
             @method('PUT')
 
             <div class="skm-figma-container">
+
+                <h2 class="section-title">Ubah Pengguna & Alamat</h2>
+                
+                <div class="skm-form-group">
+                    <label for="user_id_select" class="skm-form-label">Pilih Pengguna</label>
+                    <select name="user_id" id="user_id_select" class="skm-select">
+                        <option value="">-- Pilih Pengguna --</option>
+                        {{-- Variabel $users ini WAJIB dikirim dari Controller --}}
+                        @if(isset($users))
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ (old('user_id', $order->user_id) == $user->id) ? 'selected' : '' }}>
+                                    {{ $user->name }} ({{ $user->email }})
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="{{ $order->user_id }}" selected>{{ $order->user->name }} (Gagal memuat user lain)</option>
+                        @endif
+                    </select>
+                </div>
+        
+                <div class="skm-form-group">
+                    <label for="shipping_address_id" class="skm-form-label">Alamat Pengiriman</label>
+                    <select name="shipping_address_id" id="shipping_address_select" class="skm-select" required>
+                        <option value="">-- Pilih pengguna dahulu --</option>
+                    </select>
+                </div>
                 <h2 class="section-title">Ringkasan Belanja</h2>
+
+                @php
+                    // Hitung subtotal dari items
+                    $subtotal = $order->items->sum('subtotal');
+                    // Pajak 11%
+                    $pajak = $subtotal * 0.11;
+                    // Total yang harus dibayar
+                    // Ini seharusnya menggunakan $order->total_amount agar konsisten dengan data di DB
+                    $totalAmount = $order->total_amount; 
+                @endphp
 
                 <div class="summary-grid">
                     <span class="label">Subtotal</span>
-                    <span class="value">Rp {{ number_format($order->subtotal ?? ($order->total_amount - ($order->shipping_cost ?? 0)), 0, ',', '.') }}</span>
+                    <span class="value">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+
+                    <span class="label">Pajak (11%)</span>
+                    <span class="value">Rp {{ number_format($pajak, 0, ',', '.') }}</span>
 
                     <span class="label">Biaya Pengiriman</span>
                     <span class="value">Rp {{ number_format($order->shipping_cost ?? 0, 0, ',', '.') }}</span>
 
                     <span class="label total-label">Total</span>
-                    <span class="value total-value">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                    <span class="value total-value">Rp {{ number_format($totalAmount, 0, ',', '.') }}</span>
                 </div>
 
                 <h2 class="section-title">Status Barang</h2>
@@ -377,7 +448,12 @@
                     </div>
                 </div>
 
-            </div>
+                <h2 class="section-title">Catatan (Opsional)</h2>
+                <textarea name="notes" 
+                          class="skm-textarea" 
+                          rows="4" 
+                          placeholder="Tambahkan catatan untuk transaksi ini...">{{ old('notes', $order->notes) }}</textarea>
+                </div>
 
             <div class="submit-section">
                 <button type="submit" class="submit-btn">Submit</button>
@@ -388,6 +464,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Bagian 1: Setup Status Select (Sudah ada) ---
             function setupStatusSelect(selectName) {
                 var select = document.querySelector('select[name="' + selectName + '"]');
                 if (select) {
@@ -404,6 +481,89 @@
             }
             setupStatusSelect('payment_status');
             setupStatusSelect('shipping_status');
+
+            // ========================================================
+            // PERBAIKAN: Bagian 2: Tambahkan JavaScript untuk Alamat
+            // ========================================================
+        
+            const userSelect = document.getElementById('user_id_select');
+            const addressSelect = document.getElementById('shipping_address_select');
+            
+            // URL endpoint AJAX dari web.php (Pastikan route() ini benar)
+            // 'PLACEHOLDER' akan diganti dengan ID pengguna
+            const addressUrlBase = '{{ route("admin.users.addresses", ["userId" => "PLACEHOLDER"]) }}';
+
+            if (userSelect && addressSelect) {
+                
+                // Fungsi untuk mengambil alamat
+                function fetchAddresses(userId) {
+                    // Kosongkan dan nonaktifkan dropdown alamat
+                    addressSelect.innerHTML = '<option value="">Memuat alamat...</option>';
+                    addressSelect.disabled = true;
+
+                    if (!userId) {
+                        addressSelect.innerHTML = '<option value="">-- Pilih pengguna dahulu --</option>';
+                        return;
+                    }
+                    
+                    // Buat URL yang benar
+                    const fetchUrl = addressUrlBase.replace('PLACEHOLDER', userId);
+
+                    fetch(fetchUrl)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Gagal mengambil data alamat');
+                            }
+                            return response.json();
+                        })
+                        .then(addresses => {
+                            // Hapus opsi "Memuat..."
+                            addressSelect.innerHTML = ''; 
+                            
+                            if (addresses.length === 0) {
+                                addressSelect.innerHTML = '<option value="">-- Pengguna ini tidak memiliki alamat --</option>';
+                            } else {
+                                addressSelect.innerHTML = '<option value="">-- Pilih Alamat --</option>';
+                                
+                                // ID alamat yang saat ini tersimpan di order
+                                const currentOrderAddressId = '{{ $order->shipping_address_id ?? "" }}';
+                                
+                                // Tambahkan setiap alamat ke dropdown
+                                addresses.forEach(address => {
+                                    // Kita gunakan 'full_address' dari accessor di UserAddress.php
+                                    const option = document.createElement('option');
+                                    option.value = address.id;
+                                    option.textContent = address.full_address; // Ini dari $appends di model
+                                    
+                                    // Pilih alamat yang saat ini terkait dengan order
+                                    if (address.id == currentOrderAddressId) {
+                                        option.selected = true;
+                                    }
+
+                                    addressSelect.appendChild(option);
+                                });
+                            }
+                            
+                            addressSelect.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            addressSelect.innerHTML = '<option value="">-- Gagal memuat alamat --</option>';
+                            addressSelect.disabled = true;
+                        });
+                }
+
+                // 1. Panggil saat dropdown user berubah
+                userSelect.addEventListener('change', function() {
+                    fetchAddresses(this.value);
+                });
+
+                // 2. Panggil saat halaman dimuat (untuk halaman edit ini)
+                const currentUserId = userSelect.value;
+                if (currentUserId) {
+                    fetchAddresses(currentUserId);
+                }
+            }
         });
     </script>
 

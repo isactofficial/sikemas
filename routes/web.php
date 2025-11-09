@@ -96,6 +96,27 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+// Testing error pages (hapus setelah testing)
+Route::get('/test-error-419', function () {
+    abort(419);
+});
+
+Route::get('/test-error-429', function () {
+    abort(429);
+});
+
+Route::get('/test-error-500', function () {
+    abort(500);
+});
+
+Route::get('/test-error-502', function () {
+    abort(502);
+});
+
+Route::get('/test-error-503', function () {
+    abort(503);
+});
+
 // ============================================
 // PUBLIC PAGES
 // ============================================
@@ -217,12 +238,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Testimonies CRUD
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
-    // Transactions CRUD (BARU)
-    Route::resource('transactions', TransactionController::class)->except([
-        'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
-    ]);
-    // Free Consultations CRUD (Admin)
-    Route::resource('free-consultations', FreeConsultationController::class)
-        ->only(['index', 'edit', 'update','destroy'])
-        ->names('free-consultations');
+    // Transactions CRUD
+    Route::resource('transactions', TransactionController::class);
+    
+    // AJAX endpoint for getting user addresses
+    Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+        ->name('users.addresses');
 });

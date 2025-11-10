@@ -142,7 +142,7 @@
 		/* Smaller title size on narrow widths and ensure truncation */
 		.skm-brand__title { font-size: 20px; }
 		/* Ensure Beranda button keeps 90% width on mobile */
-		.skm-sidebar__btn.is-back { width: 90%; }
+		.skm-sidebar__btn.is-back { width: 89%; }
 		/* tone down hover scale on mobile */
 		.skm-nav__link:hover { transform: translateY(-1px) scale(1.005); }
 		.skm-nav__link.touch-hover { transform: translateY(-1px) scale(1.005); }

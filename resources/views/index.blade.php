@@ -1888,23 +1888,31 @@
     @include('layouts.footer')
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Script Hamburger---
+            const hamburgerButton = document.getElementById('navbar-hamburger');
+            const mobileMenu = document.getElementById('navbar-mobile-menu');
 
-            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
+            hamburgerButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+            });
+
+            // --- SCRIPT KOMITMEN 2 ---
             const dominoTabs = document.querySelectorAll('.domino-tab');
             const dominoContents = document.querySelectorAll('.domino-content');
 
-        dominoTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetId = tab.dataset.target;
-                const targetContent = document.getElementById(targetId);
+            dominoTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.dataset.target;
+                    const targetContent = document.getElementById(targetId);
 
-                dominoTabs.forEach(t => t.classList.remove('active'));
-                dominoContents.forEach(c => c.classList.remove('active'));
+                    dominoTabs.forEach(t => t.classList.remove('active'));
+                    dominoContents.forEach(c => c.classList.remove('active'));
 
-                tab.classList.add('active');
-                targetContent.classList.add('active');
+                    tab.classList.add('active');
+                    targetContent.classList.add('active');
+                });
             });
-        });
 
             // --- Script Login Prompt ---
             const loginButton = document.getElementById('login-prompt-button');
@@ -2012,31 +2020,44 @@
                     } catch (error) {
                         console.error('Error:', error);
 
-                        // ERROR KONEKSI: Ganti alert() dengan Swal.fire()
+                        // ERROR KONEKSI:
                         Swal.fire({
                             icon: 'error',
                             title: 'Koneksi Gagal',
                             text: 'Terjadi kesalahan koneksi. Silakan coba lagi.',
                         });
 
-                        // Kembalikan tombol ke keadaan semula jika error
+                        // Kembalikan tombol ke keadaan semula
                         requestButton.disabled = false;
                         requestButton.textContent = 'Konsultasi Gratis Sekarang';
                         requestButton.classList.remove('disabled');
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+                });
+            }
 
-                    // Kembalikan tombol ke keadaan semula
-                    requestButton.disabled = false;
-                    requestButton.textContent = 'Konsultasi Gratis Sekarang';
-                    requestButton.classList.remove('disabled');
-                }
-            });
-        }
-
-            
+            // --- Script Touch Hover Navbar ---
+            const navLinks = document.querySelectorAll('.navbar-menu a');
+            if (navLinks && navLinks.length) {
+                const addTouch = (e) => {
+                    e.currentTarget.classList.add('touch-hover');
+                };
+                const removeTouch = (e) => {
+                    e.currentTarget.classList.remove('touch-hover');
+                };
+                navLinks.forEach(a => {
+                    a.addEventListener('touchstart', addTouch, {
+                        passive: true
+                    });
+                    a.addEventListener('touchend', removeTouch, {
+                        passive: true
+                    });
+                    a.addEventListener('touchcancel', removeTouch, {
+                        passive: true
+                    });
+                    a.addEventListener('blur', removeTouch);
+                    a.addEventListener('click', removeTouch);
+                });
+            }
         });
     </script>
 </body>

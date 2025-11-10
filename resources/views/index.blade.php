@@ -1537,6 +1537,31 @@
                                     <small>{{ Auth::user()->email }}</small>
                                 </div>
                                 <a href="{{ route('profile.index') }}">Profil Saya</a>
+                                @php
+                                    // Tampilkan tombol Admin hanya untuk admin.
+                                    // Kriteria mengikuti AuthController::isAdmin():
+                                    // 1) kolom role == 'admin' ATAU
+                                    // 2) kolom boolean is_admin == true ATAU
+                                    // 3) email masuk daftar ENV ADMIN_EMAILS (comma-separated)
+                                    $__isAdmin = false;
+                                    try {
+                                        $__u = Auth::user();
+                                        if (isset($__u->role) && strtolower((string) $__u->role) === 'admin') {
+                                            $__isAdmin = true;
+                                        } elseif (isset($__u->is_admin) && (bool) $__u->is_admin) {
+                                            $__isAdmin = true;
+                                        } else {
+                                            $list = env('ADMIN_EMAILS');
+                                            if ($list) {
+                                                $emails = array_filter(array_map('trim', explode(',', $list)));
+                                                $__isAdmin = in_array(strtolower($__u->email), array_map('strtolower', $emails), true);
+                                            }
+                                        }
+                                    } catch (\Throwable $e) { $__isAdmin = false; }
+                                @endphp
+                                @if($__isAdmin)
+                                    <a href="{{ route('admin.index') }}">Halaman Admin</a>
+                                @endif
                                 <div class="dropdown-divider"></div>
                                 <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault();

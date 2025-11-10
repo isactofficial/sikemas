@@ -44,13 +44,22 @@
 		</nav>
 
 		<div class="skm-sidebar__footer">
-			<form action="{{ route('logout') }}" method="POST">
+			<a href="{{ route('beranda') }}" class="skm-sidebar__btn is-back" title="Kembali ke Beranda">
+				<span class="icon" aria-hidden="true">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
+						<path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</span>
+				<span class="text">Beranda</span>
+				<span class="chev" aria-hidden="true">›</span>
+			</a>
+			<form action="{{ route('logout') }}" method="POST" class="skm-sidebar__logout-form">
 				@csrf
-				<button type="submit" class="skm-logout__btn" title="Log Out">
+				<button type="submit" class="skm-sidebar__btn is-logout" title="Log Out">
 					<span class="icon" aria-hidden="true">
 						<img src="{{ asset('assets/img/log_out2.png') }}" alt="" class="skm-logout__icon">
 					</span>
-					<span class="skm-logout__text">Log Out</span>
+					<span class="text">Log Out</span>
 					<span class="chev" aria-hidden="true">›</span>
 				</button>
 			</form>
@@ -80,13 +89,22 @@
 	.skm-nav__link.is-active { background: #074159; color: #ffffff; box-shadow: 0 10px 28px rgba(7,65,89,0.18); }
 
 	/* Footer */
-	.skm-sidebar__footer { margin-top: auto; padding: 10px 0 8px; }
-	.skm-logout__btn { width: 100%; display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; border: 0; outline: 0; cursor: pointer; padding: 12px 14px; border-radius: 10px; background: #e53935; color: #fff; font-weight: 700; font-size: 13px; box-shadow: 0 8px 24px rgba(229,57,53,0.28); transition: background-color .15s ease, transform .15s ease, box-shadow .15s ease; }
-	.skm-logout__btn:hover { background: #d32f2f; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(229,57,53,0.36); }
-	.skm-logout__btn .icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 2px solid rgba(255,255,255,0.95); border-radius: 10px; padding: 4px; box-sizing: border-box; }
+	.skm-sidebar__footer { margin-top: auto; padding: 10px 0 8px; display: grid; grid-auto-rows: auto; gap: 8px; }
+	.skm-sidebar__footer form { width: 100%; margin: 0; }
+
+	/* Unified footer button style to guarantee identical width/height */
+	.skm-sidebar__btn { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; border: 0; outline: 0; box-shadow: 0 8px 24px rgba(0,0,0,0.12); transition: background-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+	.skm-sidebar__btn .icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 2px solid rgba(255,255,255,0.95); border-radius: 10px; padding: 4px; box-sizing: border-box; }
+	.skm-sidebar__btn .text { flex: 1 1 auto; text-align: left; }
+	.skm-sidebar__btn .chev { font-size: 18px; line-height: 1; opacity: .95; }
+
+	/* Variants */
+	.skm-sidebar__btn.is-back { background: #074159; color: #fff; box-shadow: 0 8px 24px rgba(7,65,89,0.28); width: 85%; margin: 0 auto; }
+	.skm-sidebar__btn.is-back:hover { background: #063e52; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(7,65,89,0.36); }
+
+	.skm-sidebar__btn.is-logout { background: #e53935; color: #fff; box-shadow: 0 8px 24px rgba(229,57,53,0.28); cursor: pointer; }
+	.skm-sidebar__btn.is-logout:hover { background: #d32f2f; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(229,57,53,0.36); }
 	.skm-logout__icon { width: 100%; height: 100%; object-fit: contain; display: block; filter: brightness(0) invert(1) opacity(.98); }
-	.skm-logout__text { flex: 1 1 auto; text-align: left; }
-	.skm-logout__btn .chev { font-size: 18px; line-height: 1; opacity: .95; }
 
 	/* Content area spacing for admin pages */
 	.skm-admin-main { margin-left: 240px; padding: 24px; }

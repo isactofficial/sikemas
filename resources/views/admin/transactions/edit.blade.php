@@ -271,6 +271,187 @@
         }
         /* ========================================= */
 
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 1024px) {
+            .skm-admin-main {
+                margin-left: 0;
+                padding: 20px 16px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .skm-admin-main {
+                padding: 16px 12px;
+                gap: 16px;
+            }
+
+            .skm-figma-container,
+            .order-items-section {
+                padding: 20px 16px;
+                border-radius: 16px;
+            }
+
+            .section-title {
+                font-size: 20px;
+                margin: 20px 0 12px 0;
+            }
+
+            .new-profile-avatar {
+                width: 70px;
+                height: 70px;
+            }
+
+            .new-profile-name {
+                font-size: 20px;
+            }
+
+            .new-profile-info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px 0;
+            }
+
+            .new-profile-info-item .value {
+                max-width: 100%;
+                text-align: left;
+                word-break: break-word;
+            }
+
+            .order-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .order-item .item-image {
+                width: 100%;
+                height: 150px;
+            }
+
+            .item-details {
+                width: 100%;
+            }
+
+            .item-price-info {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-left: 0;
+                margin-top: 12px;
+            }
+
+            .summary-grid {
+                font-size: 14px;
+                padding-bottom: 12px;
+                margin-bottom: 12px;
+            }
+
+            .summary-grid .total-label,
+            .summary-grid .total-value {
+                font-size: 16px;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .status-grid .row {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            #payment-wrapper,
+            #shipping-wrapper {
+                width: 100%;
+            }
+
+            .submit-section {
+                margin-top: 16px;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 12px 32px;
+                font-size: 15px;
+            }
+
+            .skm-textarea {
+                font-size: 14px;
+            }
+
+            .skm-select {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .skm-admin-main {
+                padding: 12px 8px;
+            }
+
+            .skm-figma-container,
+            .order-items-section {
+                padding: 16px 12px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .new-profile-avatar {
+                width: 60px;
+                height: 60px;
+            }
+
+            .new-profile-name {
+                font-size: 18px;
+            }
+
+            .new-profile-role {
+                font-size: 13px;
+            }
+
+            .new-profile-info-item {
+                font-size: 13px;
+            }
+
+            .order-item .item-image {
+                height: 120px;
+            }
+
+            .item-name {
+                font-size: 15px;
+            }
+
+            .item-attributes {
+                font-size: 12px;
+            }
+
+            .item-price-label {
+                font-size: 13px;
+            }
+
+            .summary-grid {
+                font-size: 13px;
+            }
+
+            .summary-grid .total-label,
+            .summary-grid .total-value {
+                font-size: 15px;
+            }
+
+            .status-grid .label {
+                font-size: 14px;
+            }
+
+            .submit-btn {
+                padding: 10px 24px;
+                font-size: 14px;
+            }
+        }
+
     </style>
 </head>
 <body>

@@ -48,6 +48,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .skm-header h1 {
@@ -74,6 +76,7 @@
             font-weight: 700;
             font-size: 14px;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .btn-back:hover {
@@ -120,6 +123,7 @@
             font-size: 15px;
             color: var(--skm-blue);
             font-weight: 700;
+            word-wrap: break-word;
         }
 
         .status-badge {
@@ -157,10 +161,16 @@
             border: 1px solid #BFDBFE;
         }
 
+        .items-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            min-width: 600px;
         }
 
         .items-table th {
@@ -171,6 +181,7 @@
             font-weight: 700;
             color: #23C8B8;
             border-bottom: 2px solid var(--skm-border);
+            white-space: nowrap;
         }
 
         .items-table td {
@@ -208,6 +219,7 @@
             justify-content: space-between;
             min-width: 300px;
             font-size: 15px;
+            gap: 20px;
         }
 
         .total-row.grand-total {
@@ -234,31 +246,148 @@
         @media (max-width: 1024px) {
             .skm-admin-main {
                 margin-left: 0;
-                padding: 20px;
+                padding: 20px 16px;
             }
         }
 
         @media (max-width: 768px) {
-            .info-grid {
-                grid-template-columns: 1fr;
+            .skm-admin-main {
+                padding: 16px 12px;
+                gap: 16px;
             }
 
-            .items-table {
+            .skm-header {
+                padding: 16px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .skm-header h1 {
+                font-size: 22px;
+                margin-bottom: 4px;
+            }
+
+            .skm-header p {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .btn-back {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 16px;
+            }
+
+            .detail-card {
+                padding: 20px 16px;
+                border-radius: 8px;
+            }
+
+            .section-title {
+                font-size: 18px;
+                margin-bottom: 16px;
+                padding-bottom: 10px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+
+            .info-label {
                 font-size: 12px;
             }
 
-            .items-table th,
+            .info-value {
+                font-size: 14px;
+            }
+
+            .items-table {
+                font-size: 11px;
+                min-width: 500px;
+            }
+
+            .items-table th {
+                padding: 8px 6px;
+                font-size: 11px;
+            }
+
             .items-table td {
-                padding: 10px 8px;
+                padding: 10px 6px;
+                font-size: 11px;
+            }
+
+            .product-name {
+                max-width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .design-file {
+                font-size: 11px;
+            }
+
+            .total-section {
+                margin-top: 16px;
+                padding-top: 16px;
+                align-items: stretch;
             }
 
             .total-row {
                 min-width: 100%;
-                font-size: 14px;
+                font-size: 13px;
+                gap: 10px;
             }
 
             .total-row.grand-total {
+                font-size: 15px;
+                padding-top: 10px;
+            }
+
+            .status-badge {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .skm-admin-main {
+                padding: 12px 8px;
+            }
+
+            .skm-header {
+                padding: 12px;
+            }
+
+            .skm-header h1 {
+                font-size: 20px;
+            }
+
+            .detail-card {
+                padding: 16px 12px;
+            }
+
+            .section-title {
                 font-size: 16px;
+            }
+
+            .items-table {
+                font-size: 10px;
+            }
+
+            .items-table th,
+            .items-table td {
+                padding: 8px 4px;
+            }
+
+            .total-row {
+                font-size: 12px;
+            }
+
+            .total-row.grand-total {
+                font-size: 14px;
             }
         }
     </style>
@@ -362,43 +491,45 @@
         <div class="detail-card">
             <h2 class="section-title">Order Items</h2>
             
-            <table class="items-table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Unit Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
-                        <th>Design File</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $subtotal = 0;
-                    @endphp
-                    @foreach($order->items as $item)
-                        @php
-                            $subtotal += $item->subtotal;
-                        @endphp
+            <div class="items-table-wrapper">
+                <table class="items-table">
+                    <thead>
                         <tr>
-                            <td class="product-name">{{ $item->product_name }}</td>
-                            <td>Rp {{ number_format($item->unit_price, 0, ',', '.') }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                            <td>
-                                @if($item->custom_design_file)
-                                    <span class="design-file">
-                                        <i class="fas fa-file"></i>
-                                        <a href="{{ asset('storage/' . $item->custom_design_file) }}" target="_blank">View File</a>
-                                    </span>
-                                @else
-                                    <span style="color: #999;">-</span>
-                                @endif
-                            </td>
+                            <th>Product Name</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th>Design File</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @php
+                            $subtotal = 0;
+                        @endphp
+                        @foreach($order->items as $item)
+                            @php
+                                $subtotal += $item->subtotal;
+                            @endphp
+                            <tr>
+                                <td class="product-name">{{ $item->product_name }}</td>
+                                <td>Rp {{ number_format($item->unit_price, 0, ',', '.') }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                                <td>
+                                    @if($item->custom_design_file)
+                                        <span class="design-file">
+                                            <i class="fas fa-file"></i>
+                                            <a href="{{ asset('storage/' . $item->custom_design_file) }}" target="_blank">View</a>
+                                        </span>
+                                    @else
+                                        <span style="color: #999;">-</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
             <div class="total-section">
                 <div class="total-row">

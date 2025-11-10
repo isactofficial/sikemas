@@ -726,7 +726,8 @@
         /* Responsive Design */
         @media (max-width: 1024px) {
             .portfolio-wrapper {
-                grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column;
                 gap: 40px;
                 padding: 40px 20px;
             }
@@ -734,18 +735,23 @@
             .portfolio-text {
                 padding-right: 0;
                 text-align: center;
+                display: contents;
             }
 
             .portfolio-text h1 {
                 font-size: 2.5rem;
-            }
-
-            .portfolio-text p {
-                text-align: center;
+                order: 1;
             }
 
             .portfolio-image-container {
                 justify-content: center;
+                order: 2;
+            }
+
+            .portfolio-text p {
+                text-align: center;
+                order: 3;
+                margin-top: 20px;
             }
 
             .portfolio-image {
@@ -754,26 +760,32 @@
 
             /* Responsive for New Profile Section */
             .profile-wrapper {
-                grid-template-columns: 1fr; /* Stack di mobile */
+                display: flex;
+                flex-direction: column;
                 gap: 40px;
                 padding: 40px 20px;
             }
 
             .profile-text {
                 padding-left: 0;
-                text-align: center;
+        text-align: center;
+        display: contents; /
             }
 
             .profile-text h1 {
                 font-size: 2.5rem;
+                order: 1;
+            }
+
+            .profile-image-container {
+                justify-content: center;
+                order: 2;
             }
 
             .profile-text p {
                 text-align: center;
-            }
-
-            .profile-image-container {
-                justify-content: center; /* Gambar di tengah */
+                order: 3;
+                margin-top: 20px;
             }
 
             .profile-image {
@@ -857,43 +869,42 @@
 
             /* Responsive for History Section */
             .history-timeline::before {
-                display: none; /* Sembunyikan garis tengah di mobile */
+                display: none;
             }
             .history-dot {
-                display: none; /* Sembunyikan titik di mobile */
+                display: none;
             }
             .history-dot::before {
-                display: none; /* Sembunyikan garis horizontal di mobile */
+                display: none;
             }
 
             .history-item {
-                grid-template-columns: 1fr; /* Stack */
-                gap: 30px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
             }
 
-            /* Atur ulang urutan agar selalu: Gambar (atas), Teks (bawah) */
-            .history-item:nth-child(odd) .history-image-container,
-            .history-item:nth-child(even) .history-image-container {
-                grid-column: 1;
-                grid-row: 1; /* Gambar di baris 1 */
-            }
+            /* Urutan di mobile: h3 (Judul) dulu, Gambar, lalu p (Isi) */
+            .history-item .history-text {
+                display: contents; /* <-- UBAH INI */
+    }
 
-            .history-item:nth-child(odd) .history-text,
-            .history-item:nth-child(even) .history-text {
-                grid-column: 1;
-                grid-row: 2; /* Teks di baris 2 */
-                text-align: left; /* Ratakan kiri semua */
-            }
+    .history-item .history-text h3 {
+        order: 1;
+        text-align: left;
+        font-size: 1.5rem;
+        margin-bottom: 0;
+    }
 
-            .history-item:nth-child(odd) .history-text h3,
-            .history-item:nth-child(even) .history-text h3 {
-                text-align: left; /* Ratakan kiri semua */
-                font-size: 1.5rem;
-            }
+    .history-item .history-image-container {
+        order: 2;
+    }
 
-             .history-text p {
-                text-align: justify; /* Teks paragraf tetap justify */
-            }
+    .history-item .history-text p {
+        order: 3;
+        text-align: justify;
+        margin-top: 20px; /* Anda mungkin perlu menghapus ini jika 'gap' sudah cukup */
+    }
 
             /* Responsive for Business Line Section */
             .business-line-title {

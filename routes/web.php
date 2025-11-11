@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Admin\FreeConsultationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\RatingController;
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -116,7 +117,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     })->name('index');
 
     // Article Management - CRUD (RESOURCE ROUTE)
-    Route::resource('articles', ArticleController::class);
+    Route::patch('/articles/{article}/status', [ArticleController::class, 'updateStatus'])
+             ->name('articles.updateStatus');
+    Route::resource('articles', ArticleController::class)->names('articles');
 
     // Products CRUD
     Route::resource('products', ProductController::class)->names('products');
@@ -225,7 +228,10 @@ Route::get('/about', function () {
     return view('about');
 })->middleware('track.page:about')->name('about');
 
-
+// Route untuk submit rating
+Route::post('/submit-rating', [RatingController::class, 'store'])
+     ->middleware('auth:web') // Pastikan menggunakan guard 'web' atau 'auth' saja
+     ->name('submit.rating');
 
 /*
 |---------------------------------

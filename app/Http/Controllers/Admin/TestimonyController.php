@@ -47,7 +47,7 @@ class TestimonyController extends Controller
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('admin.testimonials.index')->with('success', 'Testimony created successfully');
+        return redirect()->route('admin.testimonials.index')->with('success', 'Testimoni berhasil di buat');
     }
 
     public function show(Testimony $testimonial)
@@ -81,7 +81,7 @@ class TestimonyController extends Controller
         $testimonial->testimony = $validated['testimony'] ?? null;
         $testimonial->save();
 
-        return redirect()->route('admin.testimonials.index')->with('success', 'Testimony updated successfully');
+        return redirect()->route('admin.testimonials.index')->with('success', 'Testimoni berhasil di perbarui');
     }
 
     public function destroy(Testimony $testimonial)
@@ -90,6 +90,6 @@ class TestimonyController extends Controller
             Storage::disk('public')->delete($testimonial->image);
         }
         $testimonial->delete();
-        return redirect()->route('admin.testimonials.index')->with('success', 'Testimony deleted successfully');
+        return redirect()->route('admin.testimonials.index')->with('success', 'Testimoni berhasil di hapus');
     }
 }

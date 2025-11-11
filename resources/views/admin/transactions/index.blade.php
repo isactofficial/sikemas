@@ -163,7 +163,6 @@
             font-weight: 700;
         }
 
-        /* Kustomisasi untuk pagination default Laravel (Bootstrap 4) */
         .skm-pagination .pagination {
             margin: 0;
             padding: 0;
@@ -173,7 +172,6 @@
             align-items: center;
         }
 
-        /* Style dasar .page-link (Ini adalah state default) */
         .skm-pagination .page-link {
             padding: 6px 10px;
             border-radius: 6px;
@@ -185,20 +183,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
             border: 1.5px solid #E5E7EB;
-            background: #ffffff;
             color: var(--skm-blue);
+            background: #fff;
+            transition: all .2s ease;
         }
 
-        /* State hover untuk page-link */
         .skm-pagination .page-link:hover {
             background: #F9FAFB;
-            border-color: var(--skm-teal);
-            color: var(--skm-teal);
+            border-color: #23C8B8;
+            color: #23C8B8;
         }
 
-        /* State active (halaman yang sedang dipilih) */
         .skm-pagination .page-item.active .page-link {
             background: var(--skm-accent);
             border-color: var(--skm-accent);
@@ -206,64 +202,246 @@
             font-weight: 800;
         }
 
-        /* State disabled (prev/next yang tidak bisa diklik) */
         .skm-pagination .page-item.disabled .page-link {
-            background: #F9FAFB;
-            border-color: #E5E7EB;
-            color: #9CA3AF;
+            opacity: 0.4;
             cursor: not-allowed;
-            opacity: 0.6;
+            pointer-events: none;
         }
 
-        /* Hilangkan outline bawaan Bootstrap */
-        .skm-pagination .page-link:focus {
-            box-shadow: none;
-            outline: none;
+        .skm-pagination .page-link span {
+            display: inline;
         }
 
-        /* Alert */
         .skm-alert {
-            padding: 12px 20px;
+            padding: 14px 18px;
             border-radius: 8px;
             font-size: 14px;
-            margin-bottom: 16px;
             font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid;
         }
+
         .skm-alert.success {
             background: #D4EDDA;
             color: #155724;
-            border: 1px solid #C3E6CB;
+            border-color: #C3E6CB;
+        }
+
+        /* DELETE MODAL STYLES */
+        .delete-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .delete-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .delete-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 9999;
+            width: 90%;
+            max-width: 500px;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .delete-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .delete-modal-header {
+            padding: 32px 24px 20px;
+            text-align: center;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .delete-modal-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: #FF611A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.4s ease;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .delete-modal-icon i {
+            font-size: 36px;
+            color: #fff;
+            animation: shake 0.5s ease 0.2s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .delete-modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #FF611A;
+            margin-bottom: 8px;
+        }
+
+        .delete-modal-subtitle {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .delete-modal-body {
+            padding: 24px;
+        }
+
+        .delete-info-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid #FF611A;
+        }
+
+        .delete-info-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .delete-info-value {
+            font-size: 15px;
+            color: var(--skm-blue);
+            font-weight: 700;
+        }
+
+        .delete-modal-warning {
+            background: #fff3cd;
+            border: 2px solid #ffecb5;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .delete-modal-warning i {
+            color: #856404;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .delete-modal-warning-text {
+            flex: 1;
+            font-size: 13px;
+            color: #856404;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .delete-modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .delete-modal-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .delete-modal-btn-cancel {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .delete-modal-btn-cancel:hover {
+            background: #dee2e6;
+            transform: translateY(-1px);
+        }
+
+        .delete-modal-btn-confirm {
+            background: #FF611A;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(255, 97, 26, 0.3);
+        }
+
+        .delete-modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 97, 26, 0.4);
         }
 
         @media (max-width: 768px) {
-            .skm-admin-main { margin-left: 0; padding: 16px; }
-            .skm-table { display: block; }
+            .skm-admin-main{ margin-left:0; padding:16px; }
+
             .skm-table thead { display: none; }
-            .skm-table tbody { display: block; }
+            .skm-table, .skm-table tbody, .skm-table tr, .skm-table td {
+                display: block;
+                width: 100%;
+            }
+
             .skm-table tr {
-                display: block;
-                margin-bottom: 20px;
-                padding-bottom: 20px;
-                border-bottom: 2px solid #E5E7EB;
-                position: relative;
+                margin-bottom: 16px;
+                border: 1px solid #E5E7EB;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 4px rgba(0,0,0,.04);
             }
+
             .skm-table td {
-                display: block;
                 text-align: right;
-                padding: 10px 16px;
-                padding-left: 50%;
-                border: none;
+                padding: 12px 16px;
                 position: relative;
+                border-bottom: 1px solid #E5E7EB !important;
             }
+
             .skm-table td:before {
                 content: attr(data-label);
                 position: absolute;
                 left: 16px;
-                width: 50%;
-                padding-right: 10px;
                 font-weight: 700;
-                text-align: left;
-                color: var(--skm-blue);
+                color: #23C8B8;
+                font-size: 12px;
+                text-transform: uppercase;
                 white-space: nowrap;
             }
 
@@ -288,6 +466,40 @@
                 height: 28px;
             }
             .skm-alert { font-size: 13px; padding: 10px 12px; }
+
+            .delete-modal {
+                width: 95%;
+                max-width: none;
+            }
+
+            .delete-modal-header {
+                padding: 24px 16px 16px;
+            }
+
+            .delete-modal-icon {
+                width: 64px;
+                height: 64px;
+            }
+
+            .delete-modal-icon i {
+                font-size: 28px;
+            }
+
+            .delete-modal-title {
+                font-size: 20px;
+            }
+
+            .delete-modal-body {
+                padding: 16px;
+            }
+
+            .delete-modal-actions {
+                flex-direction: column;
+            }
+
+            .delete-modal-btn {
+                width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -296,7 +508,7 @@
             .skm-header h1 { font-size: 20px; }
             .skm-controls-card {
                 padding: 12px;
-                padding-top: 0; /* Terapkan juga di mobile */
+                padding-top: 0;
             }
             .skm-action-btns { gap: 16px; }
             .skm-icon-btn { width: 40px; height: 40px; }
@@ -385,7 +597,6 @@
                                     @elseif($order->payment_status == 'Cancelled')
                                         <span class="status-badge cancelled">Cancelled</span>
                                     @else
-                                        {{-- Fallback jika ada status lain --}}
                                         <span class="status-badge pending">{{ $order->payment_status }}</span>
                                     @endif
                                 </td>
@@ -415,13 +626,10 @@
                                         <a href="{{ route('admin.transactions.edit', $order->id) }}" class="skm-icon-btn btn-edit" title="Edit Status">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
-                                        <form action="{{ route('admin.transactions.destroy', $order->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="skm-icon-btn btn-delete" title="Delete Transaction">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="skm-icon-btn btn-delete" title="Delete Transaction" 
+                                            onclick="openDeleteModal('{{ $order->id }}', '{{ $order->invoice_number }}', '{{ $order->user->name ?? 'User Dihapus' }}')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -449,5 +657,75 @@
 
         </div>
     </main>
+
+    <!-- DELETE MODAL -->
+    <div class="delete-modal-overlay" id="deleteModalOverlay" onclick="closeDeleteModal()"></div>
+    <div class="delete-modal" id="deleteModal">
+        <div class="delete-modal-header">
+            <div class="delete-modal-icon">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <h3 class="delete-modal-title">Hapus Transaksi?</h3>
+            <p class="delete-modal-subtitle">Tindakan ini tidak dapat dibatalkan</p>
+        </div>
+        <div class="delete-modal-body">
+            <div class="delete-info-card">
+                <div class="delete-info-label">Invoice Number</div>
+                <div class="delete-info-value" id="modalInvoiceNumber">-</div>
+            </div>
+            <div class="delete-info-card">
+                <div class="delete-info-label">Customer</div>
+                <div class="delete-info-value" id="modalCustomerName">-</div>
+            </div>
+            <div class="delete-modal-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="delete-modal-warning-text">
+                    Data transaksi akan dihapus permanen dari database. Pastikan Anda yakin sebelum melanjutkan.
+                </div>
+            </div>
+            <div class="delete-modal-actions">
+                <button type="button" class="delete-modal-btn delete-modal-btn-cancel" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                    Batal
+                </button>
+                <form id="deleteForm" method="POST" style="flex: 1; margin: 0;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="delete-modal-btn delete-modal-btn-confirm" style="width: 100%;">
+                        <i class="fas fa-trash-alt"></i>
+                        Hapus Sekarang
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentDeleteId = null;
+
+        function openDeleteModal(orderId, invoiceNumber, customerName) {
+            currentDeleteId = orderId;
+            document.getElementById('modalInvoiceNumber').textContent = invoiceNumber;
+            document.getElementById('modalCustomerName').textContent = customerName;
+            document.getElementById('deleteForm').action = `/admin/transactions/${orderId}`;
+            
+            document.getElementById('deleteModalOverlay').classList.add('active');
+            document.getElementById('deleteModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModalOverlay').classList.remove('active');
+            document.getElementById('deleteModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentDeleteId = null;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && currentDeleteId !== null) {
+                closeDeleteModal();
+            }
+        });
+    </script>
 </body>
 </html>

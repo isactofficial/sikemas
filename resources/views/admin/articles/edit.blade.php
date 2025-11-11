@@ -1,514 +1,280 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Edit Transaction - {{ $order->invoice_number }}</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --skm-teal: #1F6D72;
-            --skm-blue: #074159;
-            --skm-blue-2: #053244;
-            --skm-accent: #ff5722;
-            --skm-bg: #F4F7F6;
-            --skm-border: #E5E7EB;
-            --skm-text-label: #6B7280;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Besley', system-ui, sans-serif;
-            background: var(--skm-bg);
-            min-height: 100vh;
-        }
-
-        .skm-admin-main {
-            margin-left: 240px;
-            padding: 40px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .skm-header {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,.04);
-        }
-
-        .skm-header h1 {
-            color: var(--skm-blue);
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .skm-header p {
-            color: #23C8B8;
-            font-size: 14px;
-        }
-
-        .skm-form-container {
-            background: #fff;
-            border-radius: 12px;
-            padding: 32px 40px;
-            box-shadow: 0 2px 10px rgba(0,0,0,.04);
-            border: 1px solid var(--skm-border);
-        }
-
-        .form-section {
-            margin-bottom: 32px;
-        }
-
-        .form-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .section-title {
-            color: var(--skm-blue);
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--skm-border);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .form-grid.single {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--skm-blue);
-        }
-
-        .form-group label .required {
-            color: var(--skm-accent);
-        }
-
-        .form-control {
-            padding: 12px 16px;
-            border: 1.5px solid var(--skm-border);
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: 'Besley', serif;
-            color: var(--skm-blue-2);
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--skm-teal);
-            box-shadow: 0 0 0 3px rgba(31, 109, 114, 0.1);
-        }
-
-        .form-control::placeholder {
-            color: #9CA3AF;
-        }
-
-        .form-control:disabled {
-            background-color: #F3F4F6;
-            cursor: not-allowed;
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        select.form-control {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23074159' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 36px;
-        }
-
-        .info-box {
-            background: #F0F9FF;
-            border: 1px solid #BAE6FD;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .info-box-title {
-            font-weight: 700;
-            color: var(--skm-blue);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .info-box-content {
-            font-size: 14px;
-            color: var(--skm-blue-2);
-        }
-
-        .alert {
-            padding: 14px 18px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-        }
-
-        .alert-danger {
-            background: #FEE2E2;
-            color: #991B1B;
-            border: 1px solid #FDD2D2;
-        }
-
-        .alert i {
-            font-size: 18px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            padding-top: 24px;
-            border-top: 2px solid var(--skm-border);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            border: none;
-            font-family: 'Besley', serif;
-        }
-
-        .btn-primary {
-            background: var(--skm-teal);
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: var(--skm-blue);
-        }
-
-        .btn-secondary {
-            background: #E5E7EB;
-            color: var(--skm-blue-2);
-        }
-
-        .btn-secondary:hover {
-            background: #D1D5DB;
-        }
-
-        .help-text {
-            font-size: 12px;
-            color: var(--skm-text-label);
-            margin-top: 4px;
-        }
-
-        @media (max-width: 1024px) {
-            .skm-admin-main {
-                margin-left: 0;
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Edit Article - Sikemas Admin</title>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;700;800&display=swap" rel="stylesheet">
+	
+	<style>
+		:root {
+			--skm-teal: #1F6D72;
+			--skm-blue: #074159;
+			--skm-accent: #ff5722;
+			--skm-green: #20C8B5;
+			--skm-bg: #F4F7F6;
+		}
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+		body { font-family: 'Besley', system-ui, sans-serif; background: var(--skm-bg); min-height: 100vh; }
+		
+		.skm-admin-main { margin-left: 240px; padding: 24px; }
+		
+		.skm-form-container { max-width: 900px; background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+		
+		.skm-form-group { margin-bottom: 24px; }
+		.skm-form-label { display: block; color: var(--skm-green); font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+		.skm-form-input, .skm-form-textarea, .skm-form-select { width: 100%; padding: 12px 16px; border: 2px solid var(--skm-accent); border-radius: 10px; font-size: 14px; font-family: inherit; transition: border-color .15s ease; }
+		.skm-form-input:focus, .skm-form-textarea:focus, .skm-form-select:focus { outline: none; border-color: var(--skm-blue); }
+		.skm-form-textarea { min-height: 100px; resize: vertical; }
+		
+		.skm-upload-box { border: 2px dashed var(--skm-accent); border-radius: 10px; padding: 40px; text-align: center; cursor: pointer; transition: all .15s ease; position: relative; }
+		.skm-upload-box:hover { border-color: var(--skm-blue); background: #F9FAFB; }
+		.skm-upload-box input[type="file"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; top: 0; left: 0; }
+		.skm-upload-preview { max-width: 200px; margin: 0 auto 12px; border-radius: 8px; overflow: hidden; }
+		.skm-upload-preview img { width: 100%; height: auto; display: block; }
+		
+		.skm-radio-group { display: flex; gap: 24px; margin-top: 8px; }
+		.skm-radio-item { display: flex; align-items: center; gap: 8px; }
+		.skm-radio-item input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
+		.skm-radio-item label { font-size: 14px; cursor: pointer; color: #374151; font-weight: 600; }
+		
+		.skm-content-section { border: 2px solid #E5E7EB; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+		.skm-content-item { margin-bottom: 16px; padding: 16px; background: #F9FAFB; border-radius: 8px; position: relative; }
+		.skm-remove-btn { position: absolute; top: 8px; right: 8px; background: #E53935; color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 700; }
+		.skm-remove-btn:hover { background: #C62828; }
+		
+		.skm-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; transition: all .15s ease; text-decoration: none; }
+		.skm-btn-primary { background: var(--skm-accent); color: #fff; box-shadow: 0 4px 12px rgba(255,87,34,.3); }
+		.skm-btn-primary:hover { background: #e64a19; transform: translateY(-1px); }
+		.skm-btn-secondary { background: var(--skm-green); color: #fff; box-shadow: 0 4px 12px rgba(32,200,181,.3); }
+		.skm-btn-secondary:hover { background: #1BA89A; transform: translateY(-1px); }
+		
+		.skm-form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 32px; }
+		
+		.skm-error { color: #E53935; font-size: 12px; margin-top: 4px; }
+		
+		@media (max-width: 767px) {
+			.skm-admin-main { margin-left: 0; margin-top: 72px; padding: 16px; }
+			.skm-form-container { padding: 20px; }
+		}
+	</style>
 </head>
 <body>
-    @include('layouts.sidebar_admin')
+@include('layouts.sidebar_admin')
+	
+	<main class="skm-admin-main">
+		<div class="skm-form-container">
+			<h1 style="color: var(--skm-blue); font-size: 28px; margin-bottom: 24px;">Edit Article</h1>
+			
+			{{-- Alert untuk error umum --}}
+			@if(session('error'))
+				<div style="background:#FFE5E5; border:1px solid #FF5252; color:#C62828; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px;">
+					<strong>Error:</strong> {{ session('error') }}
+				</div>
+			@endif
 
-    <main class="skm-admin-main">
-        <div class="skm-header">
-            <h1>Edit Transaksi</h1>
-            <p>Invoice: {{ $order->invoice_number }}</p>
-        </div>
-
-        <form action="{{ route('admin.transactions.update', $order->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-            
-            <div class="skm-form-container">
-                @if($errors->any())
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <div>
-                            <strong>Terjadi kesalahan:</strong>
-                            <ul style="margin: 8px 0 0 0; padding-left: 20px;">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Order Information -->
-                <div class="info-box">
-                    <div class="info-box-title">
-                        <i class="fas fa-info-circle"></i>
-                        Informasi Pesanan
-                    </div>
-                    <div class="info-box-content">
-                        <strong>Invoice:</strong> {{ $order->invoice_number }} <br>
-                        <strong>Tanggal Pesanan:</strong> {{ $order->order_date ? $order->order_date->format('d M Y, H:i') : 'N/A' }} <br>
-                        <strong>Total:</strong> Rp {{ number_format($order->total_amount, 0, ',', '.') }}
-                    </div>
-                </div>
-
-                <!-- Customer Information -->
-                <div class="form-section">
-                    <h2 class="section-title">Informasi Customer</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="user_id">
-                                Customer <span class="required">*</span>
-                            </label>
-                            <select name="user_id" id="user_id" class="form-control" required>
-                                <option value="">Pilih Customer</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}" 
-                                        {{ (old('user_id', $order->user_id) == $user->id) ? 'selected' : '' }}>
-                                        {{ $user->name }} ({{ $user->email }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="shipping_address_id">
-                                Alamat Pengiriman <span class="required">*</span>
-                            </label>
-                            <select name="shipping_address_id" id="shipping_address_id" class="form-control" required>
-                                <option value="">Memuat alamat...</option>
-                            </select>
-                            <span class="help-text">Alamat akan dimuat setelah memilih customer</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Current Shipping Address -->
-                @if($order->shippingAddress)
-                <div class="info-box">
-                    <div class="info-box-title">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Alamat Pengiriman Saat Ini
-                    </div>
-                    <div class="info-box-content">
-                        {{ $order->shippingAddress->full_address }}
-                    </div>
-                </div>
-                @endif
-
-                <!-- Status -->
-                <div class="form-section">
-                    <h2 class="section-title">Status Pesanan</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="payment_status">
-                                Status Pembayaran <span class="required">*</span>
-                            </label>
-                            <select name="payment_status" id="payment_status" class="form-control" required>
-                                <option value="Unpaid" {{ old('payment_status', $order->payment_status) == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
-                                <option value="Paid" {{ old('payment_status', $order->payment_status) == 'Paid' ? 'selected' : '' }}>Paid</option>
-                                <option value="Cancelled" {{ old('payment_status', $order->payment_status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="shipping_status">
-                                Status Pengiriman <span class="required">*</span>
-                            </label>
-                            <select name="shipping_status" id="shipping_status" class="form-control" required>
-                                <option value="Pending" {{ old('shipping_status', $order->shipping_status) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="Shipped" {{ old('shipping_status', $order->shipping_status) == 'Shipped' ? 'selected' : '' }}>Shipped</option>
-                                <option value="Arrived" {{ old('shipping_status', $order->shipping_status) == 'Arrived' ? 'selected' : '' }}>Arrived</option>
-                                <option value="Cancelled" {{ old('shipping_status', $order->shipping_status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Notes -->
-                <div class="form-section">
-                    <h2 class="section-title">Catatan</h2>
-                    <div class="form-grid single">
-                        <div class="form-group">
-                            <label for="notes">
-                                Catatan Tambahan
-                            </label>
-                            <textarea 
-                                name="notes" 
-                                id="notes" 
-                                class="form-control" 
-                                placeholder="Catatan atau instruksi khusus untuk pesanan ini..."
-                            >{{ old('notes', $order->notes) }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skm-form-container">
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Update Transaksi
-                    </button>
-                    <a href="{{ route('admin.transactions.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Batal
-                    </a>
-                </div>
-            </div>
-        </form>
-    </main>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const userSelect = document.getElementById('user_id');
-        const addressSelect = document.getElementById('shipping_address_id');
-        const currentUserId = {{ old('user_id', $order->user_id) }};
-        const currentAddressId = {{ old('shipping_address_id', $order->shipping_address_id ?? 'null') }};
-
-        // Fungsi untuk memuat alamat berdasarkan user ID
-        function loadAddresses(userId, selectedAddressId = null) {
-            if (!userId) {
-                addressSelect.innerHTML = '<option value="">Pilih Customer Terlebih Dahulu</option>';
-                addressSelect.disabled = true;
-                return;
-            }
-
-            // Tampilkan loading
-            addressSelect.innerHTML = '<option value="" disabled selected>Memuat alamat...</option>';
-            addressSelect.disabled = true;
-
-            // Fetch alamat dari server
-            fetch(`/admin/users/${userId}/addresses`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Gagal mengambil data alamat');
-                }
-                return response.json();
-            })
-            .then(addresses => {
-                // Clear loading message
-                addressSelect.innerHTML = '';
-                
-                if (addresses && addresses.length > 0) {
-                    // Enable select
-                    addressSelect.disabled = false;
-
-                    // Tambah option default
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = 'Pilih Alamat Pengiriman';
-                    defaultOption.disabled = true;
-                    addressSelect.appendChild(defaultOption);
-
-                    // Tambahkan setiap alamat ke dropdown
-                    addresses.forEach(address => {
-                        const option = document.createElement('option');
-                        option.value = address.id;
-                        
-                        // Gunakan full_address dari accessor
-                        let addressText = address.full_address || buildAddressText(address);
-                        
-                        // Tambahkan label "(Utama)" jika alamat utama
-                        if (address.is_primary) {
-                            addressText += ' (Utama)';
-                        }
-                        
-                        option.textContent = addressText;
-                        
-                        // Select alamat yang sesuai
-                        if (selectedAddressId && address.id == selectedAddressId) {
-                            option.selected = true;
-                        } else if (!selectedAddressId && address.is_primary) {
-                            // Jika tidak ada yang dipilih, pilih alamat utama
-                            option.selected = true;
-                        }
-                        
-                        addressSelect.appendChild(option);
-                    });
-                } else {
-                    // Tidak ada alamat
-                    addressSelect.innerHTML = '<option value="">User ini belum memiliki alamat</option>';
-                    addressSelect.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                addressSelect.innerHTML = '<option value="">Gagal memuat alamat. Silakan coba lagi.</option>';
-                addressSelect.disabled = true;
-            });
-        }
-
-        // Fungsi helper untuk membangun teks alamat
-        function buildAddressText(address) {
-            const parts = [];
-            
-            if (address.address_line) parts.push(address.address_line);
-            if (address.city) parts.push(address.city);
-            if (address.province) parts.push(address.province);
-            if (address.postal_code) parts.push(address.postal_code);
-            if (address.country) parts.push(address.country);
-            
-            return parts.join(', ');
-        }
-
-        // Event listener untuk perubahan user
-        userSelect.addEventListener('change', function() {
-            loadAddresses(this.value);
-        });
-
-        // Load alamat untuk user yang sudah dipilih (saat halaman pertama kali dimuat)
-        if (currentUserId) {
-            loadAddresses(currentUserId, currentAddressId);
-        }
-    });
-    </script>
+			{{-- Alert untuk success --}}
+			@if(session('success'))
+				<div style="background:#E8F5E9; border:1px solid #4CAF50; color:#2E7D32; padding:12px 16px; border-radius:12px; margin-bottom:16px; font-size:14px;">
+					<strong>Berhasil!</strong> {{ session('success') }}
+				</div>
+			@endif
+			
+			<form action="{{ route('admin.articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
+				@csrf
+				@method('PUT')
+				
+				<!-- Thumbnail -->
+				<div class="skm-form-group">
+					<label class="skm-form-label">Thumbnail</label>
+					<div class="skm-upload-box" id="uploadBox">
+						<input type="file" name="thumbnail" accept="image/*" id="thumbnailInput">
+						@if($article->thumbnail)
+						<div class="skm-upload-preview">
+							<img src="{{ asset('storage/' . $article->thumbnail) }}" alt="Current thumbnail" id="previewImg">
+						</div>
+						<p class="skm-upload-text">Click to change thumbnail</p>
+						@else
+						<svg class="skm-upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none">
+							<path d="M12 5v14M5 12h14" stroke="#20C8B5" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						<p class="skm-upload-text">Click to upload thumbnail image</p>
+						@endif
+					</div>
+					@error('thumbnail')
+					<span class="skm-error">{{ $message }}</span>
+					@enderror
+				</div>
+				
+				<!-- Title -->
+				<div class="skm-form-group">
+					<label class="skm-form-label">Title</label>
+					<input type="text" name="title" class="skm-form-input" value="{{ old('title', $article->title) }}" required>
+					@error('title')
+					<span class="skm-error">{{ $message }}</span>
+					@enderror
+				</div>
+				
+				<!-- Editor -->
+				<div class="skm-form-group">
+					<label class="skm-form-label">Editor</label>
+					<select name="editor_id" class="skm-form-select">
+						<option value="">Select Editor (Optional)</option>
+						@foreach($users as $user)
+						<option value="{{ $user->id }}" {{ old('editor_id', $article->editor_id) == $user->id ? 'selected' : '' }}>
+							{{ $user->name }}
+						</option>
+						@endforeach
+					</select>
+				</div>
+				
+				<!-- Description -->
+				<div class="skm-form-group">
+					<label class="skm-form-label">Description</label>
+					<textarea name="deskripsi" class="skm-form-textarea" required>{{ old('deskripsi', $article->deskripsi) }}</textarea>
+					@error('deskripsi')
+					<span class="skm-error">{{ $message }}</span>
+					@enderror
+				</div>
+				
+				<!-- Status -->
+				<div class="skm-form-group">
+					<label class="skm-form-label">Status</label>
+					<div class="skm-radio-group">
+						<div class="skm-radio-item">
+							<input type="radio" name="status" value="draft" id="statusDraft" 
+								{{ old('status', $article->status) == 'draft' ? 'checked' : '' }}>
+							<label for="statusDraft">Draft</label>
+						</div>
+						<div class="skm-radio-item">
+							<input type="radio" name="status" value="published" id="statusPublished"
+								{{ old('status', $article->status) == 'published' ? 'checked' : '' }}>
+							<label for="statusPublished">Published</label>
+						</div>
+					</div>
+					@error('status')
+					<span class="skm-error">{{ $message }}</span>
+					@enderror
+				</div>
+				
+				<!-- Dynamic Content -->
+				<div class="skm-content-section">
+					<h3 style="color: var(--skm-green); margin-bottom: 16px;">Article Content</h3>
+					
+					<div id="contentContainer">
+						@if($article->contents->count() > 0)
+							@php
+								$contentGroups = [];
+								$currentGroup = ['subheading' => null, 'paragraph' => null];
+								
+								foreach($article->contents as $content) {
+									if($content->content_type === 'subheading') {
+										if($currentGroup['subheading'] !== null || $currentGroup['paragraph'] !== null) {
+											$contentGroups[] = $currentGroup;
+											$currentGroup = ['subheading' => null, 'paragraph' => null];
+										}
+										$currentGroup['subheading'] = $content->content;
+									} else {
+										$currentGroup['paragraph'] = $content->content;
+									}
+								}
+								
+								if($currentGroup['subheading'] !== null || $currentGroup['paragraph'] !== null) {
+									$contentGroups[] = $currentGroup;
+								}
+							@endphp
+							
+							@foreach($contentGroups as $index => $group)
+							<div class="skm-content-item" data-index="{{ $index }}">
+								@if($index > 0)
+								<button type="button" class="skm-remove-btn" onclick="this.parentElement.remove()">×</button>
+								@endif
+								<div class="skm-form-group" style="margin-bottom: 12px;">
+									<label class="skm-form-label">Sub Heading</label>
+									<input type="text" name="subheadings[]" class="skm-form-input" value="{{ $group['subheading'] }}">
+								</div>
+								<div class="skm-form-group" style="margin-bottom: 0;">
+									<label class="skm-form-label">Paragraph</label>
+									<textarea name="paragraphs[]" class="skm-form-textarea">{{ $group['paragraph'] }}</textarea>
+								</div>
+							</div>
+							@endforeach
+						@else
+							<div class="skm-content-item" data-index="0">
+								<div class="skm-form-group" style="margin-bottom: 12px;">
+									<label class="skm-form-label">Sub Heading</label>
+									<input type="text" name="subheadings[]" class="skm-form-input">
+								</div>
+								<div class="skm-form-group" style="margin-bottom: 0;">
+									<label class="skm-form-label">Paragraph</label>
+									<textarea name="paragraphs[]" class="skm-form-textarea"></textarea>
+								</div>
+							</div>
+						@endif
+					</div>
+					
+					<button type="button" class="skm-btn skm-btn-secondary" id="addContentBtn">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+							<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						Add Subheading & Paragraph
+					</button>
+				</div>
+				
+				<!-- Submit Actions -->
+				<div class="skm-form-actions">
+					<a href="{{ route('admin.articles.index') }}" class="skm-btn" style="background: #6B8791; color: #fff;">Cancel</a>
+					<button type="submit" class="skm-btn skm-btn-primary">Update Article</button>
+				</div>
+			</form>
+		</div>
+	</main>
+	
+	<script>
+		let contentIndex = {{ $article->contents->count() > 0 ? count($contentGroups) : 1 }};
+		
+		document.getElementById('addContentBtn').addEventListener('click', function() {
+			const container = document.getElementById('contentContainer');
+			const newItem = document.createElement('div');
+			newItem.className = 'skm-content-item';
+			newItem.dataset.index = contentIndex;
+			newItem.innerHTML = `
+				<button type="button" class="skm-remove-btn" onclick="this.parentElement.remove()">×</button>
+				<div class="skm-form-group" style="margin-bottom: 12px;">
+					<label class="skm-form-label">Sub Heading</label>
+					<input type="text" name="subheadings[]" class="skm-form-input">
+				</div>
+				<div class="skm-form-group" style="margin-bottom: 0;">
+					<label class="skm-form-label">Paragraph</label>
+					<textarea name="paragraphs[]" class="skm-form-textarea"></textarea>
+				</div>
+			`;
+			container.appendChild(newItem);
+			contentIndex++;
+		});
+		
+		document.getElementById('thumbnailInput').addEventListener('change', function(e) {
+			const file = e.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					const previewImg = document.getElementById('previewImg');
+					if (previewImg) {
+						previewImg.src = e.target.result;
+					} else {
+						const uploadBox = document.getElementById('uploadBox');
+						const newPreview = document.createElement('div');
+						newPreview.className = 'skm-upload-preview';
+						newPreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+						uploadBox.insertBefore(newPreview, uploadBox.firstChild);
+					}
+				}
+				reader.readAsDataURL(file);
+			}
+		});
+	</script>
 </body>
 </html>

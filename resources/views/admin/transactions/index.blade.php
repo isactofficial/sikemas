@@ -277,7 +277,7 @@
             width: 80px;
             height: 80px;
             margin: 0 auto 16px;
-            background: #FF611A;
+            background: #074159;
             border-radius: 50%;
             display: flex;
             align-items: center;

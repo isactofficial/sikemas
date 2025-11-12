@@ -1381,6 +1381,11 @@
                 margin-top: 3rem;
             }
 
+            .custom-design-image-item {
+                max-width: 70%;
+                margin: 0 auto;
+            }
+
             .cta-button-design-new {
                 font-size: 1.1rem;
                 padding: 1rem 1.5rem;

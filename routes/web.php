@@ -181,6 +181,27 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+// Testing error pages (hapus setelah testing)
+Route::get('/test-error-419', function () {
+    abort(419);
+});
+
+Route::get('/test-error-429', function () {
+    abort(429);
+});
+
+Route::get('/test-error-500', function () {
+    abort(500);
+});
+
+Route::get('/test-error-502', function () {
+    abort(502);
+});
+
+Route::get('/test-error-503', function () {
+    abort(503);
+});
+
 // ============================================
 // PUBLIC PAGES
 // ============================================
@@ -261,3 +282,10 @@ Route::get('/test/413', function () {
 Route::get('/test/429', function () {
     abort(429); // 429 - Too Many Requests
 });
+
+// Transactions CRUD
+Route::resource('transactions', TransactionController::class);
+
+// AJAX endpoint for getting user addresses
+Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+    ->name('users.addresses');

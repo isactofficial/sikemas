@@ -8,6 +8,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	
 	<style>
 		:root {
@@ -210,11 +211,246 @@
 			color: #23C8B8;
 		}
 		
-		/* Alert */
-		.skm-alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
-		.skm-alert.success { background: #D4EDDA; color: #155724; border: 1px solid #C3E6CB; }
+		/* SUCCESS ALERT */
+		.skm-alert {
+			padding: 14px 18px;
+			border-radius: 8px;
+			font-size: 14px;
+			font-weight: 600;
+			margin-bottom: 20px;
+			border: 1px solid;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			animation: slideDown 0.3s ease;
+		}
+
+		.skm-alert.success {
+			background: #D4EDDA;
+			color: #155724;
+			border-color: #C3E6CB;
+		}
+
+		.skm-alert i {
+			font-size: 18px;
+		}
+
+		@keyframes slideDown {
+			from {
+				opacity: 0;
+				transform: translateY(-20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		/* DELETE MODAL STYLES */
+		.delete-modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.6);
+			backdrop-filter: blur(4px);
+			z-index: 9998;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+		.delete-modal-overlay.active {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.delete-modal {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%) scale(0.7);
+			background: #fff;
+			border-radius: 24px;
+			box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+			z-index: 9999;
+			width: 90%;
+			max-width: 500px;
+			opacity: 0;
+			transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+		}
+
+		.delete-modal.active {
+			transform: translate(-50%, -50%) scale(1);
+			opacity: 1;
+		}
+
+		.delete-modal-header {
+			padding: 32px 24px 20px;
+			text-align: center;
+			border-bottom: 2px solid #f0f0f0;
+		}
+
+		.delete-modal-icon {
+			width: 80px;
+			height: 80px;
+			margin: 0 auto 16px;
+			background: #074159;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			animation: scaleIn 0.4s ease;
+		}
+
+		@keyframes scaleIn {
+			0% { transform: scale(0); }
+			50% { transform: scale(1.1); }
+			100% { transform: scale(1); }
+		}
+
+		.delete-modal-icon i {
+			font-size: 36px;
+			color: #fff;
+			animation: shake 0.5s ease 0.2s;
+		}
+
+		@keyframes shake {
+			0%, 100% { transform: rotate(0deg); }
+			25% { transform: rotate(-10deg); }
+			75% { transform: rotate(10deg); }
+		}
+
+		.delete-modal-title {
+			font-size: 24px;
+			font-weight: 800;
+			color: #FF611A;
+			margin-bottom: 8px;
+		}
+
+		.delete-modal-subtitle {
+			font-size: 14px;
+			color: #666;
+			font-weight: 500;
+		}
+
+		.delete-modal-body {
+			padding: 24px;
+		}
+
+		.delete-modal-preview {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			background: #f8f9fa;
+			border-radius: 12px;
+			padding: 16px;
+			margin-bottom: 20px;
+			border-left: 4px solid #FF611A;
+		}
+
+		.delete-modal-preview-img {
+			width: 80px;
+			height: 80px;
+			border-radius: 8px;
+			overflow: hidden;
+			flex-shrink: 0;
+		}
+
+		.delete-modal-preview-img img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.delete-modal-preview-info {
+			flex: 1;
+		}
+
+		.delete-info-label {
+			font-size: 11px;
+			color: #666;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-bottom: 6px;
+		}
+
+		.delete-info-value {
+			font-size: 15px;
+			color: var(--skm-blue);
+			font-weight: 700;
+		}
+
+		.delete-modal-warning {
+			background: #fff3cd;
+			border: 2px solid #ffecb5;
+			border-radius: 10px;
+			padding: 14px;
+			margin-bottom: 24px;
+			display: flex;
+			align-items: start;
+			gap: 12px;
+		}
+
+		.delete-modal-warning i {
+			color: #856404;
+			font-size: 20px;
+			margin-top: 2px;
+		}
+
+		.delete-modal-warning-text {
+			flex: 1;
+			font-size: 13px;
+			color: #856404;
+			font-weight: 600;
+			line-height: 1.5;
+		}
+
+		.delete-modal-actions {
+			display: flex;
+			gap: 12px;
+		}
+
+		.delete-modal-btn {
+			flex: 1;
+			padding: 14px 20px;
+			border-radius: 10px;
+			font-weight: 700;
+			font-size: 14px;
+			cursor: pointer;
+			border: none;
+			transition: all 0.2s ease;
+			font-family: inherit;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+		}
+
+		.delete-modal-btn-cancel {
+			background: #e9ecef;
+			color: #495057;
+		}
+
+		.delete-modal-btn-cancel:hover {
+			background: #dee2e6;
+			transform: translateY(-1px);
+		}
+
+		.delete-modal-btn-confirm {
+			background: #FF611A;
+			color: #fff;
+			box-shadow: 0 4px 12px rgba(255, 97, 26, 0.3);
+		}
+
+		.delete-modal-btn-confirm:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 16px rgba(255, 97, 26, 0.4);
+		}
 		
-		@media (max-width: 767px) {
+		@media (max-width: 768px) {
 			.skm-admin-main { 
 				margin-left: 0; 
 				margin-top: 72px; 
@@ -417,6 +653,75 @@
 				font-size: 13px;
 				padding: 10px 12px;
 			}
+
+			/* MODAL RESPONSIVE */
+			.delete-modal {
+				width: 95%;
+				max-width: none;
+				border-radius: 16px;
+			}
+
+			.delete-modal-header {
+				padding: 24px 16px 16px;
+			}
+
+			.delete-modal-icon {
+				width: 64px;
+				height: 64px;
+			}
+
+			.delete-modal-icon i {
+				font-size: 28px;
+			}
+
+			.delete-modal-title {
+				font-size: 20px;
+			}
+
+			.delete-modal-subtitle {
+				font-size: 13px;
+			}
+
+			.delete-modal-body {
+				padding: 16px;
+			}
+
+			.delete-modal-preview {
+				padding: 12px;
+				gap: 12px;
+			}
+
+			.delete-modal-preview-img {
+				width: 60px;
+				height: 60px;
+			}
+
+			.delete-info-value {
+				font-size: 14px;
+			}
+
+			.delete-modal-warning {
+				padding: 12px;
+			}
+
+			.delete-modal-warning i {
+				font-size: 18px;
+			}
+
+			.delete-modal-warning-text {
+				font-size: 12px;
+			}
+
+			.delete-modal-actions {
+				flex-direction: column;
+				gap: 10px;
+			}
+
+			.delete-modal-btn {
+				width: 100%;
+				padding: 12px 16px;
+				font-size: 13px;
+			}
 		}
 
 		@media (max-width: 480px) {
@@ -473,7 +778,10 @@
 	
 	<main class="skm-admin-main">
 		@if(session('success'))
-		<div class="skm-alert success">{{ session('success') }}</div>
+		<div class="skm-alert success">
+			<i class="fas fa-check-circle"></i>
+			<span>{{ session('success') }}</span>
+		</div>
 		@endif
 		
 		<div class="skm-content-wrapper">
@@ -498,7 +806,7 @@
 					
 					<form method="GET" class="skm-filters">
 						
-						<span style="font-size: 13px; color: #23C8B8; margin-right: 4px;">Short by:</span>
+						<span style="font-size: 13px; color: #23C8B8; margin-right: 4px; font-weight: 700;">Short by:</span>
 						<select name="sort_by" onchange="this.form.submit()">
 							<option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Newest</option>
 							<option value="oldest" {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>Oldest</option>
@@ -558,13 +866,14 @@
 										<img src="{{ asset('assets/img/edit.svg') }}" alt="Edit">
 									</a>
 									
-									<form action="{{ route('admin.articles.destroy', $article->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this article?')">
-										@csrf
-										@method('DELETE')
-										<button type="submit" class="skm-icon-btn delete" title="Delete">
-											<img src="{{ asset('assets/img/delete.svg') }}" alt="Delete">
-										</button>
-									</form>
+									<button type="button" class="skm-icon-btn delete" title="Delete"
+										onclick="openDeleteModal(
+											'{{ $article->id }}',
+											'{{ addslashes($article->title) }}',
+											'{{ $article->thumbnail ? asset('storage/' . $article->thumbnail) : asset('assets/img/Article-image.png') }}'
+										)">
+										<img src="{{ asset('assets/img/delete.svg') }}" alt="Delete">
+									</button>
 								</div>
 							</td>
 						</tr>
@@ -611,6 +920,78 @@
 				@endif
 			</div>
 
-		</div> </main>
+		</div>
+	</main>
+
+	<!-- DELETE MODAL -->
+	<div class="delete-modal-overlay" id="deleteModalOverlay" onclick="closeDeleteModal()"></div>
+	<div class="delete-modal" id="deleteModal">
+		<div class="delete-modal-header">
+			<div class="delete-modal-icon">
+				<i class="fas fa-trash-alt"></i>
+			</div>
+			<h3 class="delete-modal-title">Hapus Artikel?</h3>
+			<p class="delete-modal-subtitle">Tindakan ini tidak dapat dibatalkan</p>
+		</div>
+		<div class="delete-modal-body">
+			<div class="delete-modal-preview">
+				<div class="delete-modal-preview-img">
+					<img id="modalArticleImage" src="" alt="Article">
+				</div>
+				<div class="delete-modal-preview-info">
+					<div class="delete-info-label">Judul Artikel</div>
+					<div class="delete-info-value" id="modalArticleTitle">-</div>
+				</div>
+			</div>
+			<div class="delete-modal-warning">
+				<i class="fas fa-exclamation-triangle"></i>
+				<div class="delete-modal-warning-text">
+					Data artikel akan dihapus permanen dari database. Pastikan Anda yakin sebelum melanjutkan.
+				</div>
+			</div>
+			<div class="delete-modal-actions">
+				<button type="button" class="delete-modal-btn delete-modal-btn-cancel" onclick="closeDeleteModal()">
+					<i class="fas fa-times"></i>
+					Batal
+				</button>
+				<form id="deleteForm" method="POST" style="flex: 1; margin: 0;">
+					@csrf
+					@method('DELETE')
+					<button type="submit" class="delete-modal-btn delete-modal-btn-confirm" style="width: 100%;">
+						<i class="fas fa-trash-alt"></i>
+						Hapus Sekarang
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		let currentDeleteId = null;
+
+		function openDeleteModal(articleId, articleTitle, articleImage) {
+			currentDeleteId = articleId;
+			document.getElementById('modalArticleTitle').textContent = articleTitle;
+			document.getElementById('modalArticleImage').src = articleImage;
+			document.getElementById('deleteForm').action = `/admin/articles/${articleId}`;
+			
+			document.getElementById('deleteModalOverlay').classList.add('active');
+			document.getElementById('deleteModal').classList.add('active');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function closeDeleteModal() {
+			document.getElementById('deleteModalOverlay').classList.remove('active');
+			document.getElementById('deleteModal').classList.remove('active');
+			document.body.style.overflow = 'auto';
+			currentDeleteId = null;
+		}
+
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape' && currentDeleteId !== null) {
+				closeDeleteModal();
+			}
+		});
+	</script>
 </body>
 </html>

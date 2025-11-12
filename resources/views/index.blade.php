@@ -7,8 +7,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        :root {
+            /* Mengubah warna background tombol alert */
+            --swal2-confirm-button-background-color: #ff5722;
+            /* Mengubah warna teks tombol konfirmasi */
+            --swal2-confirm-button-text-color: #ffffff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -20,239 +31,220 @@
             background-color: #f5f5ff;
         }
 
-        /* Navbar Styles */
-        .navbar {
-            background-color: #ffffff;
-            padding: 1rem 3rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            height: 80px;
-            display: flex;
-            align-items: center;
+        /* --- CSS Untuk Rating Bintang --- */
+        :root {
+            --primary-color: #ff5722;
+            --secondary-button-bg: #f0f0f0;
+            --secondary-button-text: #666;
+            --text-color-dark: #074159;
+            ;
+            --text-color-light: #777;
+            --popup-bg: #ffffff;
+            --border-color-light: #e0e0e0;
+            --star-filled: var(--primary-color);
+            --star-empty: #dcdcdc;
+            --swal-animation-duration: 0.3s;
         }
 
-        .navbar-container {
-            display: flex;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: 2rem;
-            width: 100%;
+        .swal2-popup {
+            background-color: var(--popup-bg) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+            padding: 1.8em 1.5em !important;
+            font-family: 'Inter', sans-serif, Arial !important;
+            color: var(--text-color-dark) !important;
+            animation-duration: var(--swal-animation-duration) !important;
+            max-width: 400px;
+            width: 90% !important;
+            box-sizing: border-box;
         }
 
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            margin-left: auto;
+        /* Judul popup */
+        .swal2-title {
+            color: var(--text-color-dark) !important;
+            font-size: 1.5em !important;
+            font-weight: 700 !important;
+            margin-bottom: 0.5em !important;
+            line-height: 1.3 !important;
         }
 
-        .navbar-logo img {
-            height: 50px;
-            width: auto;
-            display: block;
+        /* Text deskripsi dalam html */
+        .swal2-html-container p {
+            color: var(--text-color-light) !important;
+            font-size: 0.95em !important;
+            line-height: 1.5 !important;
+            margin: 0 0 1em 0 !important;
         }
 
-        .navbar-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .navbar-menu li a {
-            text-decoration: none;
-            color: #074159;
-            font-weight: 500;
-            font-size: 1rem;
-            position: relative;
-            transition: color 0.25s ease, transform 0.2s ease, text-shadow 0.2s ease;
-        }
-
-        /* underline accent constructed via pseudo-element to avoid layout shift */
-        .navbar-menu li a::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: -6px;
-            width: 0;
-            height: 2px;
-            background: #ff5722;
-            border-radius: 2px;
-            transform: translateX(-50%);
-            transition: width 0.2s ease;
-        }
-
-        .navbar-menu li a:hover,
-        .navbar-menu li a:focus-visible {
-            color: #053244;
-            transform: scale(1.06);
-            text-shadow: 0 0 0 rgba(0,0,0,0); /* prevent subpixel jitter */
-        }
-
-        .navbar-menu li a:hover::after,
-        .navbar-menu li a:focus-visible::after {
-            width: 60%;
-        }
-
-        /* touch-friendly hover class for mobile */
-        .navbar-menu li a.touch-hover {
-            color: #053244;
-            transform: scale(1.06);
-        }
-        .navbar-menu li a.touch-hover::after { width: 60%; }
-
-        /* tap feedback on touch devices */
-        .navbar-menu li a:active {
-            transform: scale(0.98);
-            color: #ff5722;
-        }
-
-        .navbar-profile {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Profile Icon Styles */
-        .profile-icon {
-            width: 32px;
-            height: 32px;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: transparent;
-            padding: 0;
-        }
-
-        .profile-icon:hover {
-            background-color: #f0f0f0;
-        }
-
-        .profile-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: #074159;
-            stroke-width: 1.5;
-            transition: stroke 0.3s ease;
-        }
-
-        .profile-icon:hover svg {
-            stroke: #053244;
-        }
-
-        .navbar-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            margin-left: auto;
-            z-index: 1001;
-        }
-
-        .hamburger-icon {
+        /* Container untuk bintang dan textarea */
+        .rating-container {
+            margin-top: 1em;
+            margin-bottom: 1em;
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            width: 24px;
-            height: 20px;
-            justify-content: center;
+            align-items: center;
         }
 
-        .hamburger-icon .bar {
-            height: 3px;
-            width: 100%;
-            background-color: #074159;
-            border-radius: 2px;
-            transition: all 0.3s ease;
+        /* Bintang Rating */
+        .rating-stars {
+            direction: rtl;
+            display: inline-block;
+            font-size: 2.5em;
+            margin-bottom: 0.8em;
+            unicode-bidi: bidi-override;
         }
 
-        /* CSS UNTUK PROFIL DROPDOWN (Guest & Logged In) */
-        .profile-dropdown {
-            position: relative;
+        .rating-stars input {
+            display: none;
+        }
+
+        .rating-stars label {
+            color: var(--star-empty);
+            cursor: pointer;
+            padding: 0 0.06em;
+            transition: color 0.2s ease-in-out;
             display: inline-block;
         }
 
-        .profile-dropdown-menu {
-            display: none; /* Sembunyikan secara default */
-            position: absolute;
-            right: 0;
-            top: 100%; /* <-- UBAH INI (dari 140%) */
-            background-color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            min-width: 220px;
-            z-index: 1001;
-            overflow: hidden;
-            padding-top: 1rem; /* <-- UBAH INI (dari 0.5rem) */
-            padding-bottom: 0.5rem;
+        .rating-stars label:hover,
+        .rating-stars label:hover~label,
+        .rating-stars input:checked~label {
+            color: var(--star-filled);
         }
 
-        .profile-dropdown:hover .profile-dropdown-menu {
-            display: block;
+        /* Textarea */
+        .swal2-textarea {
+            width: calc(100% - 20px) !important;
+            min-height: 80px !important;
+            padding: 10px !important;
+            margin: 0 !important;
+            border: 1px solid var(--border-color-light) !important;
+            border-radius: 8px !important;
+            font-size: 0.95em !important;
+            color: var(--text-color-dark) !important;
+            resize: vertical !important;
+            box-shadow: none !important;
+            transition: border-color 0.2s ease-in-out !important;
         }
 
-        /* Header khusus untuk user yang sudah login */
-        .profile-dropdown-menu .dropdown-header {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f0f0f0;
-            margin-bottom: 0.5rem;
-        }
-        .profile-dropdown-menu .dropdown-header span {
-            display: block;
-            font-weight: 700;
-            color: #074159;
-            white-space: nowrap;
-        }
-        .profile-dropdown-menu .dropdown-header small {
-            color: #666;
-            font-size: 0.85rem;
-            white-space: nowrap;
+        .swal2-textarea:focus {
+            border-color: var(--primary-color) !important;
+            outline: none !important;
         }
 
-        .profile-dropdown-menu a {
-            display: block;
-            padding: 0.75rem 1rem;
-            text-decoration: none;
-            color: #333;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+        .swal2-textarea::placeholder {
+            color: #a0a0a0 !important;
         }
 
-        .profile-dropdown-menu a:hover {
-            background-color: #f5f5f5;
-            color: #074159;
+        /* Tombol SweetAlert2 */
+        .swal2-actions {
+            margin-top: 1.5em !important;
+            display: flex !important;
+            flex-direction: row;
+            justify-content: center !important;
+            gap: 12px !important;
+            width: 100% !important;
         }
 
-        .profile-dropdown-menu .dropdown-divider {
-            height: 1px;
-            background-color: #f0f0f0;
-            margin: 0.5rem 0;
+        .rating-confirm-button,
+        .rating-deny-button {
+            padding: 10px 20px !important;
+            border: none !important;
+            border-radius: 7px !important;
+            font-size: 0.95em !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: background-color 0.2s ease, transform 0.1s ease !important;
+            flex: 1 !important;
+            max-width: 150px;
         }
 
-        /* Tombol "Daftar" di dropdown */
-        .profile-dropdown-menu a.dropdown-button-primary {
-            margin: 0.5rem 1rem 0;
-            padding: 0.75rem 1rem;
-            background-color: #ff5722;
-            color: white;
-            text-align: center;
-            border-radius: 4px;
-            font-weight: 600;
+        .rating-confirm-button {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            order: 2;
         }
-        .profile-dropdown-menu a.dropdown-button-primary:hover {
-            background-color: #e64a19;
-            color: white;
+
+        .rating-confirm-button:hover {
+            background-color: #e64a19 !important;
+            transform: translateY(-1px);
         }
+
+        .rating-confirm-button:active {
+            transform: translateY(0);
+        }
+
+        .rating-deny-button {
+            background-color: var(--secondary-button-bg) !important;
+            color: var(--secondary-button-text) !important;
+            order: 1;
+        }
+
+        .rating-deny-button:hover {
+            background-color: #dcdcdc !important;
+            transform: translateY(-1px);
+        }
+
+        .rating-deny-button:active {
+            transform: translateY(0);
+        }
+
+        .swal2-icon {
+            margin-bottom: 1em !important;
+        }
+
+        .swal2-icon.swal2-success [class^='swal2-success-line'] {
+            background-color: var(--primary-color) !important;
+        }
+
+        .swal2-icon.swal2-success .swal2-success-ring {
+            border-color: rgba(var(--primary-color), 0.3) !important;
+        }
+
+        .swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+            background-color: #f44336 !important;
+        }
+
+        /* Responsif */
+        @media (max-width: 500px) {
+            .swal2-popup {
+                width: 95% !important;
+                padding: 1.5em 1em !important;
+            }
+
+            .swal2-title {
+                font-size: 1.4em !important;
+            }
+
+            .swal2-html-container p {
+                font-size: 0.9em !important;
+            }
+
+            .rating-stars {
+                font-size: 2.2em;
+                margin-bottom: 0.7em;
+            }
+
+            .swal2-textarea {
+                min-height: 70px !important;
+                padding: 8px !important;
+                font-size: 0.9em !important;
+            }
+
+            .swal2-actions {
+                flex-direction: column;
+                gap: 8px !important;
+                margin-top: 1.2em !important;
+            }
+
+            .rating-confirm-button,
+            .rating-deny-button {
+                max-width: 100%;
+                padding: 10px 15px !important;
+                font-size: 0.9em !important;
+            }
+        }
+
 
         /* WHY US */
         .why-us-section {
@@ -1590,6 +1582,22 @@
         </div>
     </nav>
 
+    <script>
+        // Kirim status login & rating user dari backend (Blade) ke JavaScript
+        // Popup hanya akan muncul jika user login DAN kolom 'rating' di database-nya masih NULL
+        window.showRatingPopup =
+            @auth('web')
+                {{ Auth::guard('web')->user()->rating === null ? 'true' : 'false' }}
+            @else
+                false
+            @endauth ;
+
+        // Definisikan URL untuk submit rating (hanya jika login)
+        @auth('web')
+            window.ratingSubmitUrl = '{{ route('submit.rating') }}';
+        @endauth
+    </script>
+
     <section class="hero-section">
     <img src="{{ asset('assets/img/Section.png') }}" alt="Background" class="hero-background">
         <div class="hero-overlay"></div>
@@ -1638,56 +1646,62 @@
             <h2 class="section-title">Produk Unggulan Kami</h2>
 
             <div class="products-grid">
-                @if(isset($products) && $products->count() > 0)
-                    @foreach($products->take(3) as $product)
-                    <div class="product-card">
-                        @php
-                            $productImage = null;
-                            if (!empty($product->image)) {
-                                $productImage = asset('storage/' . $product->image);
-                            } elseif (!empty($product->featured_image)) {
-                                $productImage = asset('storage/' . $product->featured_image);
-                            } elseif (!empty($product->thumbnail)) {
-                                $productImage = asset('storage/' . $product->thumbnail);
-                            } else {
-                                $productImage = asset('assets/img/Rectangle12.png');
-                            }
-                        @endphp
-                        <img src="{{ $productImage }}"
-                             alt="{{ $product->name }}"
-                             class="product-image"
-                             onerror="this.onerror=null; this.src='{{ asset('assets/img/Rectangle12.png') }}';">
-                        <div class="product-content">
-                            <h3 class="product-title">{{ $product->name }}</h3>
-                            <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}</p>
-                            <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                @if (isset($products) && $products->count() > 0)
+                    @foreach ($products->take(3) as $product)
+                        <div class="product-card">
+                            @php
+                                $productImage = null;
+                                if (!empty($product->image)) {
+                                    $productImage = asset('storage/' . $product->image);
+                                } elseif (!empty($product->featured_image)) {
+                                    $productImage = asset('storage/' . $product->featured_image);
+                                } elseif (!empty($product->thumbnail)) {
+                                    $productImage = asset('storage/' . $product->thumbnail);
+                                } else {
+                                    $productImage = asset('assets/img/Rectangle12.png');
+                                }
+                            @endphp
+                            <img src="{{ $productImage }}" alt="{{ $product->name }}" class="product-image"
+                                onerror="this.onerror=null; this.src='{{ asset('assets/img/Rectangle12.png') }}';">
+                            <div class="product-content">
+                                <h3 class="product-title">{{ $product->name }}</h3>
+                                <p class="product-description">
+                                    {{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}
+                                </p>
+                                <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                            </div>
                         </div>
-                    </div>
                     @endforeach
                 @else
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus"
+                            class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kotak Kemasan Khusus</h3>
-                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
+                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari
+                                ukuran hingga finishing.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang" class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang"
+                            class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Karton Bergelombang</h3>
-                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan penyimpanan yang aman.</p>
+                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan
+                                penyimpanan yang aman.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan" class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan"
+                            class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kemasan Ramah Lingkungan</h3>
-                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur ulang dan dapat didaur ulang.</p>
+                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur
+                                ulang dan dapat didaur ulang.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
@@ -2025,49 +2039,16 @@
     @include('layouts.footer')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Script Hamburger---
             const hamburgerButton = document.getElementById('navbar-hamburger');
             const mobileMenu = document.getElementById('navbar-mobile-menu');
 
-            // Toggle open/close on hamburger
-            hamburgerButton.addEventListener('click', function () {
+            hamburgerButton.addEventListener('click', function() {
                 mobileMenu.classList.toggle('active');
-                const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
-                hamburgerButton.setAttribute('aria-expanded', String(!expanded));
             });
 
-            // Helper to close the mobile menu safely
-            function closeMobileMenu() {
-                if (mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    hamburgerButton.setAttribute('aria-expanded', 'false');
-                }
-            }
-
-            // 1) Click outside closes the menu (mobile)
-            document.addEventListener('click', function (e) {
-                const clickInsideMenu = mobileMenu.contains(e.target);
-                const clickOnHamburger = hamburgerButton.contains(e.target);
-                if (!clickInsideMenu && !clickOnHamburger) {
-                    closeMobileMenu();
-                }
-            });
-
-            // 2) Pressing Escape closes the menu
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeMobileMenu();
-                }
-            });
-
-            // 3) Clicking a link inside the menu closes it
-            mobileMenu.querySelectorAll('a').forEach(a => {
-                a.addEventListener('click', function () {
-                    closeMobileMenu();
-                });
-            });
-
-            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
+            // --- SCRIPT KOMITMEN 2 ---
             const dominoTabs = document.querySelectorAll('.domino-tab');
             const dominoContents = document.querySelectorAll('.domino-content');
 
@@ -2138,6 +2119,13 @@
                         console.error('Error:', error);
                         alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
 
+                        // ERROR KONEKSI:
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Koneksi Gagal',
+                            text: 'Terjadi kesalahan koneksi. Silakan coba lagi.',
+                        });
+
                         // Kembalikan tombol ke keadaan semula
                         requestButton.disabled = false;
                         requestButton.textContent = 'Konsultasi Gratis Sekarang';
@@ -2146,7 +2134,136 @@
                 });
             }
 
-            // Enable touch-mimicked hover on mobile for navbar menu links
+
+            // --- Script Popup Rating ---
+            if (window.showRatingPopup) {
+                showRatingModal();
+            }
+
+            function showRatingModal() {
+                Swal.fire({
+                    title: 'Bantu Kami Meningkat!',
+                    iconColor: '#ff5722',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    },
+                    html: `
+                        <p style="margin: 1em 0; font-size: 1.1em;">Mohon luangkan waktu sebentar untuk memberikan rating pengalaman Anda.</p>
+                        <div class="rating-container">
+                            <div class="rating-stars">
+                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Sangat Baik">★</label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Baik">★</label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Cukup Baik">★</label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Buruk">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sangat Buruk">★</label>
+                            </div>
+                            <textarea id="rating_comment" class="swal2-textarea" placeholder="Tulis komentar Anda (opsional)..." maxlength="1000"></textarea>
+                        </div>
+                    `,
+                    showDenyButton: true,
+                    denyButtonText: 'Lewati Dulu',
+                    confirmButtonText: 'Kirim Rating',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'rating-popup',
+                        confirmButton: 'rating-confirm-button',
+                        denyButton: 'rating-deny-button'
+                    },
+                    preConfirm: () => {
+                        const rating = document.querySelector('input[name="rating"]:checked');
+                        if (!rating) {
+                            Swal.showValidationMessage('Mohon pilih jumlah bintang.');
+                            return false;
+                        }
+                        const comment = document.getElementById('rating_comment').value;
+                        if (comment.length > 1000) {
+                            Swal.showValidationMessage(
+                                'Komentar tidak boleh lebih dari 1000 karakter.');
+                            return false;
+                        }
+                        return {
+                            rating: rating.value,
+                            comment: comment
+                        };
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Mengirim Rating...',
+                            text: 'Mohon tunggu sebentar.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        submitRating(result.value.rating, result.value.comment);
+                    }
+                });
+            }
+
+            function submitRating(rating, comment) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch(window.ratingSubmitUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            rating: rating,
+                            comment: comment
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().catch(() => {
+                                throw new Error('Terjadi kesalahan server yang tidak terduga.');
+                            }).then(errorData => {
+                                throw new Error(errorData.message || 'Gagal mengirim rating.');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        Swal.close();
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Terima Kasih!',
+                                text: 'Rating Anda telah kami terima. Kami sangat menghargai masukan Anda.',
+                                confirmButtonColor: '#ff5722',
+                            });
+                            window.showRatingPopup = false;
+                        } else {
+                            let errorMsg = data.message || 'Gagal mengirim rating.';
+                            if (data.errors) {
+                                let allErrors = Object.values(data.errors).map(err => err.join(', ')).join(
+                                    '\n');
+                                errorMsg = `Kesalahan validasi:\n${allErrors}`;
+                            }
+                            throw new Error(errorMsg);
+                        }
+                    })
+                    .catch(error => {
+                        Swal.close();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: error.message || 'Terjadi kesalahan. Silakan coba lagi.',
+                            confirmButtonColor: '#ff5722',
+                        });
+                    });
+            }
+
+            // --- Script Touch Hover Navbar ---
             const navLinks = document.querySelectorAll('.navbar-menu a');
             if (navLinks && navLinks.length) {
                 const addTouch = (e) => {
@@ -2156,9 +2273,15 @@
                     e.currentTarget.classList.remove('touch-hover');
                 };
                 navLinks.forEach(a => {
-                    a.addEventListener('touchstart', addTouch, { passive: true });
-                    a.addEventListener('touchend', removeTouch, { passive: true });
-                    a.addEventListener('touchcancel', removeTouch, { passive: true });
+                    a.addEventListener('touchstart', addTouch, {
+                        passive: true
+                    });
+                    a.addEventListener('touchend', removeTouch, {
+                        passive: true
+                    });
+                    a.addEventListener('touchcancel', removeTouch, {
+                        passive: true
+                    });
                     a.addEventListener('blur', removeTouch);
                     a.addEventListener('click', removeTouch);
                 });

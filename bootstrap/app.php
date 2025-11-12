@@ -10,12 +10,15 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        // Register route middleware aliases
+    ->withMiddleware(function (Middleware $middleware) { 
+
         $middleware->alias([
+            'admin' => \App\Http\Middleware\CheckAdminRole::class,
             'track.page' => \App\Http\Middleware\TrackPageVisit::class,
+
         ]);
+
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         :root {
             --skm-teal: #1F6D72;
@@ -26,6 +29,7 @@
             --color-total-bg: #F4F7F6; /* Warna untuk tombol +/- */
         }
 
+        /* ... CSS Anda (tidak diubah) ... */
         * {
             margin: 0;
             padding: 0;
@@ -617,15 +621,30 @@
             });
         });
 
-        // Remove item
+        // === LANGKAH 2: UBAH BAGIAN INI ===
+        // Remove item (Versi SweetAlert)
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                if (confirm('Apakah Anda yakin ingin menghapus produk ini dari keranjang?')) {
-                    const itemId = this.dataset.itemId;
-                    removeCartItem(itemId);
-                }
+                const itemId = this.dataset.itemId; // Ambil itemId
+
+                Swal.fire({
+                    title: 'Hapus Produk?',
+                    text: "Anda yakin ingin menghapus produk ini dari keranjang?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#074159', // Warna biru (sesuai tema)
+                    cancelButtonColor: '#FF611A',  // Warna oranye (sesuai tema)
+                    confirmButtonText: 'Ya, Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Jika dikonfirmasi, panggil fungsi removeCartItem
+                        removeCartItem(itemId);
+                    }
+                });
             });
         });
+        // === AKHIR BAGIAN YANG DIUBAH ===
 
         // Update cart item function
         function updateCartItem(itemId, quantity, inputElement) {

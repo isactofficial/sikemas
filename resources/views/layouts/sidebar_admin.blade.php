@@ -7,7 +7,7 @@
 	</span>
 </button>
 
-<aside id="skmSidebar" class="skm-sidebar" aria-label="Admin Sidebar">
+<aside id="skmSidebar" class="skm-sidebar {{ request()->is('admin') ? 'is-dashboard' : '' }} {{ request()->is('admin/transactions*') ? 'is-transactions' : '' }}" aria-label="Admin Sidebar">
 	<div class="skm-sidebar__inner">
 		<div class="skm-sidebar__brand">
 			<span class="skm-brand__icon" aria-hidden="true">
@@ -99,8 +99,13 @@
 	.skm-sidebar__btn .chev { font-size: 18px; line-height: 1; opacity: .95; }
 
 	/* Variants */
-	.skm-sidebar__btn.is-back { background: #074159; color: #fff; box-shadow: 0 8px 24px rgba(7,65,89,0.28); width: 88%; margin: 0 auto; }
+	/* Make Beranda button same width as other buttons */
+	.skm-sidebar__btn.is-back { background: #074159; color: #fff; box-shadow: 0 8px 24px rgba(7,65,89,0.28); width: 100%; margin: 0; }
 	.skm-sidebar__btn.is-back:hover { background: #063e52; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(7,65,89,0.36); }
+
+	/* Exceptions: On Dashboard and Manage Transactions keep the previous slightly narrower width */
+	.skm-sidebar.is-dashboard .skm-sidebar__btn.is-back,
+	.skm-sidebar.is-transactions .skm-sidebar__btn.is-back { width: 89%; margin: 0 auto; }
 
 	.skm-sidebar__btn.is-logout { background: #e53935; color: #fff; box-shadow: 0 8px 24px rgba(229,57,53,0.28); cursor: pointer; }
 	.skm-sidebar__btn.is-logout:hover { background: #d32f2f; transform: translateY(-1px); box-shadow: 0 12px 28px rgba(229,57,53,0.36); }
@@ -141,8 +146,11 @@
 
 		/* Smaller title size on narrow widths and ensure truncation */
 		.skm-brand__title { font-size: 20px; }
-		/* Ensure Beranda button keeps 90% width on mobile */
-		.skm-sidebar__btn.is-back { width: 89%; }
+		/* Keep Beranda button full width on most pages */
+		.skm-sidebar__btn.is-back { width: 100%; }
+		/* But on Dashboard and Transactions, use the narrower look to match design */
+		.skm-sidebar.is-dashboard .skm-sidebar__btn.is-back,
+		.skm-sidebar.is-transactions .skm-sidebar__btn.is-back { width: 89%; margin: 0 auto; }
 		/* tone down hover scale on mobile */
 		.skm-nav__link:hover { transform: translateY(-1px) scale(1.005); }
 		.skm-nav__link.touch-hover { transform: translateY(-1px) scale(1.005); }

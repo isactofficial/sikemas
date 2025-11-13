@@ -43,6 +43,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cart/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
     Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+    // Merge guest cart (localStorage) after login
+    Route::post('/cart/merge', [CartController::class, 'mergeGuestCart'])->name('cart.merge');
 
     Route::post('/consultation/request', [ConsultationController::class, 'store'])->name('consultation.request');
 

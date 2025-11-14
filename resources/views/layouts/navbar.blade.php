@@ -58,10 +58,10 @@
                         <i class="fas fa-shopping-cart"></i> Keranjang Belanja
                     </a>
                     <a href="{{ route('profile.index') }}" class="skm-mobile-link">Profil Saya</a>
-                    <a href="{{ route('logout') }}" class="skm-mobile-link" 
-                       onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
-                        Logout
-                    </a>
+                        <a href="{{ route('logout') }}" class="skm-mobile-link" 
+                           onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
+                            Logout
+                        </a>
                     <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
@@ -74,8 +74,7 @@
 
         <!-- Right: Cart Icon + User icon with dropdown (Desktop) -->
         <div class="skm-right-icons">
-            <!-- Cart Icon (Only show when logged in) -->
-            @auth
+            <!-- Cart Icon (Visible for guests & auth; guests see localStorage cart, checkout requires login) -->
             <a href="{{ route('cart.index') }}" class="skm-cart-link" aria-label="Keranjang Belanja">
                 <svg class="skm-cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 2L7 7H21L19 2H9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -85,7 +84,6 @@
                 </svg>
                 <span class="skm-cart-badge" data-cart-count style="display:none;">0</span>
             </a>
-            @endauth
             
             <!-- User Dropdown -->
             <div class="skm-user-dropdown">
@@ -590,13 +588,18 @@
                 if (guestItemsRaw) {
                     const guestItems = JSON.parse(guestItemsRaw);
                     if (Array.isArray(guestItems) && guestItems.length > 0) {
-                        const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+                        // Prefer meta CSRF, fallback to logout form hidden _token
+                        let csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+                        if (!csrf) {
+                            const tokenInput = document.querySelector('#logout-form input[name="_token"], #logout-form-mobile input[name="_token"]');
+                            if (tokenInput) csrf = tokenInput.value;
+                        }
                         fetch('{{ route('cart.merge') }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json',
-                                'X-CSRF-TOKEN': csrf || ''
+                                'X-CSRF-TOKEN': csrf
                             },
                             body: JSON.stringify({ items: guestItems })
                         })
@@ -613,7 +616,7 @@
                 }
             } catch (e) { /* no-op */ }
             @else
-            // Guest: show cart count from localStorage
+            // Guest: show cart count from localStorage (can add items before login)
             try {
                 const items = JSON.parse(localStorage.getItem('skm_guest_cart') || '[]');
                 const count = Array.isArray(items) ? items.reduce((s, it) => s + (parseInt(it.quantity)||0), 0) : 0;

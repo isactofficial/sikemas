@@ -36,13 +36,15 @@ Route::get('/edit-design', function () {
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
+// Cart (public index for guest, actions protected)
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+
 Route::middleware(['auth'])->group(function () {
-    // Cart Management
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    // Cart Management (mutations require auth)
     Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
-    Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
     // Merge guest cart (localStorage) after login
     Route::post('/cart/merge', [CartController::class, 'mergeGuestCart'])->name('cart.merge');
 

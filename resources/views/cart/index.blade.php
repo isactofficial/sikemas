@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --skm-teal: #1F6D72;
@@ -452,6 +453,7 @@
         </div>
         @endif
 
+        @auth
         @if($cart && $cart->items->count() > 0)
         <div class="cart-content">
             <div class="cart-items">
@@ -593,6 +595,43 @@
             <a href="{{ route('produk') }}" class="shop-btn">Mulai Belanja</a>
         </div>
         @endif
+        @else
+        <!-- Guest mode: same layout populated from localStorage -->
+        <div class="cart-content" id="guestCartContent" style="display:none;">
+            <div class="cart-items">
+                <h2 class="cart-items-title">Item Pesanan (<span id="guest-items-count">0</span>)</h2>
+                <div id="guest-items-list"></div>
+            </div>
+
+            <div class="cart-summary">
+                <h2 class="summary-title">Ringkasan Belanja</h2>
+                <div class="summary-row">
+                    <span class="summary-label">Subtotal</span>
+                    <span class="summary-value" id="guest-subtotal">Rp 0</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Biaya Pengiriman</span>
+                    <span class="summary-value">Rp 0</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value" id="guest-grand-total">Rp 0</span>
+                </div>
+                <div class="alert alert-error" style="margin-top:12px;">
+                    Login untuk menyimpan keranjang di akun dan melanjutkan checkout.
+                </div>
+                <a href="{{ route('login') }}" class="checkout-btn" style="display:inline-block;text-align:center;">Login untuk Checkout</a>
+            </div>
+        </div>
+
+        <div class="empty-cart" id="guestEmptyState" style="display:none;">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <p class="empty-cart-text">Keranjang belanja Anda masih kosong</p>
+            <a href="{{ route('produk') }}" class="shop-btn">Mulai Belanja</a>
+        </div>
+        @endauth
     </div>
 
     @include('layouts.footer')
@@ -601,6 +640,7 @@
         // Setup CSRF token
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
+        @auth
         // Update quantity
         document.querySelectorAll('.increase-qty, .decrease-qty').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -620,10 +660,22 @@
         // Remove item
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                if (confirm('Apakah Anda yakin ingin menghapus produk ini dari keranjang?')) {
-                    const itemId = this.dataset.itemId;
-                    removeCartItem(itemId);
-                }
+                const itemId = this.dataset.itemId; // Ambil itemId
+                Swal.fire({
+                    title: 'Hapus Produk?',
+                    text: "Anda yakin ingin menghapus produk ini dari keranjang?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#074159', // Warna biru (sesuai tema)
+                    cancelButtonColor: '#FF611A',  // Warna oranye (sesuai tema)
+                    confirmButtonText: 'Ya, Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Jika dikonfirmasi, panggil fungsi removeCartItem
+                        removeCartItem(itemId);
+                    }
+                });
             });
         });
 
@@ -690,6 +742,77 @@
                 alert('Terjadi kesalahan saat menghapus produk');
             });
         }
+        @else
+        // Guest mode logic: render and manage localStorage cart with same UI
+        function rp(n){return 'Rp ' + (n||0).toLocaleString('id-ID');}
+        function loadGuestItems(){
+            try { return JSON.parse(localStorage.getItem('skm_guest_cart')||'[]'); } catch(e){ return []; }
+        }
+        function saveGuestItems(items){ localStorage.setItem('skm_guest_cart', JSON.stringify(items)); }
+        function renderGuestCart(){
+            const items = loadGuestItems();
+            const content = document.getElementById('guestCartContent');
+            const empty = document.getElementById('guestEmptyState');
+            const list = document.getElementById('guest-items-list');
+            const countEl = document.getElementById('guest-items-count');
+            if(!items.length){ content.style.display='none'; empty.style.display='block'; updateCartBadge?.(0); return; }
+            content.style.display='grid'; empty.style.display='none';
+            list.innerHTML = '';
+            let totalQty=0, subtotal=0;
+            items.forEach((it, idx)=>{
+                const qty = parseInt(it.quantity)||0; const price = parseFloat(it.unit_price)||0; const sub = qty*price; totalQty+=qty; subtotal+=sub;
+                const div = document.createElement('div');
+                div.className='cart-item';
+                div.innerHTML = `
+                    <img src="${it.product_image || '{{ asset('assets/img/default-product.png') }}'}" alt="${it.product_name||'Produk'}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <div>
+                            <h3 class="cart-item-name">${it.product_name||'Produk'}</h3>
+                            <div class="cart-item-specs">
+                                ${it.material?`<div class='cart-item-spec'><img src='{{ asset('assets/img/kar.svg') }}' class='spec-icon' alt='Bahan'><span>Bahan: ${it.material}</span></div>`:''}
+                                ${it.size?`<div class='cart-item-spec'><img src='{{ asset('assets/img/uk.svg') }}' class='spec-icon' alt='Ukuran'><span>Ukuran: ${it.size}</span></div>`:''}
+                                ${it.design?`<div class='cart-item-spec'><img src='{{ asset('assets/img/de.svg') }}' class='spec-icon' alt='Desain'><span>Desain: ${it.design}</span></div>`:''}
+                            </div>
+                            <div class="cart-item-price">Harga: <span class="cart-item-price-value">${rp(price)}</span></div>
+                        </div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <button class="remove-btn" data-idx="${idx}"><img src="{{ asset('assets/img/ha.svg') }}" alt="Hapus"></button>
+                        <div class="cart-item-total">${rp(sub)}</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn decrease-qty" data-idx="${idx}"><i class="fas fa-minus"></i></button>
+                            <input type="number" class="quantity-input" value="${qty}" min="1" data-idx="${idx}" readonly>
+                            <button class="quantity-btn increase-qty" data-idx="${idx}"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>`;
+                list.appendChild(div);
+            });
+            countEl.textContent = items.length;
+            document.getElementById('guest-subtotal').textContent = rp(subtotal);
+            document.getElementById('guest-grand-total').textContent = rp(subtotal);
+            updateCartBadge?.(totalQty);
+
+            // bind events
+            list.querySelectorAll('.increase-qty, .decrease-qty').forEach(btn=>{
+                btn.addEventListener('click',()=>{
+                    const idx = parseInt(btn.dataset.idx);
+                    const arr = loadGuestItems();
+                    if(!arr[idx]) return;
+                    const inc = btn.classList.contains('increase-qty');
+                    const q = Math.max(1, (parseInt(arr[idx].quantity)||0) + (inc?1:-1));
+                    arr[idx].quantity = q; saveGuestItems(arr); renderGuestCart();
+                });
+            });
+            list.querySelectorAll('.remove-btn').forEach(btn=>{
+                btn.addEventListener('click',()=>{
+                    const idx = parseInt(btn.dataset.idx);
+                    const arr = loadGuestItems();
+                    arr.splice(idx,1); saveGuestItems(arr); renderGuestCart();
+                });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', renderGuestCart);
+        @endauth
     </script>
 </body>
 </html>

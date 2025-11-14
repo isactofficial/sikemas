@@ -21,23 +21,30 @@ class CartController extends Controller
      */
     public function index()
     {
+        // If guest, render the same cart view; items will be populated from localStorage via JS
+        if (!Auth::check()) {
+            $cart = null;
+            $primaryAddress = null;
+            return view('cart.index', compact('cart', 'primaryAddress'));
+        }
+
         $user = Auth::user();
-        
+
         // Get or create cart for user
-        $cart = Cart::with('items')->firstOrCreate(
-            ['user_id' => $user->id]
-        );
-        
+        $cart = Cart::with('items')->firstOrCreate([
+            'user_id' => $user->id
+        ]);
+
         // Get user's primary address
         $primaryAddress = UserAddress::where('user_id', $user->id)
             ->where('is_primary', true)
             ->first();
-        
+
         // If no primary address, get first address
         if (!$primaryAddress) {
             $primaryAddress = UserAddress::where('user_id', $user->id)->first();
         }
-        
+
         return view('cart.index', compact('cart', 'primaryAddress'));
     }
 
@@ -375,4 +382,6 @@ class CartController extends Controller
             'cart_count' => $cart->total_quantity,
         ]);
     }
+
+    
 }

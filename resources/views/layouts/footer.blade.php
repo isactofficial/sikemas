@@ -37,9 +37,10 @@
         <div class="skm-footer-col">
             <h3 class="skm-col-title">Layanan</h3>
             <ul class="skm-links">
-                <li><a href="#">---</a></li>
-                <li><a href="#">---</a></li>
-                <li><a href="#">---</a></li>
+                <li><a href="{{ route('produk') }}">Produk</a></li>
+                <li><a href="{{ route('artikel') }}">Artikel</a></li>
+                <li><a href="{{ route('portofolio') }}">Portofolio</a></li>
+                <li><a href="{{ route('about') }}">About Us</a></li>
             </ul>
         </div>
 

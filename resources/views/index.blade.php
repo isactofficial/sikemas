@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        :root {
+            /* Mengubah warna background tombol alert */
+            --swal2-confirm-button-background-color: #ff5722;
+            /* Mengubah warna teks tombol konfirmasi */
+            --swal2-confirm-button-text-color: #ffffff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -20,239 +32,220 @@
             background-color: #f5f5ff;
         }
 
-        /* Navbar Styles */
-        .navbar {
-            background-color: #ffffff;
-            padding: 1rem 3rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            height: 80px;
-            display: flex;
-            align-items: center;
+        /* --- CSS Untuk Rating Bintang --- */
+        :root {
+            --primary-color: #ff5722;
+            --secondary-button-bg: #f0f0f0;
+            --secondary-button-text: #666;
+            --text-color-dark: #074159;
+            ;
+            --text-color-light: #777;
+            --popup-bg: #ffffff;
+            --border-color-light: #e0e0e0;
+            --star-filled: var(--primary-color);
+            --star-empty: #dcdcdc;
+            --swal-animation-duration: 0.3s;
         }
 
-        .navbar-container {
-            display: flex;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: 2rem;
-            width: 100%;
+        .swal2-popup {
+            background-color: var(--popup-bg) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+            padding: 1.8em 1.5em !important;
+            font-family: 'Inter', sans-serif, Arial !important;
+            color: var(--text-color-dark) !important;
+            animation-duration: var(--swal-animation-duration) !important;
+            max-width: 400px;
+            width: 90% !important;
+            box-sizing: border-box;
         }
 
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            margin-left: auto;
+        /* Judul popup */
+        .swal2-title {
+            color: var(--text-color-dark) !important;
+            font-size: 1.5em !important;
+            font-weight: 700 !important;
+            margin-bottom: 0.5em !important;
+            line-height: 1.3 !important;
         }
 
-        .navbar-logo img {
-            height: 50px;
-            width: auto;
-            display: block;
+        /* Text deskripsi dalam html */
+        .swal2-html-container p {
+            color: var(--text-color-light) !important;
+            font-size: 0.95em !important;
+            line-height: 1.5 !important;
+            margin: 0 0 1em 0 !important;
         }
 
-        .navbar-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .navbar-menu li a {
-            text-decoration: none;
-            color: #074159;
-            font-weight: 500;
-            font-size: 1rem;
-            position: relative;
-            transition: color 0.25s ease, transform 0.2s ease, text-shadow 0.2s ease;
-        }
-
-        /* underline accent constructed via pseudo-element to avoid layout shift */
-        .navbar-menu li a::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: -6px;
-            width: 0;
-            height: 2px;
-            background: #ff5722;
-            border-radius: 2px;
-            transform: translateX(-50%);
-            transition: width 0.2s ease;
-        }
-
-        .navbar-menu li a:hover,
-        .navbar-menu li a:focus-visible {
-            color: #053244;
-            transform: scale(1.06);
-            text-shadow: 0 0 0 rgba(0,0,0,0); /* prevent subpixel jitter */
-        }
-
-        .navbar-menu li a:hover::after,
-        .navbar-menu li a:focus-visible::after {
-            width: 60%;
-        }
-
-        /* touch-friendly hover class for mobile */
-        .navbar-menu li a.touch-hover {
-            color: #053244;
-            transform: scale(1.06);
-        }
-        .navbar-menu li a.touch-hover::after { width: 60%; }
-
-        /* tap feedback on touch devices */
-        .navbar-menu li a:active {
-            transform: scale(0.98);
-            color: #ff5722;
-        }
-
-        .navbar-profile {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Profile Icon Styles */
-        .profile-icon {
-            width: 32px;
-            height: 32px;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: transparent;
-            padding: 0;
-        }
-
-        .profile-icon:hover {
-            background-color: #f0f0f0;
-        }
-
-        .profile-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: #074159;
-            stroke-width: 1.5;
-            transition: stroke 0.3s ease;
-        }
-
-        .profile-icon:hover svg {
-            stroke: #053244;
-        }
-
-        .navbar-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            margin-left: auto;
-            z-index: 1001;
-        }
-
-        .hamburger-icon {
+        /* Container untuk bintang dan textarea */
+        .rating-container {
+            margin-top: 1em;
+            margin-bottom: 1em;
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            width: 24px;
-            height: 20px;
-            justify-content: center;
+            align-items: center;
         }
 
-        .hamburger-icon .bar {
-            height: 3px;
-            width: 100%;
-            background-color: #074159;
-            border-radius: 2px;
-            transition: all 0.3s ease;
+        /* Bintang Rating */
+        .rating-stars {
+            direction: rtl;
+            display: inline-block;
+            font-size: 2.5em;
+            margin-bottom: 0.8em;
+            unicode-bidi: bidi-override;
         }
 
-        /* CSS UNTUK PROFIL DROPDOWN (Guest & Logged In) */
-        .profile-dropdown {
-            position: relative;
+        .rating-stars input {
+            display: none;
+        }
+
+        .rating-stars label {
+            color: var(--star-empty);
+            cursor: pointer;
+            padding: 0 0.06em;
+            transition: color 0.2s ease-in-out;
             display: inline-block;
         }
 
-        .profile-dropdown-menu {
-            display: none; /* Sembunyikan secara default */
-            position: absolute;
-            right: 0;
-            top: 100%; /* <-- UBAH INI (dari 140%) */
-            background-color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            min-width: 220px;
-            z-index: 1001;
-            overflow: hidden;
-            padding-top: 1rem; /* <-- UBAH INI (dari 0.5rem) */
-            padding-bottom: 0.5rem;
+        .rating-stars label:hover,
+        .rating-stars label:hover~label,
+        .rating-stars input:checked~label {
+            color: var(--star-filled);
         }
 
-        .profile-dropdown:hover .profile-dropdown-menu {
-            display: block;
+        /* Textarea */
+        .swal2-textarea {
+            width: calc(100% - 20px) !important;
+            min-height: 80px !important;
+            padding: 10px !important;
+            margin: 0 !important;
+            border: 1px solid var(--border-color-light) !important;
+            border-radius: 8px !important;
+            font-size: 0.95em !important;
+            color: var(--text-color-dark) !important;
+            resize: vertical !important;
+            box-shadow: none !important;
+            transition: border-color 0.2s ease-in-out !important;
         }
 
-        /* Header khusus untuk user yang sudah login */
-        .profile-dropdown-menu .dropdown-header {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f0f0f0;
-            margin-bottom: 0.5rem;
-        }
-        .profile-dropdown-menu .dropdown-header span {
-            display: block;
-            font-weight: 700;
-            color: #074159;
-            white-space: nowrap;
-        }
-        .profile-dropdown-menu .dropdown-header small {
-            color: #666;
-            font-size: 0.85rem;
-            white-space: nowrap;
+        .swal2-textarea:focus {
+            border-color: var(--primary-color) !important;
+            outline: none !important;
         }
 
-        .profile-dropdown-menu a {
-            display: block;
-            padding: 0.75rem 1rem;
-            text-decoration: none;
-            color: #333;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+        .swal2-textarea::placeholder {
+            color: #a0a0a0 !important;
         }
 
-        .profile-dropdown-menu a:hover {
-            background-color: #f5f5f5;
-            color: #074159;
+        /* Tombol SweetAlert2 */
+        .swal2-actions {
+            margin-top: 1.5em !important;
+            display: flex !important;
+            flex-direction: row;
+            justify-content: center !important;
+            gap: 12px !important;
+            width: 100% !important;
         }
 
-        .profile-dropdown-menu .dropdown-divider {
-            height: 1px;
-            background-color: #f0f0f0;
-            margin: 0.5rem 0;
+        .rating-confirm-button,
+        .rating-deny-button {
+            padding: 10px 20px !important;
+            border: none !important;
+            border-radius: 7px !important;
+            font-size: 0.95em !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: background-color 0.2s ease, transform 0.1s ease !important;
+            flex: 1 !important;
+            max-width: 150px;
         }
 
-        /* Tombol "Daftar" di dropdown */
-        .profile-dropdown-menu a.dropdown-button-primary {
-            margin: 0.5rem 1rem 0;
-            padding: 0.75rem 1rem;
-            background-color: #ff5722;
-            color: white;
-            text-align: center;
-            border-radius: 4px;
-            font-weight: 600;
+        .rating-confirm-button {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            order: 2;
         }
-        .profile-dropdown-menu a.dropdown-button-primary:hover {
-            background-color: #e64a19;
-            color: white;
+
+        .rating-confirm-button:hover {
+            background-color: #e64a19 !important;
+            transform: translateY(-1px);
         }
+
+        .rating-confirm-button:active {
+            transform: translateY(0);
+        }
+
+        .rating-deny-button {
+            background-color: var(--secondary-button-bg) !important;
+            color: var(--secondary-button-text) !important;
+            order: 1;
+        }
+
+        .rating-deny-button:hover {
+            background-color: #dcdcdc !important;
+            transform: translateY(-1px);
+        }
+
+        .rating-deny-button:active {
+            transform: translateY(0);
+        }
+
+        .swal2-icon {
+            margin-bottom: 1em !important;
+        }
+
+        .swal2-icon.swal2-success [class^='swal2-success-line'] {
+            background-color: var(--primary-color) !important;
+        }
+
+        .swal2-icon.swal2-success .swal2-success-ring {
+            border-color: rgba(var(--primary-color), 0.3) !important;
+        }
+
+        .swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+            background-color: #f44336 !important;
+        }
+
+        /* Responsif */
+        @media (max-width: 500px) {
+            .swal2-popup {
+                width: 95% !important;
+                padding: 1.5em 1em !important;
+            }
+
+            .swal2-title {
+                font-size: 1.4em !important;
+            }
+
+            .swal2-html-container p {
+                font-size: 0.9em !important;
+            }
+
+            .rating-stars {
+                font-size: 2.2em;
+                margin-bottom: 0.7em;
+            }
+
+            .swal2-textarea {
+                min-height: 70px !important;
+                padding: 8px !important;
+                font-size: 0.9em !important;
+            }
+
+            .swal2-actions {
+                flex-direction: column;
+                gap: 8px !important;
+                margin-top: 1.2em !important;
+            }
+
+            .rating-confirm-button,
+            .rating-deny-button {
+                max-width: 100%;
+                padding: 10px 15px !important;
+                font-size: 0.9em !important;
+            }
+        }
+
 
         /* WHY US */
         .why-us-section {
@@ -294,7 +287,7 @@
         .why-us-card {
             background-color: #F6FAFA;
             border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             padding: 2.5rem 2rem;
             text-align: center;
             transition: all 0.3s ease;
@@ -302,7 +295,7 @@
 
         .why-us-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         .why-us-icon {
@@ -335,7 +328,7 @@
 
         /* Hero Section */
         .hero-section {
-            margin-top: 80px;
+            margin-top: 0px;
             height: calc(100vh - 80px);
             position: relative;
             display: flex;
@@ -544,23 +537,27 @@
             text-align: center;
             padding: 64px 16px;
         }
+
         .start-project .sp-container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 12px;
         }
+
         .start-project h2 {
             font-size: 36px;
             font-weight: 800;
             margin-bottom: 12px;
         }
+
         .start-project p {
             font-size: 16px;
             line-height: 1.6;
-            color: rgba(255,255,255,0.9);
+            color: rgba(255, 255, 255, 0.9);
             max-width: 760px;
             margin: 0 auto 22px;
         }
+
         .start-project .sp-button {
             display: inline-block;
             background-color: #ff5722;
@@ -572,6 +569,7 @@
             box-shadow: 0 4px 10px rgba(255, 87, 34, 0.35);
             transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
         }
+
         .start-project .sp-button:hover {
             background-color: #e64a19;
             transform: translateY(-1px);
@@ -579,39 +577,70 @@
         }
 
         @media (max-width: 768px) {
-            .start-project { padding: 48px 14px; margin-top: 44px; }
-            .start-project h2 { font-size: 26px; margin-bottom: 10px; }
-            .start-project p { font-size: 14px; margin-bottom: 18px; }
-            .start-project .sp-button { padding: 10px 18px; }
+            .start-project {
+                padding: 48px 14px;
+                margin-top: 44px;
+            }
+
+            .start-project h2 {
+                font-size: 26px;
+                margin-bottom: 10px;
+            }
+
+            .start-project p {
+                font-size: 14px;
+                margin-bottom: 18px;
+            }
+
+            .start-project .sp-button {
+                padding: 10px 18px;
+            }
         }
 
         /* KOMITMEN */
         .commitment-section {
             position: relative;
             padding: 6rem 2rem;
-            background-image: url('{{ asset('assets/img/ekspansibisnisS.png') }}');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-color: #074159;
             color: #ffffff;
             text-align: center;
             overflow: hidden;
         }
+
+        /* Pseudo-element background blur commitment */
+        .commitment-section::before {
+            content: '';
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background-image: url('{{ asset('assets/img/ekspansibisnisS.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* INI UNTUK MENGATUR BLUR */
+            filter: blur(5px);
+            z-index: 1;
+        }
+
         .commitment-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(7, 65, 89, 0.9);
-            z-index: 1;
+            background: rgba(19, 51, 60, 0.425);
+            z-index: 0;
         }
+
         .commitment-container {
             max-width: 1100px;
             margin: 0 auto;
             position: relative;
             z-index: 3;
         }
+
         .section-title-commitment {
             font-size: 36px;
             font-weight: 700;
@@ -619,6 +648,7 @@
             margin-bottom: 1rem;
             position: relative;
         }
+
         .section-title-commitment::after {
             content: '';
             display: block;
@@ -628,6 +658,7 @@
             margin: 10px auto 0;
             border-radius: 2px;
         }
+
         .section-description-commitment {
             font-size: 16px;
             line-height: 1.6;
@@ -635,11 +666,13 @@
             max-width: 760px;
             margin: 2rem auto 3rem;
         }
+
         .commitment-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
         }
+
         .commitment-card {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -650,11 +683,13 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
+
         .commitment-card:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.3);
         }
+
         .commitment-icon {
             margin-bottom: 1.5rem;
             height: 70px;
@@ -662,6 +697,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .commitment-icon img {
             height: 64px;
             width: auto;
@@ -671,6 +707,7 @@
             height: 90px;
             margin-bottom: 0.35rem;
         }
+
         .commitment-icon.icon-efisiensi img {
             height: 80px;
         }
@@ -681,6 +718,7 @@
             color: #ffffff;
             margin-bottom: 0.75rem;
         }
+
         .commitment-description {
             font-size: 16px;
             line-height: 1.6;
@@ -725,7 +763,7 @@
             position: relative;
             width: 130px;
             height: 250px;
-            background: linear-gradient(145deg, #095a7c, #074159); /* Gradient biru */
+            background: linear-gradient(145deg, #095a7c, #074159);
             border-radius: 8px;
             color: white;
             cursor: pointer;
@@ -736,19 +774,6 @@
             justify-content: center;
             padding: 1rem;
             font-family: 'Besley', serif;
-
-            /* EFEK SHADOW 3D TEBAL (10 lapis) - ATAS & KANAN */
-            box-shadow: 1px -1px #053244,
-                        2px -2px #053244,
-                        3px -3px #053244,
-                        4px -4px #053244,
-                        5px -5px #053244,
-                        6px -6px #053244,
-                        7px -7px #053244,
-                        8px -8px #053244,
-                        9px -9px #053244,
-                        10px -10px #053244,
-                        10px -10px 15px rgba(0,0,0,0.2);
         }
 
         /* .domino-tab span (Teks di dalam card) */
@@ -763,43 +788,8 @@
         /* .domino-tab:hover (Efek saat di-hover) */
         .domino-tab:hover {
             transform: translate(6px, -6px);
-
-            /* Bayangan memanjang saat hover (12 lapis) */
-            box-shadow: 1px -1px #053244,
-                        2px -2px #053244,
-                        3px -3px #053244,
-                        4px -4px #053244,
-                        5px -5px #053244,
-                        6px -6px #053244,
-                        7px -7px #053244,
-                        8px -8px #053244,
-                        9px -9px #053244,
-                        10px -10px #053244,
-                        11px -11px #053244,
-                        12px -12px #053244,
-                        12px -12px 20px rgba(0,0,0,0.25);
         }
 
-        /* Style untuk tab AKTIF (Orange) */
-        .domino-tab.active {
-            background: linear-gradient(145deg, #ff7a50, #ff5722); /* Gradient orange */
-            transform: translate(6px, -6px);
-
-            /* Shadow warna orange (12 lapis) */
-            box-shadow: 1px -1px #e64a19,
-                        2px -2px #e64a19,
-                        3px -3px #e64a19,
-                        4px -4px #e64a19,
-                        5px -5px #e64a19,
-                        6px -6px #e64a19,
-                        7px -7px #e64a19,
-                        8px -8px #e64a19,
-                        9px -9px #e64a19,
-                        10px -10px #e64a19,
-                        11px -11px #e64a19,
-                        12px -12px #e64a19,
-                        12px -12px 20px rgba(0,0,0,0.25);
-        }
 
         .domino-content-wrapper {
             margin: 0 auto;
@@ -816,8 +806,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .domino-content h3 {
@@ -857,11 +854,61 @@
             font-family: 'Besley', serif;
         }
 
+        /* --- CSS untuk Tombol Gambar Domino --- */
+
+        /* 1. Atur tombol agar hanya gambar yang terlihat */
+        /*  untuk memperbesar ukuran */
+        .domino-nav .domino-tab {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            max-width: 160px;
+            width: 80%;
+        }
+
+        /* 2. Pastikan gambar responsif di dalam tombol */
+        .domino-nav .domino-tab img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 3. Logika untuk menukar gambar */
+
+        /* Sembunyikan gambar 'aktif' (oranye) secara default */
+        .domino-nav .domino-tab .img-active {
+            display: none;
+        }
+
+        /* Tampilkan gambar 'tidak aktif' (biru) secara default */
+        .domino-nav .domino-tab .img-inactive {
+            display: block;
+        }
+
+        /* 4. Saat tombol memiliki kelas '.active' */
+
+        /* Tampilkan gambar 'aktif' (oranye) */
+        .domino-nav .domino-tab.active .img-active {
+            display: block;
+        }
+
+        /* Sembunyikan gambar 'tidak aktif' (biru) */
+        .domino-nav .domino-tab.active .img-inactive {
+            display: none;
+        }
+
+        .domino-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;/ margin-bottom: 25px;
+        }
+
         /*CSS ALUR PROSES KAMI*/
         .our-process-section {
             background-color: #ffffff;
-            /* padding: 6rem 2rem; */ /* <-- DIUBAH */
-            padding: 2rem 2rem 6rem; /* <-- Jarak atas dikurangi, jarak bawah tetap 6rem */
+            padding: 2rem 2rem 6rem;
             font-family: 'Besley', serif;
         }
 
@@ -904,7 +951,7 @@
             margin-bottom: 1.5rem;
             overflow: hidden;
             border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .process-image-wrapper img {
@@ -932,7 +979,7 @@
             justify-content: center;
             margin: 0 auto 1rem;
             border: 3px solid #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
             margin-top: -30px;
             z-index: 2;
@@ -952,11 +999,10 @@
             margin: 0;
         }
 
-        /* =========================================== */
-        /* === CSS CUSTOM DESIGN SECTION (DIUBAH) === */
-        /* =========================================== */
+        /* === CSS CUSTOM DESIGN SECTION  === */
         .custom-design-section {
-            background-color: #F4F7F6; /* Background abu-abu muda */
+            background-color: #F4F7F6;
+            /* Background abu-abu muda */
             padding: 6rem 2rem;
             font-family: 'Besley', serif;
         }
@@ -1045,15 +1091,28 @@
         /*FREE DESIGN SECTION*/
         .free-design-section {
             position: relative;
-            background-image: url('{{ asset('assets/img/desainGr.png') }}');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-color: #13333c;
             padding: 8rem 2rem;
             color: #ffffff;
             text-align: center;
             overflow: hidden;
             font-family: 'Besley', serif;
+        }
+
+        .free-design-section::before {
+            content: '';
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background-image: url('{{ asset('assets/img/desainGr.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* INI UNTUK MENGATUR BLUR */
+            filter: blur(6px);
+            z-index: 0;
         }
 
         .free-design-overlay {
@@ -1130,19 +1189,21 @@
 
         .skm-alert {
             padding: 15px;
-            margin: 20px 3rem; /* Sesuaikan margin */
+            margin: 20px 3rem;
             border: 1px solid transparent;
             border-radius: 4px;
             font-size: 16px;
             position: relative;
-            z-index: 1001; /* Di atas navbar */
-            top: 80px; /* Di bawah navbar fixed */
+            z-index: 1001;
+            top: 80px;
         }
+
         .skm-alert-success {
             color: #155724;
             background-color: #d4edda;
             border-color: #c3e6cb;
         }
+
         .skm-alert-error {
             color: #721c24;
             background-color: #f8d7da;
@@ -1156,68 +1217,15 @@
             cursor: not-allowed;
             opacity: 0.7;
         }
+
         .free-design-button.disabled:hover {
-            background-color: #ccc; /* Tetap sama saat di-hover */
+            background-color: #ccc;
+            /* Tetap sama saat di-hover */
 
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem 1.5rem;
-            }
-
-            .navbar-toggle {
-                display: flex;
-            }
-
-            .navbar-right {
-                display: none;
-                position: absolute;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background-color: #ffffff;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-
-            .navbar-right.active {
-                display: flex;
-            }
-
-            .navbar-menu {
-                flex-direction: column;
-                gap: 0;
-                width: 100%;
-            }
-
-            .navbar-menu li {
-                width: 100%;
-                text-align: center;
-            }
-
-            .navbar-menu li a {
-                display: block;
-                padding: 1rem;
-                border-bottom: 1px solid #f0f0f0;
-            }
-
-            /* reduce scaling on narrow screens to avoid layout jumps */
-            .navbar-menu li a:hover,
-            .navbar-menu li a:focus-visible { transform: scale(1.02); }
-            .navbar-menu li a::after { bottom: 0; }
-            .navbar-menu li a.touch-hover { transform: scale(1.02); }
-
-            .navbar-profile {
-                justify-content: center;
-                width: 100%;
-                padding: 1rem; /* Beri padding untuk ikon di mobile */
-                border-bottom: 1px solid #f0f0f0;
-            }
-
             .hero-content h1 {
                 font-size: 2.5rem;
             }
@@ -1263,14 +1271,17 @@
                 padding: 4rem 1.5rem;
                 background-attachment: scroll;
             }
+
             .section-title-commitment {
                 font-size: 28px;
             }
+
             .section-description-commitment {
                 font-size: 14px;
                 margin-bottom: 2rem;
                 margin-top: 1.5rem;
             }
+
             .commitment-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -1280,10 +1291,12 @@
             .commitment-2-section {
                 padding: 4rem 1.5rem;
             }
+
             .commitment-2-section h2 {
                 font-size: 24px;
                 margin-bottom: 2rem;
             }
+
             .domino-nav {
                 flex-wrap: wrap;
                 gap: 1rem;
@@ -1313,17 +1326,21 @@
             .domino-content-wrapper {
                 text-align: center;
             }
+
             .domino-content h3 {
                 font-size: 22px;
             }
+
             .domino-content p {
                 font-size: 15px;
                 text-align: left;
             }
+
             .orange-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
+
             .orange-box {
                 font-size: 1rem;
                 min-height: 80px;
@@ -1334,14 +1351,17 @@
             .our-process-section {
                 padding: 4rem 1.5rem;
             }
+
             .section-title-process {
                 font-size: 28px;
             }
+
             .our-process-grid {
                 grid-template-columns: 1fr;
                 gap: 3rem;
                 margin-top: 3rem;
             }
+
             .process-image-wrapper img {
                 height: 200px;
             }
@@ -1350,6 +1370,7 @@
             .custom-design-section {
                 padding: 4rem 1.5rem;
             }
+
             .section-title-custom-design {
                 font-size: 28px;
             }
@@ -1381,76 +1402,17 @@
                 padding: 4rem 1.5rem;
                 background-attachment: scroll;
             }
+
             .free-design-title {
                 font-size: 28px;
             }
+
             .free-design-description {
                 font-size: 14px;
             }
+
             .free-design-button {
                 padding: 10px 18px;
-            }
-
-
-            /* --- CSS RESPONSIVE UNTUK DROPDOWN --- */
-
-            .profile-dropdown {
-                width: 100%;
-            }
-            .profile-dropdown-toggle {
-                /* Tombol ikon di mobile */
-                text-align: center;
-                width: 100%;
-                border-radius: 0;
-                display: flex;
-                justify-content: center;
-            }
-            .profile-dropdown-toggle:hover {
-                background-color: #f5f5f5;
-            }
-            .profile-dropdown-toggle svg {
-                margin: 0 auto; /* Pusatkan ikon */
-            }
-
-            /* Menu dropdown di mobile */
-            .profile-dropdown-menu {
-                position: static;
-                display: block;
-                box-shadow: none;
-                border-radius: 0;
-                min-width: 0;
-                width: 100%;
-                background: none;
-                border-top: 1px solid #f0f0f0;
-                padding: 0;
-            }
-            .profile-dropdown:hover .profile-dropdown-menu {
-                display: block;
-            }
-            .profile-dropdown-menu .dropdown-header {
-                 display: none;
-            }
-            .profile-dropdown-menu a {
-                text-align: center;
-                padding: 1rem;
-                border-bottom: 1px solid #f0f0f0;
-                color: #074159;
-            }
-            .profile-dropdown-menu a:hover {
-                background: #f5f5f5;
-            }
-            .profile-dropdown-menu .dropdown-divider {
-                display: none;
-            }
-             /* Tombol "Daftar" di mobile */
-            .profile-dropdown-menu a.dropdown-button-primary {
-                margin: 0;
-                border-radius: 0;
-                color: white;
-                background-color: #ff5722;
-            }
-            .profile-dropdown-menu a.dropdown-button-primary:hover {
-                background-color: #e64a19;
             }
 
         }
@@ -1466,116 +1428,223 @@
         }
 
         /* CSS Untuk Artikel Section dari file Anda */
-        .skm-articles { background: #F4F7F6; padding: 56px 16px 70px; font-family: 'Besley', serif; }
-        .skm-a-wrap { max-width: 980px; margin: 0 auto; }
-        .skm-articles h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
-        .skm-articles h2::after { content: ""; display: block; width: 56px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
-        .skm-a-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 26px; }
-        @media (max-width: 900px) { .skm-a-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { .skm-a-grid { grid-template-columns: 1fr; } }
-        .skm-a-card { background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden; }
-        .skm-a-card .thumb { height: 160px; overflow: hidden; }
-        .skm-a-card .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .skm-a-card .body { padding: 14px 16px 16px; }
-        .skm-a-card .title { color: #074159; font-size: 18px; font-weight: 800; line-height: 1.35; margin: 0 0 8px; }
-        .skm-a-card .deskripsi { color: #425B66; font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
-        .skm-a-card .more { color: #ff5722; font-weight: 800; text-decoration: none; }
-        .skm-a-card .more:hover { text-decoration: underline; }
+        .skm-articles {
+            background: #F4F7F6;
+            padding: 56px 16px 70px;
+            font-family: 'Besley', serif;
+        }
+
+        .skm-a-wrap {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .skm-articles h2 {
+            color: #074159;
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .skm-articles h2::after {
+            content: "";
+            display: block;
+            width: 56px;
+            height: 4px;
+            background: #ff5722;
+            border-radius: 2px;
+            margin: 8px auto 0;
+        }
+
+        .skm-a-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            margin-top: 26px;
+        }
+
+        @media (max-width: 900px) {
+            .skm-a-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .skm-a-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .skm-a-card {
+            background: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .skm-a-card .thumb {
+            height: 160px;
+            overflow: hidden;
+        }
+
+        .skm-a-card .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .skm-a-card .body {
+            padding: 14px 16px 16px;
+        }
+
+        .skm-a-card .title {
+            color: #074159;
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.35;
+            margin: 0 0 8px;
+        }
+
+        .skm-a-card .deskripsi {
+            color: #425B66;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0 0 12px;
+        }
+
+        .skm-a-card .more {
+            color: #ff5722;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .skm-a-card .more:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 640px) {
-            .skm-articles h2 { font-size: 28px; }
-            .skm-a-card .title { font-size: 16px; }
-            .skm-a-card .deskripsi { font-size: 14px; }
+            .skm-articles h2 {
+                font-size: 28px;
+            }
+
+            .skm-a-card .title {
+                font-size: 16px;
+            }
+
+            .skm-a-card .deskripsi {
+                font-size: 14px;
+            }
         }
 
         /* CSS Untuk Testimoni Section dari file Anda */
-        .skm-testimonials { background: #FFFFFF; padding: 60px 16px 70px; font-family: 'Besley', serif; }
-        .skm-t-wrap { max-width: 1100px; margin: 0 auto; }
-        .skm-testimonials h2 { color: #074159; font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 18px; }
-        .skm-testimonials h2::after { content: ""; display: block; width: 66px; height: 4px; background: #ff5722; border-radius: 2px; margin: 8px auto 0; }
-        .skm-t-single { max-width: 820px; margin: 0 auto; background: #F6FAFA; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: 22px 24px; text-align: center; }
-        .skm-t-single .quote { color: #074159; font-size: 17px; line-height: 1.65; margin: 0 0 6px; font-style: normal; letter-spacing: 0.2px; }
-        .skm-t-single .credit { color: #074159; margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 0.2px; }
-        .skm-t-single .credit strong { font-weight: 800; }
+        .skm-testimonials {
+            background: #FFFFFF;
+            padding: 60px 16px 70px;
+            font-family: 'Besley', serif;
+        }
+
+        .skm-t-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .skm-testimonials h2 {
+            color: #074159;
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .skm-testimonials h2::after {
+            content: "";
+            display: block;
+            width: 66px;
+            height: 4px;
+            background: #ff5722;
+            border-radius: 2px;
+            margin: 8px auto 0;
+        }
+
+        .skm-t-single {
+            max-width: 820px;
+            margin: 0 auto;
+            background: #F6FAFA;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            padding: 22px 24px;
+            text-align: center;
+        }
+
+        .skm-t-single .quote {
+            color: #074159;
+            font-size: 17px;
+            line-height: 1.65;
+            margin: 0 0 6px;
+            font-style: normal;
+            letter-spacing: 0.2px;
+        }
+
+        .skm-t-single .credit {
+            color: #074159;
+            margin: 0;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .skm-t-single .credit strong {
+            font-weight: 800;
+        }
+
         @media (max-width: 640px) {
-            .skm-testimonials h2 { font-size: 28px; }
-            .skm-t-single { padding: 18px; }
-            .skm-t-single .quote { font-size: 16px; }
-            .skm-t-single .credit { font-size: 15px; }
+            .skm-testimonials h2 {
+                font-size: 28px;
+            }
+
+            .skm-t-single {
+                padding: 18px;
+            }
+
+            .skm-t-single .quote {
+                font-size: 16px;
+            }
+
+            .skm-t-single .credit {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="navbar-logo">
-                <a href="{{ url('/') }}">
-                    <img src="{{ asset('assets/img/Rectangle.png') }}" alt="SIKEMAS Logo">
-                </a>
-            </div>
+    @include('layouts.navbar')
 
-            <div class="navbar-right" id="navbar-mobile-menu">
-                <ul class="navbar-menu">
-                    <li><a href="{{ url('/beranda') }}">Beranda</a></li>
-                    <li><a href="{{ url('/produk') }}">Produk</a></li>
-                    <li><a href="{{ url('/artikel') }}">Artikel</a></li>
-                    <li><a href="{{ url('/portofolio') }}">Portofolio</a></li>
-                    <li><a href="{{ url('/about') }}">About Us</a></li>
+    <script>
+        // Kirim status login & rating user dari backend (Blade) ke JavaScript
+        // Popup hanya akan muncul jika user login DAN kolom 'rating' di database-nya masih NULL
+        window.showRatingPopup =
+            @auth('web')
+                {{ Auth::guard('web')->user()->rating === null ? 'true' : 'false' }}
+            @else
+                false
+            @endauth ;
 
-                    @guest
-                        <li><a href="{{ route('login') }}">Profile</a></li>
-                    @endguest
-                </ul>
-
-                <div class="navbar-profile">
-                    <div class="profile-dropdown">
-
-                        <button class="profile-icon profile-dropdown-toggle" aria-label="User Menu">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </button>
-
-                        <div class="profile-dropdown-menu">
-                            @auth
-                                <div class="dropdown-header">
-                                    <span>{{ Auth::user()->name }}</span>
-                                    <small>{{ Auth::user()->email }}</small>
-                                </div>
-                                <a href="{{ route('profile.index') }}">Profil Saya</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            @else
-                                <a href="{{ route('login') }}">Login</a>
-                                <a href="{{ route('register') }}" class="dropdown-button-primary">Daftar</a>
-                            @endauth
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="navbar-toggle" id="navbar-hamburger" aria-label="Toggle menu">
-                <div class="hamburger-icon">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
-            </button>
-
-        </div>
-    </nav>
+        // Definisikan URL untuk submit rating (hanya jika login)
+        @auth('web')
+            window.ratingSubmitUrl = '{{ route('submit.rating') }}';
+        @endauth
+    </script>
 
     <section class="hero-section">
-    <img src="{{ asset('assets/img/Section.png') }}" alt="Background" class="hero-background">
+        <img src="{{ asset('assets/img/Section.png') }}" alt="Background" class="hero-background">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>Protect Your Value</h1>
-            <p>Menjadi partner sejarah pertumbuhan bisnis anda dengan menyediakan proteksi yang dapat menciptakan ekosistem bisnis yang berkelanjutan</p>
+            <p>Menjadi partner sejarah pertumbuhan bisnis anda dengan menyediakan proteksi yang dapat menciptakan
+                ekosistem bisnis yang berkelanjutan</p>
             <a href="{{ url('/produk') }}" class="cta-button">Lihat Produk Kami</a>
         </div>
     </section>
@@ -1590,7 +1659,8 @@
                         <img src="{{ asset('assets/img/Symbol13.svg') }}" alt="">
                     </div>
                     <h3 class="why-us-title">Kustomisasi Tanpa Batas</h3>
-                    <p class="why-us-description">Kami wujudkan ide desain Anda menjadi kemasan yang unik dan personal.</p>
+                    <p class="why-us-description">Kami wujudkan ide desain Anda menjadi kemasan yang unik dan personal.
+                    </p>
                 </div>
 
                 <div class="why-us-card">
@@ -1598,7 +1668,8 @@
                         <img src="{{ asset('assets/img/Symbol14.svg') }}" alt="">
                     </div>
                     <h3 class="why-us-title">Konsultasi Ahli</h3>
-                    <p class="why-us-description">Tim profesional kami siap membantu Anda dari ide awal hingga produk jadi.</p>
+                    <p class="why-us-description">Tim profesional kami siap membantu Anda dari ide awal hingga produk
+                        jadi.</p>
                 </div>
 
                 <div class="why-us-card">
@@ -1606,7 +1677,8 @@
                         <img src="{{ asset('assets/img/Container5.svg') }}" alt="">
                     </div>
                     <h3 class="why-us-title">Layanan Cepat & Andal</h3>
-                    <p class="why-us-description">Proses produksi dan pengiriman kami dirancang untuk efisiensi dan ketepatan waktu.</p>
+                    <p class="why-us-description">Proses produksi dan pengiriman kami dirancang untuk efisiensi dan
+                        ketepatan waktu.</p>
                 </div>
 
             </div>
@@ -1618,56 +1690,62 @@
             <h2 class="section-title">Produk Unggulan Kami</h2>
 
             <div class="products-grid">
-                @if(isset($products) && $products->count() > 0)
-                    @foreach($products->take(3) as $product)
-                    <div class="product-card">
-                        @php
-                            $productImage = null;
-                            if (!empty($product->image)) {
-                                $productImage = asset('storage/' . $product->image);
-                            } elseif (!empty($product->featured_image)) {
-                                $productImage = asset('storage/' . $product->featured_image);
-                            } elseif (!empty($product->thumbnail)) {
-                                $productImage = asset('storage/' . $product->thumbnail);
-                            } else {
-                                $productImage = asset('assets/img/Rectangle12.png');
-                            }
-                        @endphp
-                        <img src="{{ $productImage }}"
-                             alt="{{ $product->name }}"
-                             class="product-image"
-                             onerror="this.onerror=null; this.src='{{ asset('assets/img/Rectangle12.png') }}';">
-                        <div class="product-content">
-                            <h3 class="product-title">{{ $product->name }}</h3>
-                            <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}</p>
-                            <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                @if (isset($products) && $products->count() > 0)
+                    @foreach ($products->take(3) as $product)
+                        <div class="product-card">
+                            @php
+                                $productImage = null;
+                                if (!empty($product->image)) {
+                                    $productImage = asset('storage/' . $product->image);
+                                } elseif (!empty($product->featured_image)) {
+                                    $productImage = asset('storage/' . $product->featured_image);
+                                } elseif (!empty($product->thumbnail)) {
+                                    $productImage = asset('storage/' . $product->thumbnail);
+                                } else {
+                                    $productImage = asset('assets/img/Rectangle12.png');
+                                }
+                            @endphp
+                            <img src="{{ $productImage }}" alt="{{ $product->name }}" class="product-image"
+                                onerror="this.onerror=null; this.src='{{ asset('assets/img/Rectangle12.png') }}';">
+                            <div class="product-content">
+                                <h3 class="product-title">{{ $product->name }}</h3>
+                                <p class="product-description">
+                                    {{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}
+                                </p>
+                                <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
+                            </div>
                         </div>
-                    </div>
                     @endforeach
                 @else
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus" class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus"
+                            class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kotak Kemasan Khusus</h3>
-                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari ukuran hingga finishing.</p>
+                            <p class="product-description">Didesain untuk memenuhi kebutuhan spesifik produk Anda, dari
+                                ukuran hingga finishing.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang" class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang"
+                            class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Karton Bergelombang</h3>
-                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan penyimpanan yang aman.</p>
+                            <p class="product-description">Kekuatan dan ketahanan optimal untuk pengiriman dan
+                                penyimpanan yang aman.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
 
                     <div class="product-card">
-                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan" class="product-image">
+                        <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan"
+                            class="product-image">
                         <div class="product-content">
                             <h3 class="product-title">Kemasan Ramah Lingkungan</h3>
-                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur ulang dan dapat didaur ulang.</p>
+                            <p class="product-description">Solusi kemasan berkelanjutan yang terbuat dari bahan daur
+                                ulang dan dapat didaur ulang.</p>
                             <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                         </div>
                     </div>
@@ -1697,7 +1775,8 @@
                         <img src="{{ asset('assets/img/ContainerR.png') }}" alt="Bahan Berkualitas">
                     </div>
                     <h3 class="commitment-title">Bahan Berkualitas</h3>
-                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo non condimentum efficitur.</p>
+                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo non condimentum efficitur.</p>
                 </div>
 
                 <div class="commitment-card">
@@ -1705,7 +1784,8 @@
                         <img src="{{ asset('assets/img/ContainerT.png') }}" alt="Bisnis Berkelanjutan">
                     </div>
                     <h3 class="commitment-title">Bisnis Berkelanjutan</h3>
-                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo non condimentum efficitur.</p>
+                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo non condimentum efficitur.</p>
                 </div>
 
                 <div class="commitment-card">
@@ -1713,7 +1793,8 @@
                         <img src="{{ asset('assets/img/icon.png') }}" alt="Efisiensi Biaya">
                     </div>
                     <h3 class="commitment-title">Efisiensi Biaya</h3>
-                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo non condimentum efficitur.</p>
+                    <p class="commitment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo non condimentum efficitur.</p>
                 </div>
 
             </div>
@@ -1722,29 +1803,45 @@
 
     <section class="commitment-2-section" aria-labelledby="commitment-2-title">
         <div class="commitment-2-container">
-            <h2 id="commitment-2-title">Berkarya dengan hati untuk dedikasi menjadi partner membangun<br>bisnis yang berkelanjutan</h2>
+            <h2 id="commitment-2-title">Berkarya dengan hati untuk dedikasi menjadi partner membangun<br>bisnis yang
+                berkelanjutan</h2>
+
             <nav class="domino-nav" aria-label="Komitmen Kami">
+
                 <button class="domino-tab active" data-target="content-eco">
-                    <span>Eco Solutions</span>
+                    <img src="/assets/KomSect/EcoB.png" alt="Eco Solutions" class="img-inactive">
+                    <img src="/assets/KomSect/EcoKlik.png" alt="Eco Solutions" class="img-active">
                 </button>
+
                 <button class="domino-tab" data-target="content-guidance">
-                    <span>Guidance</span>
+                    <img src="/assets/KomSect/GuidenceB.png" alt="Guidance" class="img-inactive">
+                    <img src="/assets/KomSect/GuidenceKlik.png" alt="Guidance" class="img-active">
                 </button>
+
                 <button class="domino-tab" data-target="content-quality">
-                    <span>Quality & Delivery</span>
+                    <img src="/assets/KomSect/QB.png" alt="Quality & Delivery" class="img-inactive">
+                    <img src="/assets/KomSect/QKlik.png" alt="Quality & Delivery" class="img-active">
                 </button>
+
                 <button class="domino-tab" data-target="content-transparency">
-                    <span>Transparency</span>
+                    <img src="/assets/KomSect/TransparencyB.png" alt="Transparency" class="img-inactive">
+                    <img src="/assets/KomSect/TKlik.png" alt="Transparency" class="img-active">
                 </button>
+
                 <button class="domino-tab" data-target="content-innovations">
-                    <span>Innovations</span>
+                    <img src="/assets/KomSect/InnovationsB.png" alt="Innovations" class="img-inactive">
+                    <img src="/assets/KomSect/InnovationsKlik.png" alt="Innovations" class="img-active">
                 </button>
+
             </nav>
 
             <div class="domino-content-wrapper">
+
                 <div class="domino-content active" id="content-eco">
                     <h3>The world Need Sustainable Packaging</h3>
-                    <p>Meskipun banyak produsen menawarkan harga yang terkesan ekonomis, kualitas produk yang dihasilkan sering kali tidak optimal. Pilihan yang tampak murah di awal justru dapat menimbulkan kerugian jangka panjang bagi bisnis Anda.</p>
+                    <p>Meskipun banyak produsen menawarkan harga yang terkesan ekonomis, kualitas produk yang dihasilkan
+                        sering kali Anda tidak optimal. Pilihan yang tampak murah di awal justru dapat menimbulkan
+                        kerugian jangka panjang bagi bisnis Anda.</p>
                     <div class="orange-grid">
                         <div class="orange-box">Solusi paling sirkular di setiap kategori.</div>
                         <div class="orange-box">Pilihan bervariasi untuk kemasan, kardus, dan banyak lagi</div>
@@ -1755,7 +1852,9 @@
 
                 <div class="domino-content" id="content-guidance">
                     <h3>Guidance & Support</h3>
-                    <p>Kami memandu Anda melalui setiap langkah, dari konsep hingga kenyataan. Tim ahli kami siap membantu Anda menemukan solusi kemasan terbaik untuk kebutuhan spesifik Anda, memastikan Anda membuat pilihan yang tepat.</p>
+                    <p>Kami memandu Anda melalui setiap langkah, dari konsep hingga kenyataan. Tim ahli kami siap
+                        membantu Anda menemukan solusi kemasan terbaik untuk kebutuhan spesifik Anda, memastikan Anda
+                        membuat pilihan yang tepat.</p>
                     <div class="orange-grid">
                         <div class="orange-box">Konsultasi Desain Gratis</div>
                         <div class="orange-box">Dukungan Teknis Ahli</div>
@@ -1766,7 +1865,9 @@
 
                 <div class="domino-content" id="content-quality">
                     <h3>Quality & Delivery</h3>
-                    <p>Kualitas adalah janji kami. Kami menggunakan material terbaik dan proses produksi yang ketat untuk memastikan setiap kemasan kokoh dan sempurna. Pengiriman tepat waktu adalah prioritas kami agar bisnis Anda terus berjalan lancar.</p>
+                    <p>Kualitas adalah janji kami. Kami menggunakan material terbaik dan proses produksi yang ketat
+                        untuk memastikan setiap kemasan kokoh dan sempurna. Pengiriman tepat waktu adalah prioritas kami
+                        agar bisnis Anda terus berjalan lancar.</p>
                     <div class="orange-grid">
                         <div class="orange-box">Kontrol Kualitas Berlapis</div>
                         <div class="orange-box">Jaminan Tepat Waktu</div>
@@ -1777,7 +1878,9 @@
 
                 <div class="domino-content" id="content-transparency">
                     <h3>Transparency</h3>
-                    <p>Kami percaya pada kemitraan yang jujur. Anda akan mendapatkan informasi yang jelas dan terbuka mengenai harga, material, dan proses produksi. Tidak ada biaya tersembunyi, hanya komitmen tulus untuk kesuksesan Anda.</p>
+                    <p>Kami percaya pada kemitraan yang jujur. Anda akan mendapatkan informasi yang jelas dan terbuka
+                        mengenai harga, material, dan proses produksi. Tidak ada biaya tersembunyi, hanya komitmen tulus
+                        untuk kesuksesan Anda.</p>
                     <div class="orange-grid">
                         <div class="orange-box">Harga Jujur Tanpa Biaya Tersembunyi</div>
                         <div class="orange-box">Pelacakan Proses Produksi</div>
@@ -1788,7 +1891,9 @@
 
                 <div class="domino-content" id="content-innovations">
                     <h3>Innovations</h3>
-                    <p>Dunia terus berubah, begitu pula kami. Sikemas terus berinovasi dalam teknologi dan desain untuk memberikan Anda solusi kemasan yang tidak only fungsional tetapi juga modern dan terdepan di pasar.</p>
+                    <p>Dunia terus berubah, begitu pula kami. Sikemas terus berinovasi dalam teknologi dan desain untuk
+                        memberikan Anda solusi kemasan yang tidak only fungsional tetapi juga modern dan terdepan di
+                        pasar.</p>
                     <div class="orange-grid">
                         <div class="orange-box">Teknologi Cetak Terbaru</div>
                         <div class="orange-box">Desain Kemasan Pintar (Smart Packaging)</div>
@@ -1796,6 +1901,7 @@
                         <div class="orange-box">Solusi Otomatisasi Kemasan</div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -1811,7 +1917,8 @@
                     </div>
                     <div class="process-step-number">1</div>
                     <h3 class="process-step-title">Konsultasi & Desain</h3>
-                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo</p>
                 </div>
 
                 <div class="our-process-step">
@@ -1820,7 +1927,8 @@
                     </div>
                     <div class="process-step-number">2</div>
                     <h3 class="process-step-title">Pemilihan Material</h3>
-                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo</p>
                 </div>
 
                 <div class="our-process-step">
@@ -1829,7 +1937,8 @@
                     </div>
                     <div class="process-step-number">3</div>
                     <h3 class="process-step-title">Purchase / Dealing</h3>
-                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo</p>
                 </div>
 
                 <div class="our-process-step">
@@ -1838,7 +1947,8 @@
                     </div>
                     <div class="process-step-number">4</div>
                     <h3 class="process-step-title">Produksi & Kontrol Kualitas</h3>
-                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo</p>
                 </div>
 
                 <div class="our-process-step">
@@ -1847,7 +1957,8 @@
                     </div>
                     <div class="process-step-number">5</div>
                     <h3 class="process-step-title">Pengiriman</h3>
-                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis justo</p>
+                    <p class="process-step-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+                        lobortis justo</p>
                 </div>
 
             </div>
@@ -1859,9 +1970,12 @@
             <h2 class="section-title-custom-design" id="custom-design-title">Custom Desain Anda Sendiri</h2>
 
             <div class="custom-design-image-grid">
-                <img src="{{ asset('assets/img/custom1.png') }}" alt="Contoh Desain Box 1" class="custom-design-image-item">
-                <img src="{{ asset('assets/img/custom2.png') }}" alt="Contoh Desain Box 2" class="custom-design-image-item">
-                <img src="{{ asset('assets/img/custom3.png') }}" alt="Contoh Desain Box 3" class="custom-design-image-item">
+                <img src="{{ asset('assets/img/custom1.png') }}" alt="Contoh Desain Box 1"
+                    class="custom-design-image-item">
+                <img src="{{ asset('assets/img/custom2.png') }}" alt="Contoh Desain Box 2"
+                    class="custom-design-image-item">
+                <img src="{{ asset('assets/img/custom3.png') }}" alt="Contoh Desain Box 3"
+                    class="custom-design-image-item">
             </div>
 
             <div class="custom-design-cta">
@@ -1877,31 +1991,36 @@
         <div class="free-design-container">
             <p class="free-design-subtitle">konsultasi</p>
             <h2 class="free-design-title" id="free-design-title">DESAIN GRATIS</h2>
-            <p class="free-design-description">Kami siap membuat ide desainmu menjadi nyata. Konsultasikan sekarang juga secara gratis!</p>
+            <p class="free-design-description">Kami siap membuat ide desainmu menjadi nyata. Konsultasikan sekarang
+                juga secara gratis!</p>
 
+            {{-- JIKA PENGGUNA BELUM LOGIN (GUEST) --}}
+            @guest
+                <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button"
+                    aria-label="Konsultasi Gratis Sekarang (Login diperlukan)">
+                    Konsultasi Gratis Sekarang
+                </a>
+            @endguest
+
+            {{-- JIKA PENGGUNA SUDAH LOGIN --}}
             @auth
-                {{-- Rule #3: Cek jika user punya konsultasi aktif --}}
-                {{-- Membutuhkan fungsi hasActiveConsultation() di model User.php Anda --}}
+                {{-- Cek jika user punya konsultasi aktif --}}
                 @if (Auth::user()->hasActiveConsultation())
                     {{-- Tampilkan tombol nonaktif --}}
                     <button class="free-design-button disabled" disabled
-                            title="Anda sudah memiliki permintaan konsultasi aktif. Satu pengguna hanya bisa melakukan 1 kali konsultasi sampai sesi konsultasi berakhir.">
+                        title="Anda sudah memiliki permintaan konsultasi aktif. Satu pengguna hanya bisa melakukan 1 kali konsultasi sampai sesi konsultasi berakhir.">
                         Menunggu Sesi Konsultasi
                     </button>
                 @else
-                    {{-- Tombol aktif. Gunakan ID untuk JavaScript/AJAX --}}
-                    <button type="button" class="free-design-button" id="request-consultation-button" aria-label="Konsultasi Gratis Sekarang">
+                    {{-- Tombol aktif. Gunakan ID "request-consultation-button" untuk AJAX --}}
+                    <button type="button" class="free-design-button" id="request-consultation-button"
+                        aria-label="Konsultasi Gratis Sekarang"
+                        data-phone-filled="{{ Auth::user()->phone ? 'true' : 'false' }}"
+                        data-profile-url="{{ route('profile.index') }}">
                         Konsultasi Gratis Sekarang
                     </button>
                 @endif
             @endauth
-
-            @guest
-                {{-- Rule #1: User belum login. Tombol akan dihandle oleh JS untuk popup login --}}
-                <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button">
-                    Konsultasi Gratis Sekarang
-                </a>
-            @endguest
 
         </div>
     </section>
@@ -1910,54 +2029,59 @@
         <div class="skm-a-wrap">
             <h2 id="articles-title">Artikel &amp; Berita</h2>
             <div class="skm-a-grid">
-                @if(isset($articles) && $articles->count() > 0)
-                    @foreach($articles->take(3) as $article)
-                    <article class="skm-a-card">
-                        <div class="thumb">
-                            @php
-                                // Cek berbagai kemungkinan field gambar
-                                $articleImage = null;
-                                if (!empty($article->image)) {
-                                    $articleImage = asset('storage/' . $article->image);
-                                } elseif (!empty($article->featured_image)) {
-                                    $articleImage = asset('storage/' . $article->featured_image);
-                                } elseif (!empty($article->thumbnail)) {
-                                    $articleImage = asset('storage/' . $article->thumbnail);
-                                } else {
-                                    $articleImage = asset('assets/img/Article-image.png');
-                                }
-                            @endphp
-                            <img src="{{ $articleImage }}" 
-                                 alt="{{ $article->title }}"
-                                 onerror="this.onerror=null; this.src='{{ asset('assets/img/Article-image.png') }}';">
-                        </div>
-                        <div class="body">
-                            <h3 class="title">{{ $article->title }}</h3>
-                            <p class="deskripsi">{{ Str::limit(strip_tags($article->content), 100) }}</p>
-                            <a class="more" href="{{ route('detail_artikel', $article->slug) }}" 
-                               aria-label="Baca selengkapnya {{ $article->title }}">Baca Selengkapnya</a>
-                        </div>
-                    </article>
+                @if (isset($articles) && $articles->count() > 0)
+                    @foreach ($articles->take(3) as $article)
+                        <article class="skm-a-card">
+                            <div class="thumb">
+                                @php
+                                    // Cek berbagai kemungkinan field gambar
+                                    $articleImage = null;
+                                    if (!empty($article->image)) {
+                                        $articleImage = asset('storage/' . $article->image);
+                                    } elseif (!empty($article->featured_image)) {
+                                        $articleImage = asset('storage/' . $article->featured_image);
+                                    } elseif (!empty($article->thumbnail)) {
+                                        $articleImage = asset('storage/' . $article->thumbnail);
+                                    } else {
+                                        $articleImage = asset('assets/img/Article-image.png');
+                                    }
+                                @endphp
+                                <img src="{{ $articleImage }}" alt="{{ $article->title }}"
+                                    onerror="this.onerror=null; this.src='{{ asset('assets/img/Article-image.png') }}';">
+                            </div>
+                            <div class="body">
+                                <h3 class="title">{{ $article->title }}</h3>
+                                <p class="deskripsi">{{ Str::limit(strip_tags($article->content), 100) }}</p>
+                                <a class="more" href="{{ route('detail_artikel', $article->slug) }}"
+                                    aria-label="Baca selengkapnya {{ $article->title }}">Baca Selengkapnya</a>
+                            </div>
+                        </article>
                     @endforeach
                 @else
                     <article class="skm-a-card">
                         <div class="thumb">
-                            <img src="{{ asset('assets/img/Article-image.png') }}" alt="Trend Kemasan Ramah Lingkungan">
+                            <img src="{{ asset('assets/img/Article-image.png') }}"
+                                alt="Trend Kemasan Ramah Lingkungan">
                         </div>
                         <div class="body">
                             <h3 class="title">Trend Kemasan Ramah Lingkungan</h3>
-                            <p class="deskripsi">Membahas inovasi terbaru dalam industri kemasan karton yang berkelanjutan dan ramah lingkungan.</p>
-                            <a class="more" href="{{ route('artikel') }}" aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
+                            <p class="deskripsi">Membahas inovasi terbaru dalam industri kemasan karton yang
+                                berkelanjutan dan ramah lingkungan.</p>
+                            <a class="more" href="{{ route('artikel') }}"
+                                aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
                         </div>
                     </article>
                     <article class="skm-a-card">
                         <div class="thumb">
-                            <img src="{{ asset('assets/img/Article-image.png') }}" alt="Pentingnya Kemasan yang Tepat">
+                            <img src="{{ asset('assets/img/Article-image.png') }}"
+                                alt="Pentingnya Kemasan yang Tepat">
                         </div>
                         <div class="body">
                             <h3 class="title">Pentingnya Kemasan yang Tepat</h3>
-                            <p class="deskripsi">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual produk Anda.</p>
-                            <a class="more" href="{{ route('artikel') }}" aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
+                            <p class="deskripsi">Bagaimana kemasan yang kuat dan menarik dapat meningkatkan nilai jual
+                                produk Anda.</p>
+                            <a class="more" href="{{ route('artikel') }}"
+                                aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
                         </div>
                     </article>
                     <article class="skm-a-card">
@@ -1966,8 +2090,10 @@
                         </div>
                         <div class="body">
                             <h3 class="title">Proses Produksi Kami</h3>
-                            <p class="deskripsi">Mengintip proses di balik produksi kemasan karton berkualitas tinggi di pabrik Sikemas.</p>
-                            <a class="more" href="{{ route('artikel') }}" aria-label="Baca selengkapnya Proses Produksi Kami">Baca Selengkapnya</a>
+                            <p class="deskripsi">Mengintip proses di balik produksi kemasan karton berkualitas tinggi
+                                di pabrik Sikemas.</p>
+                            <a class="more" href="{{ route('artikel') }}"
+                                aria-label="Baca selengkapnya Proses Produksi Kami">Baca Selengkapnya</a>
                         </div>
                     </article>
                 @endif
@@ -2005,49 +2131,9 @@
     @include('layouts.footer')
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerButton = document.getElementById('navbar-hamburger');
-            const mobileMenu = document.getElementById('navbar-mobile-menu');
+        document.addEventListener('DOMContentLoaded', function() {
 
-            // Toggle open/close on hamburger
-            hamburgerButton.addEventListener('click', function () {
-                mobileMenu.classList.toggle('active');
-                const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
-                hamburgerButton.setAttribute('aria-expanded', String(!expanded));
-            });
-
-            // Helper to close the mobile menu safely
-            function closeMobileMenu() {
-                if (mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    hamburgerButton.setAttribute('aria-expanded', 'false');
-                }
-            }
-
-            // 1) Click outside closes the menu (mobile)
-            document.addEventListener('click', function (e) {
-                const clickInsideMenu = mobileMenu.contains(e.target);
-                const clickOnHamburger = hamburgerButton.contains(e.target);
-                if (!clickInsideMenu && !clickOnHamburger) {
-                    closeMobileMenu();
-                }
-            });
-
-            // 2) Pressing Escape closes the menu
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeMobileMenu();
-                }
-            });
-
-            // 3) Clicking a link inside the menu closes it
-            mobileMenu.querySelectorAll('a').forEach(a => {
-                a.addEventListener('click', function () {
-                    closeMobileMenu();
-                });
-            });
-
-            // --- SCRIPT BARU UNTUK KOMITMEN 2 ---
+            // --- SCRIPT KOMITMEN 2 ---
             const dominoTabs = document.querySelectorAll('.domino-tab');
             const dominoContents = document.querySelectorAll('.domino-content');
 
@@ -2064,26 +2150,52 @@
                 });
             });
 
+            // --- Script Login Prompt ---
             const loginButton = document.getElementById('login-prompt-button');
             if (loginButton) {
-                loginButton.addEventListener('click', function (event) {
-                    // 1. Hentikan aksi default (pindah halaman)
-                    event.preventDefault();
+                loginButton.addEventListener('click', function(event) {
+                    event.preventDefault(); // Mencegah link langsung berpindah
+                    const loginUrl = this.href;
 
-                    // 2. Tampilkan notifikasi popup (alert)
-                    alert('Anda harus login terlebih dahulu untuk melakukan konsultasi.');
-
-                    // 3. Arahkan ke halaman login
-                    window.location.href = this.href;
+                    // Ganti alert() dengan Swal.fire()
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Login Diperlukan',
+                        text: 'Anda harus login terlebih dahulu untuk melakukan konsultasi.',
+                        confirmButtonText: 'Login Sekarang',
+                        allowOutsideClick: false
+                    }).then(() => {
+                        // Arahkan ke halaman login setelah popup ditutup
+                        window.location.href = loginUrl;
+                    });
                 });
             }
 
-            // =============================================
-            // KODE BARU UNTUK REQUEST KONSULTASI VIA POPUP (Rule #2, #3)
-            // =============================================
+            // =======================
+            // KODE REQUEST KONSULTASI
+            // =======================
             const requestButton = document.getElementById('request-consultation-button');
             if (requestButton) {
-                requestButton.addEventListener('click', async function () {
+                requestButton.addEventListener('click', async function() {
+                    // Ambil data dari attribute
+                    const isPhoneFilled = requestButton.dataset.phoneFilled === 'true';
+                    const profileUrl = requestButton.dataset.profileUrl;
+
+                    // Cek apakah nomor telepon sudah diisi
+                    if (!isPhoneFilled) {
+                        // Ganti alert() dengan Swal.fire()
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Data Belum Lengkap',
+                            text: 'Anda harus melengkapi nomor telepon Anda di halaman Profil Saya sebelum dapat melakukan konsultasi.',
+                            confirmButtonText: 'Lengkapi Profil',
+                            allowOutsideClick: false
+                        }).then(() => {
+                            // Arahkan ke halaman profil setelah popup ditutup
+                            window.location.href = profileUrl;
+                        });
+                        return; // Hentikan eksekusi
+                    }
 
                     // Nonaktifkan visual tombol saat proses
                     requestButton.disabled = true;
@@ -2095,28 +2207,61 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Pastikan Anda memiliki meta tag CSRF token di <head>
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
                             },
                         });
 
                         const data = await response.json();
 
                         if (response.ok) {
-                            // SUKSES (Rule #2: Notifikasi Popup sukses)
-                            alert(data.message);
-                            // Refresh halaman untuk menampilkan tombol disabled
-                            window.location.reload();
+                            // SUKSES: Ganti alert() dengan Swal.fire()
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Permintaan Terkirim!',
+                                text: data.message,
+                                timer: 25000,
+                                timerProgressBar: true
+                            }).then(() => {
+                                // Refresh halaman setelah popup sukses
+                                window.location.reload();
+                            });
+
                         } else {
-                            // ERROR (Rule #3: Notifikasi Popup error)
-                            alert('Gagal mengajukan konsultasi: ' + data.message);
-                            // Kembalikan tombol ke keadaan semula jika error selain status 409
+                            // ERROR (Rule #3 atau error validasi)
+
+                            // Cek jika ini adalah error 'redirect' dari controller
+                            if (response.status === 403 && data.redirect) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: data.message,
+                                }).then(() => {
+                                    window.location.href = data.redirect;
+                                });
+                            } else {
+                                // Tampilkan error lain
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal Mengajukan Konsultasi',
+                                    text: data.message,
+                                });
+                            }
+
+                            // Kembalikan tombol ke keadaan semula jika error
                             requestButton.disabled = false;
                             requestButton.textContent = 'Konsultasi Gratis Sekarang';
                             requestButton.classList.remove('disabled');
                         }
                     } catch (error) {
                         console.error('Error:', error);
-                        alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+
+                        // ERROR KONEKSI:
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Koneksi Gagal',
+                            text: 'Terjadi kesalahan koneksi. Silakan coba lagi.',
+                        });
 
                         // Kembalikan tombol ke keadaan semula
                         requestButton.disabled = false;
@@ -2126,24 +2271,136 @@
                 });
             }
 
-            // Enable touch-mimicked hover on mobile for navbar menu links
-            const navLinks = document.querySelectorAll('.navbar-menu a');
-            if (navLinks && navLinks.length) {
-                const addTouch = (e) => {
-                    e.currentTarget.classList.add('touch-hover');
-                };
-                const removeTouch = (e) => {
-                    e.currentTarget.classList.remove('touch-hover');
-                };
-                navLinks.forEach(a => {
-                    a.addEventListener('touchstart', addTouch, { passive: true });
-                    a.addEventListener('touchend', removeTouch, { passive: true });
-                    a.addEventListener('touchcancel', removeTouch, { passive: true });
-                    a.addEventListener('blur', removeTouch);
-                    a.addEventListener('click', removeTouch);
+
+            // --- Script Popup Rating ---
+            if (window.showRatingPopup) {
+                showRatingModal();
+            }
+
+            function showRatingModal() {
+                Swal.fire({
+                    title: 'Bantu Kami Meningkat!',
+                    iconColor: '#ff5722',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    },
+                    html: `
+                        <p style="margin: 1em 0; font-size: 1.1em;">Mohon luangkan waktu sebentar untuk memberikan rating pengalaman Anda.</p>
+                        <div class="rating-container">
+                            <div class="rating-stars">
+                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Sangat Baik">★</label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Baik">★</label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Cukup Baik">★</label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Buruk">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sangat Buruk">★</label>
+                            </div>
+                            <textarea id="rating_comment" class="swal2-textarea" placeholder="Tulis komentar Anda (opsional)..." maxlength="1000"></textarea>
+                        </div>
+                    `,
+                    showDenyButton: true,
+                    denyButtonText: 'Lewati Dulu',
+                    confirmButtonText: 'Kirim Rating',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'rating-popup',
+                        confirmButton: 'rating-confirm-button',
+                        denyButton: 'rating-deny-button'
+                    },
+                    preConfirm: () => {
+                        const rating = document.querySelector('input[name="rating"]:checked');
+                        if (!rating) {
+                            Swal.showValidationMessage('Mohon pilih jumlah bintang.');
+                            return false;
+                        }
+                        const comment = document.getElementById('rating_comment').value;
+                        if (comment.length > 1000) {
+                            Swal.showValidationMessage(
+                                'Komentar tidak boleh lebih dari 1000 karakter.');
+                            return false;
+                        }
+                        return {
+                            rating: rating.value,
+                            comment: comment
+                        };
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Mengirim Rating...',
+                            text: 'Mohon tunggu sebentar.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        submitRating(result.value.rating, result.value.comment);
+                    }
                 });
+            }
+
+            function submitRating(rating, comment) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch(window.ratingSubmitUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            rating: rating,
+                            comment: comment
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().catch(() => {
+                                throw new Error('Terjadi kesalahan server yang tidak terduga.');
+                            }).then(errorData => {
+                                throw new Error(errorData.message || 'Gagal mengirim rating.');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        Swal.close();
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Terima Kasih!',
+                                text: 'Rating Anda telah kami terima. Kami sangat menghargai masukan Anda.',
+                                confirmButtonColor: '#ff5722',
+                            });
+                            window.showRatingPopup = false;
+                        } else {
+                            let errorMsg = data.message || 'Gagal mengirim rating.';
+                            if (data.errors) {
+                                let allErrors = Object.values(data.errors).map(err => err.join(', ')).join(
+                                    '\n');
+                                errorMsg = `Kesalahan validasi:\n${allErrors}`;
+                            }
+                            throw new Error(errorMsg);
+                        }
+                    })
+                    .catch(error => {
+                        Swal.close();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: error.message || 'Terjadi kesalahan. Silakan coba lagi.',
+                            confirmButtonColor: '#ff5722',
+                        });
+                    });
             }
         });
     </script>
 </body>
+
 </html>

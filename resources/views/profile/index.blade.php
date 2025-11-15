@@ -9,7 +9,11 @@
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
+        /* ... CSS Anda (tidak diubah) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
@@ -519,8 +523,12 @@
                             </a>
 
                             <form id="delete-form-{{ $address->id }}" action="{{ route('profile.address.delete', $address->id) }}" method="POST" style="display: inline;">
+
+                            <form id="delete-form-{{ $address->id }}" action="{{ route('profile.address.delete', $address->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
+                                
+                                <button type="button" class="btn-icon delete" title="Delete" onclick="confirmDelete('{{ $address->id }}')">
                                 
                                 <button type="button" class="btn-icon delete" title="Delete" onclick="confirmDelete('{{ $address->id }}')">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -529,7 +537,7 @@
                                     Delete
                                 </button>
                             </form>
-                        </div>
+                            </div>
                     </div>
                     <p class="address-text">{{ $address->full_address }}</p>
                 </div>

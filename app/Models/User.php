@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+// TAMBAHKAN INI UNTUK VERIFIKASI EMAIL
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +14,8 @@ use Carbon\Carbon;
 // Impor model Consultation
 use App\Models\Consultation;
 
-class User extends Authenticatable
+// TAMBAHKAN 'implements MustVerifyEmail'
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -67,6 +70,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relationship: User has one cart
+     */
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    /**
      * Relationship: User has many orders
      */
     public function orders()
@@ -75,7 +86,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Relationship: User has many consultations
+     * Mendapatkan semua konsultasi gratis milik user.
      */
     public function consultations()
     {
@@ -83,7 +94,8 @@ class User extends Authenticatable
     }
 
     /**
-     * Helper function untuk mengecek konsultasi aktif (pending atau scheduled)
+     * Cek apakah user memiliki konsultasi yang sedang aktif (belum selesai).
+     * Ini digunakan untuk Rule #3 di halaman depan.
      */
     public function hasActiveConsultation(): bool
     {
@@ -122,26 +134,6 @@ class User extends Authenticatable
 
         // Return default if file doesn't exist
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=074159&background=E6EEF0&size=200';
-    }
-
-    /**
-     * Get user profile photo path (for internal use)
-     */
-    public function getProfilePhotoPathAttribute()
-    {
-        if (!$this->profile_photo) {
-            return null;
-        }
-
-        if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
-            return $this->profile_photo;
-        }
-
-        if (Storage::exists('public/profiles/' . $this->profile_photo)) {
-            return asset('storage/profiles/' . $this->profile_photo);
-        }
-
-        return null;
     }
 
     /**
@@ -219,6 +211,6 @@ class User extends Authenticatable
      */
     public function isGoogleUser()
     {
-        return !empty($this->google_id) && empty($this->password);
+        return !empty($this->google_id);
     }
 }

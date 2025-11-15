@@ -33,14 +33,35 @@
                         <span>{{ Auth::user()->name }}</span>
                         <small>{{ Auth::user()->email }}</small>
                     </div>
+                    @php
+                        // Deteksi admin untuk menu mobile
+                        $__isAdmin_m = false;
+                        try {
+                            $__um = Auth::user();
+                            if (isset($__um->role) && strtolower((string) $__um->role) === 'admin') {
+                                $__isAdmin_m = true;
+                            } elseif (isset($__um->is_admin) && (bool) $__um->is_admin) {
+                                $__isAdmin_m = true;
+                            } else {
+                                $listm = env('ADMIN_EMAILS');
+                                if ($listm) {
+                                    $emailsm = array_filter(array_map('trim', explode(',', $listm)));
+                                    $__isAdmin_m = in_array(strtolower($__um->email), array_map('strtolower', $emailsm), true);
+                                }
+                            }
+                        } catch (\Throwable $e) { $__isAdmin_m = false; }
+                    @endphp
+                    @if ($__isAdmin_m)
+                        <a href="{{ route('admin.index') }}" class="skm-mobile-link">Halaman Admin</a>
+                    @endif
                     <a href="{{ route('cart.index') }}" class="skm-mobile-link">
                         <i class="fas fa-shopping-cart"></i> Keranjang Belanja
                     </a>
                     <a href="{{ route('profile.index') }}" class="skm-mobile-link">Profil Saya</a>
-                    <a href="{{ route('logout') }}" class="skm-mobile-link" 
-                       onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
-                        Logout
-                    </a>
+                        <a href="{{ route('logout') }}" class="skm-mobile-link" 
+                           onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
+                            Logout
+                        </a>
                     <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
@@ -53,8 +74,7 @@
 
         <!-- Right: Cart Icon + User icon with dropdown (Desktop) -->
         <div class="skm-right-icons">
-            <!-- Cart Icon (Only show when logged in) -->
-            @auth
+            <!-- Cart Icon (Visible for guests & auth; guests see localStorage cart, checkout requires login) -->
             <a href="{{ route('cart.index') }}" class="skm-cart-link" aria-label="Keranjang Belanja">
                 <svg class="skm-cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 2L7 7H21L19 2H9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -64,7 +84,6 @@
                 </svg>
                 <span class="skm-cart-badge" data-cart-count style="display:none;">0</span>
             </a>
-            @endauth
             
             <!-- User Dropdown -->
             <div class="skm-user-dropdown">
@@ -84,6 +103,27 @@
                             <small>{{ Auth::user()->email }}</small>
                         </div>
                         <a href="{{ route('profile.index') }}" class="skm-dropdown-item">Profil Saya</a>
+                        @php
+                            // Deteksi admin untuk menampilkan link "Halaman Admin" tepat di bawah Profil Saya
+                            $__isAdmin_d = false;
+                            try {
+                                $__ud = Auth::user();
+                                if (isset($__ud->role) && strtolower((string) $__ud->role) === 'admin') {
+                                    $__isAdmin_d = true;
+                                } elseif (isset($__ud->is_admin) && (bool) $__ud->is_admin) {
+                                    $__isAdmin_d = true;
+                                } else {
+                                    $listd = env('ADMIN_EMAILS');
+                                    if ($listd) {
+                                        $emailsd = array_filter(array_map('trim', explode(',', $listd)));
+                                        $__isAdmin_d = in_array(strtolower($__ud->email), array_map('strtolower', $emailsd), true);
+                                    }
+                                }
+                            } catch (\Throwable $e) { $__isAdmin_d = false; }
+                        @endphp
+                        @if ($__isAdmin_d)
+                            <a href="{{ route('admin.index') }}" class="skm-dropdown-item">Halaman Admin</a>
+                        @endif
                         <a href="{{ route('cart.index') }}" class="skm-dropdown-item">
                             <i class="fas fa-shopping-cart"></i> Keranjang Belanja
                         </a>
@@ -541,6 +581,47 @@
             .catch(error => {
                 console.error('Error loading cart count:', error);
             });
+
+            // After login: merge guest cart from localStorage (if any)
+            try {
+                const guestItemsRaw = localStorage.getItem('skm_guest_cart');
+                if (guestItemsRaw) {
+                    const guestItems = JSON.parse(guestItemsRaw);
+                    if (Array.isArray(guestItems) && guestItems.length > 0) {
+                        // Prefer meta CSRF, fallback to logout form hidden _token
+                        let csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+                        if (!csrf) {
+                            const tokenInput = document.querySelector('#logout-form input[name="_token"], #logout-form-mobile input[name="_token"]');
+                            if (tokenInput) csrf = tokenInput.value;
+                        }
+                        fetch('{{ route('cart.merge') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrf
+                            },
+                            body: JSON.stringify({ items: guestItems })
+                        })
+                        .then(r => r.json())
+                        .then(d => {
+                            // Clear local guest cart on success
+                            try { localStorage.removeItem('skm_guest_cart'); } catch (e) {}
+                            if (typeof updateCartBadge === 'function' && typeof d.cart_count !== 'undefined') {
+                                updateCartBadge(d.cart_count);
+                            }
+                        })
+                        .catch(err => console.error('Merge guest cart failed:', err));
+                    }
+                }
+            } catch (e) { /* no-op */ }
+            @else
+            // Guest: show cart count from localStorage (can add items before login)
+            try {
+                const items = JSON.parse(localStorage.getItem('skm_guest_cart') || '[]');
+                const count = Array.isArray(items) ? items.reduce((s, it) => s + (parseInt(it.quantity)||0), 0) : 0;
+                updateCartBadge(count);
+            } catch (e) { updateCartBadge(0); }
             @endauth
             
             // Function to update cart badge

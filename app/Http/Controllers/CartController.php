@@ -21,23 +21,30 @@ class CartController extends Controller
      */
     public function index()
     {
+        // If guest, render the same cart view; items will be populated from localStorage via JS
+        if (!Auth::check()) {
+            $cart = null;
+            $primaryAddress = null;
+            return view('cart.index', compact('cart', 'primaryAddress'));
+        }
+
         $user = Auth::user();
-        
+
         // Get or create cart for user
-        $cart = Cart::with('items')->firstOrCreate(
-            ['user_id' => $user->id]
-        );
-        
+        $cart = Cart::with('items')->firstOrCreate([
+            'user_id' => $user->id
+        ]);
+
         // Get user's primary address
         $primaryAddress = UserAddress::where('user_id', $user->id)
             ->where('is_primary', true)
             ->first();
-        
+
         // If no primary address, get first address
         if (!$primaryAddress) {
             $primaryAddress = UserAddress::where('user_id', $user->id)->first();
         }
-        
+
         return view('cart.index', compact('cart', 'primaryAddress'));
     }
 
@@ -224,20 +231,13 @@ class CartController extends Controller
             // Generate invoice number
             $invoiceNumber = 'INV-' . date('ymd') . '-' . strtoupper(Str::random(6));
             
-            // Hitung total dengan pajak
-            $subtotal = $cart->total_amount;
-            $pajak = $subtotal * 0.11; // Pajak 11%
-            $shipping = $cart->shipping_cost;
-            $grandTotal = $subtotal + $pajak + $shipping;
-            
             // Create order
             $order = Order::create([
                 'user_id' => $user->id,
                 // 'cart_id' => $cart->id, // Lihat Catatan di bawah
                 'invoice_number' => $invoiceNumber,
                 'order_date' => now(),
-                'total_amount' => $grandTotal, // Total keseluruhan (subtotal + pajak + ongkir)
-                'shipping_cost' => $shipping, // Simpan biaya pengiriman
+                'total_amount' => $cart->grand_total, // Asumsi grand_total termasuk ongkir
                 'status' => 'Diproses', // Status awal
                 'payment_method' => 'Transfer Bank', // Bisa dibuat dinamis
                 'shipping_address_id' => $address->id,
@@ -323,4 +323,65 @@ class CartController extends Controller
         
         return $pdf->download($filename);
     }
+
+    /**
+     * Merge guest cart (from localStorage) into authenticated user's cart
+     */
+    public function mergeGuestCart(Request $request)
+    {
+        $validated = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.product_name' => 'required|string|max:255',
+            'items.*.material' => 'nullable|string|max:100',
+            'items.*.size' => 'nullable|string|max:100',
+            'items.*.design' => 'nullable|string|max:100',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.product_image' => 'nullable|string|max:255',
+            'items.*.has_custom_design' => 'required|boolean',
+        ]);
+
+        $user = Auth::user();
+        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+
+        $imported = 0;
+        foreach ($validated['items'] as $item) {
+            // Try merge with existing
+            $existingItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_name', $item['product_name'])
+                ->where('material', $item['material'] ?? null)
+                ->where('size', $item['size'] ?? null)
+                ->where('design', $item['design'] ?? null)
+                ->where('has_custom_design', (bool) $item['has_custom_design'])
+                ->whereNull('custom_design_file') // guest cart won't have files
+                ->first();
+
+            if ($existingItem) {
+                $existingItem->quantity += (int) $item['quantity'];
+                $existingItem->save();
+            } else {
+                CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_name' => $item['product_name'],
+                    'material' => $item['material'] ?? null,
+                    'size' => $item['size'] ?? null,
+                    'design' => $item['design'] ?? null,
+                    'quantity' => (int) $item['quantity'],
+                    'unit_price' => (float) $item['unit_price'],
+                    'product_image' => $item['product_image'] ?? null,
+                    'has_custom_design' => (bool) $item['has_custom_design'],
+                    'custom_design_file' => null,
+                ]);
+            }
+            $imported++;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Berhasil mengimpor {$imported} item dari keranjang tamu.",
+            'cart_count' => $cart->total_quantity,
+        ]);
+    }
+
+    
 }

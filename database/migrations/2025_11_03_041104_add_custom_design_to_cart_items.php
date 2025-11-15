@@ -8,16 +8,33 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('cart_items', function (Blueprint $table) {
-            $table->string('custom_design_file')->nullable()->after('product_image');
-            $table->boolean('has_custom_design')->default(false)->after('custom_design_file');
-        });
+        if (Schema::hasTable('cart_items')) {
+            Schema::table('cart_items', function (Blueprint $table) {
+                if (!Schema::hasColumn('cart_items', 'custom_design_file')) {
+                    $table->string('custom_design_file')->nullable()->after('product_image');
+                }
+                if (!Schema::hasColumn('cart_items', 'has_custom_design')) {
+                    $table->boolean('has_custom_design')->default(false)->after('custom_design_file');
+                }
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('cart_items', function (Blueprint $table) {
-            $table->dropColumn(['custom_design_file', 'has_custom_design']);
-        });
+        if (Schema::hasTable('cart_items')) {
+            Schema::table('cart_items', function (Blueprint $table) {
+                $cols = [];
+                if (Schema::hasColumn('cart_items', 'custom_design_file')) {
+                    $cols[] = 'custom_design_file';
+                }
+                if (Schema::hasColumn('cart_items', 'has_custom_design')) {
+                    $cols[] = 'has_custom_design';
+                }
+                if (!empty($cols)) {
+                    $table->dropColumn($cols);
+                }
+            });
+        }
     }
 };

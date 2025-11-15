@@ -11,21 +11,20 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
-
+use App\Http\Controllers\Admin\FreeConsultationController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\RatingController;
 // ============================================
 // HOME ROUTE
 // ============================================
 use App\Models\Article;
-use App\Models\Product;
-
 Route::get('/', function () {
-    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(3)
+        ->take(12)
         ->get();
-    return view('index', compact('products', 'articles'));
+    return view('index', compact('articles'));
 })->middleware('track.page:home')->name('home');
 
 Route::get('/edit-design', function () {
@@ -37,13 +36,17 @@ Route::get('/edit-design', function () {
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
+// Cart (public index for guest, actions protected)
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+
 Route::middleware(['auth'])->group(function () {
-    // Cart Management
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    // Cart Management (mutations require auth)
     Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
-    Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+    // Merge guest cart (localStorage) after login
+    Route::post('/cart/merge', [CartController::class, 'mergeGuestCart'])->name('cart.merge');
 
     Route::post('/consultation/request', [ConsultationController::class, 'store'])->name('consultation.request');
 
@@ -53,6 +56,92 @@ Route::middleware(['auth'])->group(function () {
     // Invoice
     Route::get('/invoice/{id}', [CartController::class, 'showInvoice'])->name('invoice.show');
 });
+
+// ============================================
+// ADMIN ROUTES (Protected)
+// ============================================
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
+    Route::get('/', function () {
+        $metrics = [
+            'articles'     => \App\Models\Article::count(),
+            'products'     => \App\Models\Product::count(),
+            'testimonies'  => \App\Models\Testimony::count(),
+            'transactions' => \App\Models\Order::count(),
+        ];
+
+        $totalViewsArticles = (int) \App\Models\Article::sum('views');
+
+        // Page visits aggregation
+        $pages = ['home','article','produk','portofolio','about','contact'];
+        try {
+            $visitTotals = \App\Models\PageVisit::selectRaw('page, SUM(count) as total')
+                ->groupBy('page')
+                ->pluck('total', 'page');
+        } catch (\Throwable $e) {
+            $visitTotals = collect();
+        }
+        $pageVisits = [];
+        foreach ($pages as $p) {
+            $pageVisits[$p] = (int) ($visitTotals[$p] ?? 0);
+        }
+
+        // Homepage breakdown: today, week, month, year
+        $today = \Carbon\Carbon::today();
+        $startOfWeek = (clone $today)->startOfWeek();
+        $startOfMonth = (clone $today)->startOfMonth();
+        $startOfYear = (clone $today)->startOfYear();
+
+        $homeToday = $homeWeek = $homeMonth = $homeYear = $totalHomeAllTime = 0;
+        try {
+            $homeToday = (int) \App\Models\PageVisit::where('page','home')->where('date', $today)->sum('count');
+            $homeWeek = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfWeek, $today])->sum('count');
+            $homeMonth = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfMonth, $today])->sum('count');
+            $homeYear = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfYear, $today])->sum('count');
+            $totalHomeAllTime = (int) \App\Models\PageVisit::where('page','home')->sum('count');
+        } catch (\Throwable $e) {
+            // leave as zeros if table not ready
+        }
+
+        $totalVisitsBreakdown = compact('homeToday','homeWeek','homeMonth','homeYear','totalHomeAllTime');
+
+        // Latest content
+        $latestArticles = \App\Models\Article::orderByDesc('created_at')->take(3)->get();
+        $latestProducts = \App\Models\Product::orderByDesc('created_at')->take(3)->get();
+
+        return view('admin.index', compact(
+            'metrics',
+            'totalViewsArticles',
+            'pageVisits',
+            'totalVisitsBreakdown',
+            'latestArticles',
+            'latestProducts'
+        ));
+    })->name('index');
+
+    // Article Management - CRUD (RESOURCE ROUTE)
+    Route::patch('/articles/{article}/status', [ArticleController::class, 'updateStatus'])
+             ->name('articles.updateStatus');
+    Route::resource('articles', ArticleController::class)->names('articles');
+
+    // Products CRUD
+    Route::resource('products', ProductController::class)->names('products');
+
+    // Testimonies CRUD
+    Route::resource('testimonials', TestimonyController::class)->names('testimonials');
+
+    // Transactions CRUD
+    Route::resource('transactions', TransactionController::class)->except([
+        'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
+    ]);
+    // Free Consultations CRUD (Admin)
+    Route::resource('free-consultations', FreeConsultationController::class)
+        ->only(['index', 'edit', 'update','destroy'])
+        ->names('free-consultations');
+});
+
+
 
 // ============================================
 // AUTH ROUTES (Public)
@@ -121,16 +210,15 @@ Route::get('/test-error-503', function () {
 // PUBLIC PAGES
 // ============================================
 Route::get('/beranda', function () {
-    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(3)
+        ->take(12)
         ->get();
-    return view('index', compact('products', 'articles'));
+    return view('index', compact('articles'));
 })->middleware('track.page:home')->name('beranda');
 
-
+use App\Models\Product;
 Route::get('/produk', function () {
     $products = Product::query()
         ->orderByDesc('created_at')
@@ -165,83 +253,43 @@ Route::get('/about', function () {
     return view('about');
 })->middleware('track.page:about')->name('about');
 
-// ============================================
-// ADMIN ROUTES (Protected)
-// ============================================
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard
-    Route::get('/', function () {
-        $metrics = [
-            'articles'     => \App\Models\Article::count(),
-            'products'     => \App\Models\Product::count(),
-            'testimonies'  => \App\Models\Testimony::count(),
-            'transactions' => \App\Models\Order::count(),
-        ];
+// Route untuk submit rating
+Route::post('/submit-rating', [RatingController::class, 'store'])
+     ->middleware('auth:web') // Pastikan menggunakan guard 'web' atau 'auth' saja
+     ->name('submit.rating');
 
-        $totalViewsArticles = (int) \App\Models\Article::sum('views');
-
-        // Page visits aggregation
-        $pages = ['home','article','produk','portofolio','about','contact'];
-        try {
-            $visitTotals = \App\Models\PageVisit::selectRaw('page, SUM(count) as total')
-                ->groupBy('page')
-                ->pluck('total', 'page');
-        } catch (\Throwable $e) {
-            $visitTotals = collect();
-        }
-        $pageVisits = [];
-        foreach ($pages as $p) {
-            $pageVisits[$p] = (int) ($visitTotals[$p] ?? 0);
-        }
-
-        // Homepage breakdown: today, week, month, year
-        $today = \Carbon\Carbon::today();
-        $startOfWeek = (clone $today)->startOfWeek();
-        $startOfMonth = (clone $today)->startOfMonth();
-        $startOfYear = (clone $today)->startOfYear();
-
-        $homeToday = $homeWeek = $homeMonth = $homeYear = $totalHomeAllTime = 0;
-        try {
-            $homeToday = (int) \App\Models\PageVisit::where('page','home')->where('date', $today)->sum('count');
-            $homeWeek = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfWeek, $today])->sum('count');
-            $homeMonth = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfMonth, $today])->sum('count');
-            $homeYear = (int) \App\Models\PageVisit::where('page','home')->whereBetween('date', [$startOfYear, $today])->sum('count');
-            $totalHomeAllTime = (int) \App\Models\PageVisit::where('page','home')->sum('count');
-        } catch (\Throwable $e) {
-            // leave as zeros if table not ready
-        }
-
-        $totalVisitsBreakdown = compact('homeToday','homeWeek','homeMonth','homeYear','totalHomeAllTime');
-
-        // Latest content
-        $latestArticles = \App\Models\Article::orderByDesc('created_at')->take(3)->get();
-        $latestProducts = \App\Models\Product::orderByDesc('created_at')->take(3)->get();
-
-        return view('admin.index', compact(
-            'metrics',
-            'totalViewsArticles',
-            'pageVisits',
-            'totalVisitsBreakdown',
-            'latestArticles',
-            'latestProducts'
-        ));
-    })->name('index');
-
-    // Article Management - CRUD (RESOURCE ROUTE)
-    Route::resource('articles', ArticleController::class);
-    // Quick status update for articles
-    Route::patch('articles/{article}/status', [ArticleController::class, 'updateStatus'])->name('articles.updateStatus');
-
-    // Products CRUD
-    Route::resource('products', ProductController::class)->names('products');
-
-    // Testimonies CRUD
-    Route::resource('testimonials', TestimonyController::class)->names('testimonials');
-
-    // Transactions CRUD
-    Route::resource('transactions', TransactionController::class);
-    
-    // AJAX endpoint for getting user addresses
-    Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
-        ->name('users.addresses');
+/*
+|---------------------------------
+| RUTE UNTUK TESTING HALAMAN ERROR
+|---------------------------------
+*/
+Route::get('/test/400', function () {
+    abort(400); // 400 - Bad Request
 });
+
+Route::get('/test/401', function () {
+    abort(401); // 401 - Unauthorized
+});
+
+Route::get('/test/403', function () {
+    abort(403); // 403 - Forbidden
+});
+
+Route::get('/test/404', function () {
+    abort(404); // 404 - Not Found
+});
+
+Route::get('/test/413', function () {
+    abort(413); // 413 - Payload Too Large
+});
+
+Route::get('/test/429', function () {
+    abort(429); // 429 - Too Many Requests
+});
+
+// Transactions CRUD
+Route::resource('transactions', TransactionController::class);
+
+// AJAX endpoint for getting user addresses
+Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+    ->name('users.addresses');

@@ -10,20 +10,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        /* ... CSS Anda (tidak diubah) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
             font-family: 'Besley', serif; 
-            background: #FFFFFF; /* === BACKGROUND DIUBAH JADI PUTIH === */
+            background: #FFFFFF;
             min-height: 100vh;
         }
         
-        /* Container mungkin perlu penyesuaian padding-top jika navbar.blade.php Anda 'fixed' */
         .container { 
             max-width: 800px; 
             margin: 0 auto; 
-            padding: 2rem 1rem; /* Padding asli halaman */
+            padding: 2rem 1rem;
         }
         
         .page-title {
@@ -50,22 +48,21 @@
             position: relative;
         }
         
-        /* CSS UNTUK TOMBOL EDIT (IKON PENSIL #074159) */
         .edit-profile-btn {
             position: absolute;
             top: 0;
             right: 0;
-            background: none; /* Tanpa background */
-            color: #074159; /* Warna ikon */
+            background: none;
+            color: #074159;
             border: none;
-            padding: 0; /* Hapus padding */
+            padding: 0;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
         }
         
         .edit-profile-btn:hover {
-            color: #053244; /* Warna hover lebih gelap */
+            color: #053244;
             background: none;
             transform: none;
         }
@@ -80,7 +77,7 @@
         .avatar {
             width: 100%;
             height: 100%;
-            border-radius: 0; /* Kotak */
+            border-radius: 0;
             object-fit: cover;
             border: 4px solid #074159;
         }
@@ -153,7 +150,6 @@
             gap: 1rem; 
         }
         
-        /* CSS UNTUK TOMBOL AKSI ALAMAT (DENGAN TEKS) */
         .btn-icon {
             background: none;
             border: none;
@@ -252,7 +248,6 @@
             height: 14px;
         }
         
-        /* STATUS WARNA SOLID - 3 TOMBOL */
         .status-selesai { 
             background: #074159; 
             color: #FFFFFF;     
@@ -310,7 +305,6 @@
             border-top: 1px solid #f0f0f0;
         }
         
-        /* ORDER ACTION BUTTONS */
         .order-actions {
             display: flex;
             gap: 0.5rem;
@@ -380,7 +374,6 @@
             color: #721c24;
         }
         
-        /* === CSS UNTUK PAGINATION KUSTOM === */
         .pagination-custom {
             display: flex;
             justify-content: center;
@@ -411,12 +404,10 @@
             background-color: #053244;
         }
         .pagination-btn.disabled {
-            background-color: #074159;  /* Latar belakang disamakan */
-            color: #FFFFFF;            /* Teks tetap putih */
-            /* opacity: 0.5; Dihapus */ 
+            background-color: #074159;
+            color: #FFFFFF;
             pointer-events: none;
         }
-        
         
         @media (max-width: 768px) {
             .info-grid {
@@ -491,7 +482,13 @@
                 <div class="info-value">{{ $user->name }}</div>
                 
                 <div class="info-label">Tanggal Lahir</div>
-                <div class="info-value">{{ $user->formatted_birth_date }}</div>
+                <div class="info-value">
+                    @if($user->birth_date)
+                        {{ $user->birth_date->translatedFormat('d F Y') }}
+                    @else
+                        -
+                    @endif
+                </div>
                 
                 <div class="info-label">Jenis Kelamin</div>
                 <div class="info-value">{{ $user->gender_display }}</div>
@@ -532,7 +529,7 @@
                                     Delete
                                 </button>
                             </form>
-                            </div>
+                        </div>
                     </div>
                     <p class="address-text">{{ $address->full_address }}</p>
                 </div>
@@ -612,7 +609,7 @@
                             </svg>
                             Download PDF
                         </a>
-                        </div>
+                    </div>
                 </div>
                 @empty
                 <p style="color: #666; text-align: center; padding: 2rem 0;">Belum ada riwayat pesanan</p>
@@ -649,13 +646,12 @@
             text: "Anda yakin ingin menghapus alamat ini? Tindakan ini tidak dapat dibatalkan.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#074159', // Warna biru tua (sesuai tema)
-            cancelButtonColor: '#FF611A',  // Warna oranye (sesuai tema)
+            confirmButtonColor: '#074159',
+            cancelButtonColor: '#FF611A',
             confirmButtonText: 'Ya, Hapus Saja',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika pengguna klik "Ya", cari form berdasarkan ID uniknya dan submit
                 document.getElementById('delete-form-' + addressId).submit();
             }
         });

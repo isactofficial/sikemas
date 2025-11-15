@@ -7,8 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
+use Carbon\Carbon;
 
-// BARU: Impor model Consultation
+// Impor model Consultation
 use App\Models\Consultation;
 
 class User extends Authenticatable
@@ -29,7 +30,7 @@ class User extends Authenticatable
         'birth_date',
         'profile_photo',
         'survey_completed',
-        'google_id', // Tambahan untuk Google OAuth
+        'google_id',
     ];
 
     /**
@@ -73,10 +74,6 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    // ===========================================
-    // KODE BARU DIMULAI DI SINI
-    // ===========================================
-
     /**
      * Relationship: User has many consultations
      */
@@ -90,33 +87,27 @@ class User extends Authenticatable
      */
     public function hasActiveConsultation(): bool
     {
-        // Jika tabel consultations belum ada (mis. environment dev/belum migrasi), anggap tidak ada konsultasi aktif
         try {
             if (!Schema::hasTable('consultations')) {
                 return false;
             }
 
-            // Cek jika ada konsultasi dengan status 'pending' ATAU 'scheduled'
             return $this->consultations()
                         ->whereIn('status', ['pending', 'scheduled'])
                         ->exists();
         } catch (\Throwable $e) {
-            // Fail-safe: jangan gagalkan halaman hanya karena tabel/kolom belum siap
             return false;
         }
     }
 
-    // ===========================================
-    // KODE BARU BERAKHIR DI SINI
-    // ===========================================
-
     /**
-     * Get user profile photo path
+     * Get user profile photo URL
      */
-    public function getProfilePhotoPathAttribute()
+    public function getProfilePhotoUrlAttribute()
     {
+        // If no profile photo, return default avatar
         if (!$this->profile_photo) {
-            return null;
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=074159&background=E6EEF0&size=200';
         }
 
         // Check if it's a URL (from Google)
@@ -124,7 +115,28 @@ class User extends Authenticatable
             return $this->profile_photo;
         }
 
-        // Check if local file exists and return local path if file exists
+        // Check if local file exists
+        if (Storage::exists('public/profiles/' . $this->profile_photo)) {
+            return asset('storage/profiles/' . $this->profile_photo);
+        }
+
+        // Return default if file doesn't exist
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=074159&background=E6EEF0&size=200';
+    }
+
+    /**
+     * Get user profile photo path (for internal use)
+     */
+    public function getProfilePhotoPathAttribute()
+    {
+        if (!$this->profile_photo) {
+            return null;
+        }
+
+        if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
+            return $this->profile_photo;
+        }
+
         if (Storage::exists('public/profiles/' . $this->profile_photo)) {
             return asset('storage/profiles/' . $this->profile_photo);
         }
@@ -141,12 +153,10 @@ class User extends Authenticatable
             return false;
         }
 
-        // Check if it's a URL (from Google)
         if (filter_var($this->profile_photo, FILTER_VALIDATE_URL)) {
             return true;
         }
 
-        // Check if local file exists
         return Storage::exists('public/profiles/' . $this->profile_photo);
     }
 
@@ -168,6 +178,30 @@ class User extends Authenticatable
     public function getFormattedPhoneAttribute()
     {
         return $this->phone ?? '-';
+    }
+
+    /**
+     * Get formatted birth date
+     */
+    public function getFormattedBirthDateAttribute()
+    {
+        if (!$this->birth_date) {
+            return '-';
+        }
+
+        try {
+            // Ensure birth_date is a Carbon instance
+            if ($this->birth_date instanceof Carbon) {
+                return $this->birth_date->translatedFormat('d F Y');
+            }
+
+            // Parse if it's a string
+            $date = Carbon::parse($this->birth_date);
+            return $date->translatedFormat('d F Y');
+        } catch (\Exception $e) {
+            // If parsing fails, return the raw value or dash
+            return $this->birth_date ?? '-';
+        }
     }
 
     /**

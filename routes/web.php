@@ -14,6 +14,7 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Admin\FreeConsultationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\ContactController;
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -26,6 +27,9 @@ Route::get('/', function () {
         ->get();
     return view('index', compact('articles'));
 })->middleware('track.page:home')->name('home');
+
+
+Route::post('/contact/store', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/edit-design', function () {
     return view('edit-design');

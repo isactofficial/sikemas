@@ -1616,6 +1616,68 @@
                 font-size: 15px;
             }
         }
+
+        /* == Mulai Style Responsif domino == */
+        @media (max-width: 768px) {
+
+            /* 1. Sesuaikan padding container utama */
+            .commitment-2-container {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            /* 2. Perkecil font judul utama dan hapus <br> */
+            #commitment-2-title {
+                font-size: 1.5rem;
+                line-height: 1.3;
+                text-align: center;
+                margin-bottom: 75px;
+            }
+
+
+            /* 3. Atur 'Domino Nav'*/
+            .domino-nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                padding: 0 10px;
+            }
+
+            /* 4. Atur lebar TOMBOL 'Domino'*/
+            .domino-tab {
+                flex-basis: 30%;
+                max-width: 90px;
+                padding: 0;
+                margin: 0;
+            }
+
+            /* 5. Pastikan gambar mengisi tombol */
+            .domino-tab img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            /* 5. Sesuaikan ukuran font konten */
+            .domino-content h3 {
+                font-size: 1.3rem;
+                text-align: center;
+                margin-top: 60px;
+            }
+
+            .domino-content p {
+                font-size: 0.95rem;
+                line-height: 1.5;
+                text-align: center;
+            }
+
+            /* 6. 'orange-grid' menjadi satu kolom */
+            .orange-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 

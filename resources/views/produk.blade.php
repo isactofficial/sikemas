@@ -934,9 +934,41 @@
      */
     function addToCart(productData, buttonElement) {
         @guest
-            alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.');
-            window.location.href = '{{ route("login") }}';
-            return;
+            // Guest: simpan ke localStorage lalu arahkan ke halaman cart
+            try {
+                const key = 'skm_guest_cart';
+                const items = JSON.parse(localStorage.getItem(key) || '[]');
+                const idx = items.findIndex(it => (
+                    String(it.product_name||'').toLowerCase() === String(productData.product_name||'').toLowerCase() &&
+                    String(it.material||'') === String(productData.material||'') &&
+                    String(it.size||'') === String(productData.size||'') &&
+                    String(it.design||'') === String(productData.design||'') &&
+                    Boolean(it.has_custom_design||false) === Boolean(Number(productData.has_custom_design||0))
+                ));
+                if (idx >= 0) {
+                    items[idx].quantity = (parseInt(items[idx].quantity)||0) + (parseInt(productData.quantity)||1);
+                } else {
+                    items.push({
+                        product_name: productData.product_name,
+                        material: productData.material||null,
+                        size: productData.size||null,
+                        design: productData.design||'Standard',
+                        quantity: parseInt(productData.quantity)||1,
+                        unit_price: parseFloat(productData.unit_price)||0,
+                        product_image: productData.product_image||null,
+                        has_custom_design: Boolean(Number(productData.has_custom_design||0))
+                    });
+                }
+                localStorage.setItem(key, JSON.stringify(items));
+                // Update badge dan beri notifikasi singkat
+                const totalQty = items.reduce((s,it)=> s + (parseInt(it.quantity)||0), 0);
+                if (typeof updateCartBadge === 'function') updateCartBadge(totalQty);
+                showNotification('success', 'Produk ditambahkan ke keranjang.');
+                // Tetap di halaman, tidak redirect
+            } catch(e) {
+                console.error('Guest cart error:', e);
+            }
+            return
         @endguest
         
         if (!csrfToken) {
@@ -993,8 +1025,50 @@
      */
     function addToCartWithFile(formData, buttonElement) {
         @guest
-            alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.');
-            window.location.href = '{{ route("login") }}';
+            // Guest: tidak dapat mengunggah file ke server. Simpan metadatanya saja.
+            try {
+                const data = Object.fromEntries(formData.entries());
+                const key = 'skm_guest_cart';
+                const items = JSON.parse(localStorage.getItem(key) || '[]');
+                const hasCustom = data.has_custom_design === '1';
+                if (hasCustom && data.custom_design_file) {
+                    // Tidak menyimpan file; hanya tandai custom design
+                    console.warn('Guest cannot upload files; storing as custom without file.');
+                }
+                const newItem = {
+                    product_name: data.product_name,
+                    material: data.material||null,
+                    size: data.size||null,
+                    design: hasCustom ? 'Custom' : (data.design||'Standard'),
+                    quantity: parseInt(data.quantity)||1,
+                    unit_price: parseFloat(data.unit_price)||0,
+                    product_image: data.product_image||null,
+                    has_custom_design: hasCustom
+                };
+                const idx = items.findIndex(it => (
+                    String(it.product_name||'').toLowerCase() === String(newItem.product_name||'').toLowerCase() &&
+                    String(it.material||'') === String(newItem.material||'') &&
+                    String(it.size||'') === String(newItem.size||'') &&
+                    String(it.design||'') === String(newItem.design||'') &&
+                    Boolean(it.has_custom_design||false) === Boolean(newItem.has_custom_design)
+                ));
+                if (idx >= 0) {
+                    items[idx].quantity = (parseInt(items[idx].quantity)||0) + newItem.quantity;
+                } else {
+                    items.push(newItem);
+                }
+                localStorage.setItem(key, JSON.stringify(items));
+
+                const totalQty = items.reduce((s,it)=> s + (parseInt(it.quantity)||0), 0);
+                if (typeof updateCartBadge === 'function') updateCartBadge(totalQty);
+                showNotification('success', 'Produk ditambahkan ke keranjang. Login untuk checkout.');
+                // Tutup modal
+                document.getElementById('modal-detail')?.classList.remove('active');
+                document.getElementById('modal-overlay')?.classList.remove('active');
+                // Tetap di halaman, tidak redirect
+            } catch(e) {
+                console.error('Guest cart error:', e);
+            }
             return;
         @endguest
         

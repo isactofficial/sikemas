@@ -174,6 +174,18 @@
                                             <span>{{ (int) $c->likes_count }}</span>
                                         </button>
                                     </form>
+                                    @auth
+                                        @if((int) $c->user_id === (int) auth()->id())
+                                            <form action="{{ route('comments.destroy', $c) }}" method="POST" style="display:inline" onsubmit="return confirm('Hapus komentar ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" title="Hapus komentar" aria-label="Hapus komentar" style="display:inline-flex; align-items:center; gap:6px; background:#FCEBEC; border:1px solid #F5C2C7; color:#B4232A; padding:4px 8px; border-radius:999px; cursor:pointer">
+                                                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1z"/></svg>
+                                                    <span>Hapus</span>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endauth
                                 </div>
 
                                 @php($replies = $c->replies)

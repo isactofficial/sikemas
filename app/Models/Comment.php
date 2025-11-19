@@ -30,4 +30,9 @@ class Comment extends Model
     {
         return $this->hasMany(Reply::class)->orderBy('created_at');
     }
+
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'comment_likes')->withTimestamps();
+    }
 }

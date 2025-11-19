@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
+        // Guard: if table already exists (e.g. imported via .sql), skip to prevent 1050 error
+        if (Schema::hasTable('articles')) {
+            return;
+        }
+
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title');

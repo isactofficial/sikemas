@@ -167,10 +167,20 @@
                                 </div>
                                 <div style="color:#475B63; margin-bottom:6px">{!! nl2br(e($c->content)) !!}</div>
                                 <div style="display:flex; align-items:center; gap:10px; color:#6B8791; font-size:13px; margin-bottom:4px">
+                                    @php($commentLiked = auth()->check() && $c->isLikedBy(auth()->user()))
                                     <form action="{{ route('comments.like', $c) }}" method="POST" style="display:inline" onsubmit="this.querySelector('button').disabled=true;">
                                         @csrf
-                                        <button type="submit" title="Suka" aria-label="Suka komentar" style="display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid #E6EEF1; color:#0E4B63; padding:4px 8px; border-radius:999px; cursor:pointer">
-                                            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-5.31l.95-4.57.03-.32a1 1 0 0 0-.29-.7L14 2 7.59 8.41C7.22 8.78 7 9.3 7 9.83V19c0 1.1.9 2 2 2h7c.82 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.21.14-.43.14-.66V10z"/></svg>
+                                        <button type="submit"
+                                                title="{{ $commentLiked ? 'Batal Suka' : 'Suka' }}"
+                                                aria-label="{{ $commentLiked ? 'Batal suka komentar' : 'Suka komentar' }}"
+                                                style="display:inline-flex; align-items:center; gap:6px; {{ $commentLiked ? 'background:#F28C28; border:1px solid #F28C28; color:#fff;' : 'background:transparent; border:1px solid #E6EEF1; color:#0E4B63;' }} padding:4px 10px; border-radius:999px; cursor:pointer; transition:.2s">
+                                            @if($commentLiked)
+                                                <!-- Filled heart/thumb icon -->
+                                                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 3 12.28 3 8.5 3 6 5 4 7.5 4c1.74 0 3.41 1.01 4.5 2.09C13.59 5.01 15.26 4 17 4c2.5 0 4.5 2 4.5 4.5 0 3.78-2.4 6.86-7.55 11.54L12 21.35z"/></svg>
+                                            @else
+                                                <!-- Outline thumb icon -->
+                                                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-5.31l.95-4.57.03-.32a1 1 0 0 0-.29-.7L14 2 7.59 8.41C7.22 8.78 7 9.3 7 9.83V19c0 1.1.9 2 2 2h7c.82 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.21.14-.43.14-.66V10z"/></svg>
+                                            @endif
                                             <span>{{ (int) $c->likes_count }}</span>
                                         </button>
                                     </form>
@@ -199,13 +209,33 @@
                                                 </div>
                                                 <div style="color:#475B63; margin-bottom:4px">{!! nl2br(e($r->content)) !!}</div>
                                                 <div style="display:flex; align-items:center; gap:10px; color:#6B8791; font-size:12px">
+                                                    @php($replyLiked = auth()->check() && $r->isLikedBy(auth()->user()))
                                                     <form action="{{ route('replies.like', $r) }}" method="POST" style="display:inline" onsubmit="this.querySelector('button').disabled=true;">
                                                         @csrf
-                                                        <button type="submit" title="Suka" aria-label="Suka balasan" style="display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid #E6EEF1; color:#0E4B63; padding:3px 8px; border-radius:999px; cursor:pointer">
-                                                            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-5.31l.95-4.57.03-.32a1 1 0 0 0-.29-.7L14 2 7.59 8.41C7.22 8.78 7 9.3 7 9.83V19c0 1.1.9 2 2 2h7c.82 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.21.14-.43.14-.66V10z"/></svg>
+                                                        <button type="submit"
+                                                                title="{{ $replyLiked ? 'Batal Suka' : 'Suka' }}"
+                                                                aria-label="{{ $replyLiked ? 'Batal suka balasan' : 'Suka balasan' }}"
+                                                                style="display:inline-flex; align-items:center; gap:6px; {{ $replyLiked ? 'background:#F28C28; border:1px solid #F28C28; color:#fff;' : 'background:transparent; border:1px solid #E6EEF1; color:#0E4B63;' }} padding:3px 10px; border-radius:999px; cursor:pointer; transition:.2s">
+                                                            @if($replyLiked)
+                                                                <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 3 12.28 3 8.5 3 6 5 4 7.5 4c1.74 0 3.41 1.01 4.5 2.09C13.59 5.01 15.26 4 17 4c2.5 0 4.5 2 4.5 4.5 0 3.78-2.4 6.86-7.55 11.54L12 21.35z"/></svg>
+                                                            @else
+                                                                <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-5.31l.95-4.57.03-.32a1 1 0 0 0-.29-.7L14 2 7.59 8.41C7.22 8.78 7 9.3 7 9.83V19c0 1.1.9 2 2 2h7c.82 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.21.14-.43.14-.66V10z"/></svg>
+                                                            @endif
                                                             <span>{{ (int) $r->likes_count }}</span>
                                                         </button>
                                                     </form>
+                                                    @auth
+                                                        @if((int) $r->user_id === (int) auth()->id())
+                                                            <form action="{{ route('replies.destroy', $r) }}" method="POST" style="display:inline" onsubmit="return confirm('Hapus balasan ini?');">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" title="Hapus balasan" aria-label="Hapus balasan" style="display:inline-flex; align-items:center; gap:6px; background:#FCEBEC; border:1px solid #F5C2C7; color:#B4232A; padding:3px 8px; border-radius:999px; cursor:pointer">
+                                                                    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1z"/></svg>
+                                                                    <span>Hapus</span>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    @endauth
                                                 </div>
                                             </li>
                                         @endforeach

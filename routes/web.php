@@ -240,6 +240,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/comments/{comment}/replies', [CommentController::class, 'reply'])->name('comments.reply');
     Route::post('/comments/{comment}/like', [CommentController::class, 'likeComment'])->name('comments.like');
     Route::post('/replies/{reply}/like', [CommentController::class, 'likeReply'])->name('replies.like');
+    Route::delete('/replies/{reply}', [CommentController::class, 'destroyReply'])->name('replies.destroy');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
 

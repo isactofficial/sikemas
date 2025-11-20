@@ -96,8 +96,27 @@ class CommentController extends Controller
     public function likeReply(Reply $reply)
     {
         $this->authorizeWhenLoggedIn();
+        $user = Auth::user();
 
-        $reply->increment('likes_count');
+        $alreadyLiked = $reply->likedByUsers()
+            ->where('users.id', $user->id)
+            ->exists();
+
+        if ($alreadyLiked) {
+            // Unlike
+            $reply->likedByUsers()->detach($user->id);
+            if ((int) $reply->likes_count > 0) {
+                $reply->decrement('likes_count');
+            }
+        } else {
+            // Like
+            try {
+                $reply->likedByUsers()->attach($user->id);
+            } catch (\Throwable $e) {
+                // Ignore race condition duplicates
+            }
+            $reply->increment('likes_count');
+        }
 
         return back();
     }
@@ -118,5 +137,21 @@ class CommentController extends Controller
         $comment->delete();
 
         return back()->with('status', 'Komentar berhasil dihapus.');
+    }
+
+    /**
+     * Delete a reply (owner only)
+     */
+    public function destroyReply(Reply $reply)
+    {
+        $this->authorizeWhenLoggedIn();
+
+        if ((int) $reply->user_id !== (int) Auth::id()) {
+            abort(403, 'Anda tidak dapat menghapus balasan ini.');
+        }
+
+        $reply->delete();
+
+        return back()->with('status', 'Balasan berhasil dihapus.');
     }
 }

@@ -35,4 +35,19 @@ class Comment extends Model
     {
         return $this->belongsToMany(User::class, 'comment_likes')->withTimestamps();
     }
+
+    /**
+     * Check if given user has liked this comment.
+     */
+    public function isLikedBy(?User $user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+        // If relation already loaded use collection to avoid extra query.
+        if ($this->relationLoaded('likedByUsers')) {
+            return $this->likedByUsers->contains($user->id);
+        }
+        return $this->likedByUsers()->where('user_id', $user->id)->exists();
+    }
 }

@@ -25,4 +25,23 @@ class Reply extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'reply_likes')->withTimestamps();
+    }
+
+    /**
+     * Check if given user has liked this reply.
+     */
+    public function isLikedBy(?User $user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+        if ($this->relationLoaded('likedByUsers')) {
+            return $this->likedByUsers->contains($user->id);
+        }
+        return $this->likedByUsers()->where('user_id', $user->id)->exists();
+    }
 }

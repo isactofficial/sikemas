@@ -148,6 +148,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Route Manajemen Pesan
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
+    // Route untuk mengubah status baca/belum
+    Route::patch('/admin/messages/{id}/toggle-read', [MessageController::class, 'toggleRead'])
+    ->name('messages.toggleRead');
 });
 
 

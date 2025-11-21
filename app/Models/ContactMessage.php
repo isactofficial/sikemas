@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ContactMessage extends Model
 {
@@ -21,8 +21,14 @@ class ContactMessage extends Model
         'email',
         'subjek',
         'pesan',
+        'is_read',
     ];
 
+    //jadi true/false (bukan 1/0)
+    protected $casts = [
+    'is_read' => 'boolean',
+    ];
+    
     /**
      * Mendapatkan user yang mengirim pesan (jika ada).
      */

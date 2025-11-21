@@ -19,6 +19,15 @@ class MessageController extends Controller
         return view('admin.messages.index', compact('messages'));
     }
 
+    public function toggleRead($id)
+    {
+        $message = \App\Models\ContactMessage::findOrFail($id);
+        $message->is_read = !$message->is_read;
+        $message->save();
+        $status = $message->is_read ? 'sudah dibaca' : 'belum dibaca';
+        return back()->with('success', "Status pesan berhasil diubah menjadi {$status}.");
+    }
+
     /**
      * Menghapus pesan.
      */

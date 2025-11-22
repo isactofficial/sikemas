@@ -14,6 +14,8 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Admin\FreeConsultationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\MessageController;
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -26,6 +28,9 @@ Route::get('/', function () {
         ->get();
     return view('index', compact('articles'));
 })->middleware('track.page:home')->name('home');
+
+
+Route::post('/contact/store', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/edit-design', function () {
     return view('edit-design');
@@ -139,6 +144,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('free-consultations', FreeConsultationController::class)
         ->only(['index', 'edit', 'update','destroy'])
         ->names('free-consultations');
+
+    // Route Manajemen Pesan
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
+    // Route untuk mengubah status baca/belum
+    Route::patch('/admin/messages/{id}/toggle-read', [MessageController::class, 'toggleRead'])
+    ->name('messages.toggleRead');
 });
 
 
@@ -259,35 +271,6 @@ Route::get('/about', function () {
 Route::post('/submit-rating', [RatingController::class, 'store'])
      ->middleware('auth:web') // Pastikan menggunakan guard 'web' atau 'auth' saja
      ->name('submit.rating');
-
-/*
-|---------------------------------
-| RUTE UNTUK TESTING HALAMAN ERROR
-|---------------------------------
-*/
-Route::get('/test/400', function () {
-    abort(400); // 400 - Bad Request
-});
-
-Route::get('/test/401', function () {
-    abort(401); // 401 - Unauthorized
-});
-
-Route::get('/test/403', function () {
-    abort(403); // 403 - Forbidden
-});
-
-Route::get('/test/404', function () {
-    abort(404); // 404 - Not Found
-});
-
-Route::get('/test/413', function () {
-    abort(413); // 413 - Payload Too Large
-});
-
-Route::get('/test/429', function () {
-    abort(429); // 429 - Too Many Requests
-});
 
 // Transactions CRUD
 Route::resource('transactions', TransactionController::class);

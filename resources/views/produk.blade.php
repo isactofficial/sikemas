@@ -968,7 +968,7 @@
             } catch(e) {
                 console.error('Guest cart error:', e);
             }
-            return
+            return;
         @endguest
         
         if (!csrfToken) {

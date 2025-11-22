@@ -100,6 +100,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Relationship: User liked comments
+     */
+    public function likedComments()
+    {
+        return $this->belongsToMany(Comment::class, 'comment_likes')->withTimestamps();
+    }
+
+    /**
      * Relationship: User has many surveys
      */
     public function surveys()

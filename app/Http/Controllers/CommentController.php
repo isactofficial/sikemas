@@ -64,10 +64,29 @@ class CommentController extends Controller
     public function likeComment(Comment $comment)
     {
         $this->authorizeWhenLoggedIn();
+        $user = Auth::user();
 
-        $comment->increment('likes_count');
+        // Toggle like: if already liked -> unlike, else like
+        $alreadyLiked = $comment->likedByUsers()
+            ->where('users.id', $user->id)
+            ->exists();
 
-        // Redirect back to the article page
+        if ($alreadyLiked) {
+            // Unlike
+            $comment->likedByUsers()->detach($user->id);
+            if ((int) $comment->likes_count > 0) {
+                $comment->decrement('likes_count');
+            }
+        } else {
+            // Like (guard against duplicate inserts via unique index)
+            try {
+                $comment->likedByUsers()->attach($user->id);
+            } catch (\Throwable $e) {
+                // If a race condition occurs and record exists, ignore
+            }
+            $comment->increment('likes_count');
+        }
+
         return back();
     }
 
@@ -77,9 +96,62 @@ class CommentController extends Controller
     public function likeReply(Reply $reply)
     {
         $this->authorizeWhenLoggedIn();
+        $user = Auth::user();
 
-        $reply->increment('likes_count');
+        $alreadyLiked = $reply->likedByUsers()
+            ->where('users.id', $user->id)
+            ->exists();
+
+        if ($alreadyLiked) {
+            // Unlike
+            $reply->likedByUsers()->detach($user->id);
+            if ((int) $reply->likes_count > 0) {
+                $reply->decrement('likes_count');
+            }
+        } else {
+            // Like
+            try {
+                $reply->likedByUsers()->attach($user->id);
+            } catch (\Throwable $e) {
+                // Ignore race condition duplicates
+            }
+            $reply->increment('likes_count');
+        }
 
         return back();
+    }
+
+    /**
+     * Delete a comment (owner only)
+     */
+    public function destroy(Comment $comment)
+    {
+        $this->authorizeWhenLoggedIn();
+
+        if ((int) $comment->user_id !== (int) Auth::id()) {
+            abort(403, 'Anda tidak dapat menghapus komentar ini.');
+        }
+
+        // Remove replies first (in case no cascading is set), then delete comment
+        $comment->replies()->delete();
+        $comment->delete();
+
+        return back()->with('status', 'Komentar berhasil dihapus.');
+    }
+
+    /**
+     * Delete a reply (owner only)
+     */
+    public function destroyReply(Reply $reply)
+    {
+        $this->authorizeWhenLoggedIn();
+
+        if ((int) $reply->user_id !== (int) Auth::id()) {
+            abort(403, 'Anda tidak dapat menghapus balasan ini.');
+        }
+
+        $reply->delete();
+
+        return back()->with('status', 'Balasan berhasil dihapus.');
     }
 }

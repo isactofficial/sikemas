@@ -960,12 +960,10 @@
                     });
                 }
                 localStorage.setItem(key, JSON.stringify(items));
-
                 // Update badge dan beri notifikasi singkat
                 const totalQty = items.reduce((s,it)=> s + (parseInt(it.quantity)||0), 0);
                 if (typeof updateCartBadge === 'function') updateCartBadge(totalQty);
                 showNotification('success', 'Produk ditambahkan ke keranjang.');
-
                 // Tetap di halaman, tidak redirect
             } catch(e) {
                 console.error('Guest cart error:', e);

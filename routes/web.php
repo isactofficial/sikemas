@@ -131,10 +131,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Testimonies CRUD
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
-    // Transactions CRUD
-    Route::resource('transactions', TransactionController::class)->except([
-        'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
-    ]);
+    // Transactions CRUD (include create & store to match developments branch)
+    Route::resource('transactions', TransactionController::class)->names('transactions');
     // Free Consultations CRUD (Admin)
     Route::resource('free-consultations', FreeConsultationController::class)
         ->only(['index', 'edit', 'update','destroy'])

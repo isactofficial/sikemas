@@ -132,13 +132,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
     // Transactions CRUD
-    Route::resource('transactions', TransactionController::class)->except([
-        'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
-    ]);
+    Route::resource('transactions', TransactionController::class)->names('transactions');
+    
     // Free Consultations CRUD (Admin)
     Route::resource('free-consultations', FreeConsultationController::class)
         ->only(['index', 'edit', 'update','destroy'])
         ->names('free-consultations');
+
+    // Route AJAX dipindahkan ke dalam grup admin agar aman
+    // dan namanya otomatis menjadi 'admin.users.addresses'
+    Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+        ->name('users.addresses');
 });
 
 
@@ -281,6 +285,33 @@ Route::get('/test/404', function () {
     abort(404); // 404 - Not Found
 });
 
+// =================================================================
+// PERBAIKAN DI SINI:
+// Baris-baris yang rusak (yang mengandung '4OF_PAGES')
+// telah dihapus.
+// =================================================================
+
+/*
+|---------------------------------
+| RUTE UNTUK TESTING HALAMAN ERROR
+|---------------------------------
+*/
+Route::get('/test/400', function () {
+    abort(400); // 400 - Bad Request
+});
+
+Route::get('/test/401', function () {
+    abort(401); // 401 - Unauthorized
+});
+
+Route::get('/test/403', function () {
+    abort(403); // 403 - Forbidden
+});
+
+Route::get('/test/404', function () {
+    abort(404); // 404 - Not Found
+});
+
 Route::get('/test/413', function () {
     abort(413); // 413 - Payload Too Large
 });
@@ -289,9 +320,5 @@ Route::get('/test/429', function () {
     abort(429); // 429 - Too Many Requests
 });
 
-// Transactions CRUD
-Route::resource('transactions', TransactionController::class);
-
-// AJAX endpoint for getting user addresses
-Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
-    ->name('users.addresses');
+// Route AJAX dihapus dari sini karena sudah dipindahkan
+// ke dalam grup admin di atas.

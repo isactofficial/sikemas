@@ -2124,7 +2124,7 @@
         <div class="sp-container">
             <h2 id="sp-title">Siap memulai proyek Anda?</h2>
             <p>Hubungi kami hari ini untuk konsultasi gratis dan wujudkan kemasan impian Anda.</p>
-            <a href="#" class="sp-button" aria-label="Hubungi Kami">Hubungi Kami</a>
+            <a href="{{ url('/about') }}#kontak-kami" class="sp-button" aria-label="Hubungi Kami">Hubungi Kami</a>
         </div>
     </section>
 

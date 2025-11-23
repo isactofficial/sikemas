@@ -1193,10 +1193,10 @@
         </div>
     </section>
 
-    <section class="contact-section">
-        <div class="contact-wrapper">
-            <div class="contact-header">
-                <h1 class="contact-section-title">Mari Terhubung dengan Sikemas</h1>
+    <section class="contact-section" id="kontak-kami">
+    <div class="contact-wrapper">
+        <div class="contact-header">
+            <h1 class="contact-section-title">Mari Terhubung dengan Sikemas</h1>
                 <p>Punya pertanyaan, ide kolaborasi, atau ingin berbagi cerita? Tim profesional kami siap melayani Anda.</p>
             </div>
 

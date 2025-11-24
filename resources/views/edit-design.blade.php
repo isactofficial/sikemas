@@ -3,1907 +3,1013 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Desain - SIKEMAS</title>
+    <title>Desain Kemasan Kustom - Sikemas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Three.js for 3D View -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Fabric.js for Canvas Manipulation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Besley', serif;
-            background-color: #f5f5ff;
-            overflow-x: hidden;
-            width: 100%;
-            max-width: 100vw;
-        }
-
-        /* Main Editor Container */
-        .editor-container {
-            display: flex;
-            height: 100vh;
-            background-color: #f5f5ff;
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
-        }
-
-        /* Left Sidebar - Elements & Upload */
-        .left-sidebar {
-            width: 280px;
-            background-color: #ffffff;
-            border-right: 1px solid #e0e0e0;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 1.5rem;
-            box-sizing: border-box;
-        }
-
-        .sidebar-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #074159;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .upload-section {
-            margin-bottom: 2rem;
-        }
-
-        .upload-button {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: #00b4a8;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .upload-button:hover {
-            background-color: #009a8f;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 180, 168, 0.3);
-        }
-
-        .upload-input {
-            display: none;
-        }
-
-        /* Elements Grid */
-        .elements-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-        }
-
-        .element-item {
-            aspect-ratio: 1;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .element-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .element-item:hover {
-            border-color: #00b4a8;
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 180, 168, 0.2);
-        }
-
-        .element-item.selected {
-            border-color: #00b4a8;
-            border-width: 3px;
-        }
-
-        /* Tab Switcher */
-        .tab-switcher {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            background-color: #f0f0f0;
-            padding: 0.25rem;
-            border-radius: 8px;
-        }
-
-        .tab-button {
-            flex: 1;
-            padding: 0.5rem;
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #666;
-        }
-
-        .tab-button.active {
-            background-color: white;
-            color: #074159;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* View Switcher Container */
-        .view-switcher-container {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background-color: transparent;
-            padding: 0;
-            border-radius: 0;
-        }
-
-        .view-label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .view-3d-button {
-            background-color: #074159;
-            border: none;
-            border-radius: 20px;
-            padding: 0.4rem 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-        }
-
-        .view-3d-button:hover {
-            background-color: #053244;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(7, 65, 89, 0.3);
-        }
-
-        .view-3d-button img {
-            filter: brightness(0) invert(1);
-        }
-
-        .view-3d-button span {
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        /* Canvas Area */
-        .canvas-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            position: relative;
-            background-color: #F4F7F6;
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-
-        .design-title-bar {
-            width: 100%;
-            max-width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            background-color: transparent;
-            padding: 0;
-            border-radius: 0;
-            box-shadow: none;
-        }
-
-        .canvas-wrapper {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-            max-width: 100%;
-            width: 100%;
-            position: relative;
-            box-sizing: border-box;
-        }
-
-        .canvas {
-            width: 100%;
-            height: 700px;
-            border: 2px dashed #d0d0d0;
-            border-radius: 8px;
-            position: relative;
-            background-color: #fafafa;
-            overflow: hidden;
-        }
-
-        /* Dimension Labels */
-        .dimension-label {
-            position: absolute;
-            background: #074159;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .dimension-horizontal {
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .dimension-vertical {
-            top: 50%;
-            transform: translateY(-50%) rotate(-90deg);
-        }
-
-        /* Canvas Controls */
-        .canvas-controls {
-            position: relative;
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            background: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: calc(100% - 4rem);
-            justify-content: center;
-        }
-
-        .control-button {
-            width: 40px;
-            height: 40px;
-            border: none;
-            border-radius: 50%;
-            background: #f0f0f0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .control-button:hover {
-            background: #00b4a8;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .control-button:hover svg {
-            stroke: white;
-        }
-
-        .control-button svg {
-            stroke: #333;
-        }
-
-        #luar-btn {
-            background: white;
-            color: #074159;
-            border: 2px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        #luar-btn:hover {
-            background: #074159;
-            color: white;
-            border-color: #074159;
-        }
-
-        #luar-btn:hover svg {
-            stroke: white;
-        }
-
-        #luar-btn svg {
-            stroke: #074159;
-        }
-
-        .zoom-display {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            padding: 0 1rem;
-        }
-
-        /* Right Sidebar - Properties */
-        .right-sidebar {
-            width: 320px;
-            background-color: #ffffff;
-            border-left: 1px solid #e0e0e0;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 1.5rem;
-            box-sizing: border-box;
-        }
-
-        .property-section {
-            margin-bottom: 2rem;
-        }
-
-        .property-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #074159;
-            margin-bottom: 1rem;
-        }
-
-        .dimension-group {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .dimension-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .dimension-label-text {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #666;
-        }
-
-        .dimension-value {
-            padding: 0.75rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            background: #f8f8f8;
-            font-weight: 600;
-            color: #074159;
-            text-align: center;
-        }
-
-        .dimension-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            background: #ffffff;
-            font-family: 'Besley', serif;
-            font-weight: 600;
-            color: #074159;
-            text-align: center;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .dimension-input:focus {
-            outline: none;
-            border-color: #074159;
-            box-shadow: 0 0 0 3px rgba(7, 65, 89, 0.1);
-            background: #ffffff;
-        }
-
-        .dimension-input:hover {
-            border-color: #00b4a8;
-        }
-
-        /* Material Selection */
-        .material-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .material-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            padding: 0.75rem;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .material-item:hover {
-            border-color: #00b4a8;
-            background: #f8f8f8;
-        }
-
-        .material-item.selected {
-            border-color: #00b4a8;
-            background: #e8f9f8;
-        }
-
-        .material-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .material-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #074159;
-            text-align: center;
-        }
-
-        /* Color Selection */
-        .color-grid {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .color-item {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .color-item:hover {
-            transform: scale(1.15);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .color-item.selected {
-            border-color: #074159;
-            transform: scale(1.15);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            gap: 1rem;
-            z-index: 100;
-            align-items: center;
-        }
-
-        .action-button {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .button-exit {
-            background: transparent;
-            color: #666;
-            border: none;
-            box-shadow: none;
-        }
-
-        .button-exit:hover {
-            background: #f0f0f0;
-            color: #074159;
-        }
-
-        .button-save {
-            background: #FF611A; /* Diubah */
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .button-save:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 97, 26, 0.4); /* Disesuaikan */
-            background: #ff7d40; /* Disesuaikan */
-        }
-
-        /* Draggable Elements on Canvas */
-        .draggable-element {
-            position: absolute;
-            cursor: move;
-            user-select: none;
-            border: 2px dashed transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .draggable-element:hover,
-        .draggable-element.selected {
-            border-color: #00b4a8;
-        }
-
-        .draggable-element img {
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            object-fit: cover;
-        }
-
-        /* Resize Handles */
-        .resize-handle {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #00b4a8;
-            border: 2px solid white;
-            border-radius: 50%;
-            display: none;
-            z-index: 10;
-        }
-
-        .draggable-element.selected .resize-handle {
-            display: block;
-        }
-
-        .resize-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
-        .resize-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
-        .resize-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
-        .resize-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
-
-        /* 3D Canvas */
-        #canvas-3d {
-            width: 100%;
-            height: 600px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .left-sidebar,
-            .right-sidebar {
-                width: 250px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .editor-container {
-                flex-direction: column;
-            }
-
-            .left-sidebar,
-            .right-sidebar {
-                width: 100%;
-                height: auto;
-                max-height: 300px;
-            }
-
-            .action-buttons {
-                position: fixed;
-                bottom: 1rem;
-                right: 1rem;
-                flex-direction: row;
-            }
-        }
-
-        /* Success Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 2rem;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            animation: slideDown 0.3s ease;
-        }
-
-        .modal-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #00b4a8 0%, #00d4c4 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2.5rem;
-            color: white;
-        }
-
-        .modal-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #074159;
-            margin-bottom: 1rem;
-        }
-
-        .modal-text {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 2rem;
-        }
-
-        .modal-button {
-            padding: 0.75rem 2rem;
-            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideDown {
-            from { 
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to { 
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Loading Indicator */
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #00b4a8;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
-            body {
-                overflow-x: hidden;
-            }
-
-            .editor-container {
-                flex-direction: column;
-                height: auto;
-                min-height: 100vh;
-                width: 100%;
-                overflow-x: hidden;
-            }
-
-            .left-sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #e0e0e0;
-                padding: 1rem;
-                max-height: 50vh;
-                box-sizing: border-box;
-            }
-
-            .canvas-area {
-                padding: 0.75rem;
-                min-height: auto;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .design-title-bar {
-                flex-direction: column;
-                gap: 0.75rem;
-                align-items: stretch;
-                width: 100%;
-                max-width: 100%;
-                margin-bottom: 1rem;
-                box-sizing: border-box;
-            }
-
-            .view-switcher-container {
-                justify-content: center;
-                flex-wrap: wrap;
-                width: 100%;
-            }
-
-            .canvas-wrapper {
-                padding: 0.75rem;
-                width: 100%;
-                max-width: 100%;
-                margin: 0;
-                box-sizing: border-box;
-            }
-
-            .canvas {
-                height: 350px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .right-sidebar {
-                width: 100%;
-                border-left: none;
-                border-top: 1px solid #e0e0e0;
-                padding: 1rem;
-                max-height: none;
-                box-sizing: border-box;
-            }
-
-            .canvas-controls {
-                justify-content: center;
-                gap: 0.5rem;
-                flex-wrap: wrap;
-                width: 100%;
-            }
-
-            .control-button {
-                flex: 0 1 auto;
-                min-width: 80px;
-                font-size: 0.85rem;
-                padding: 0.5rem 0.75rem;
-            }
-
-            #canvas-3d {
-                height: 350px;
-                width: 100%;
-            }
-
-            .action-buttons {
-                position: relative;
-                bottom: auto;
-                right: auto;
-                flex-direction: row;
-                gap: 0.5rem;
-                margin-top: 1rem;
-                justify-content: center;
-                width: 100%;
-                padding: 0 1rem;
-                box-sizing: border-box;
-            }
-
-            .action-button {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.9rem;
-                flex: 1;
-                max-width: 200px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            * {
-                box-sizing: border-box;
-            }
-
-            html, body {
-                overflow-x: hidden;
-                width: 100%;
-                max-width: 100vw;
-            }
-
-            body {
-                font-size: 14px;
-            }
-
-            .editor-container {
-                width: 100vw;
-                max-width: 100%;
-            }
-
-            .left-sidebar {
-                padding: 0.75rem;
-                max-height: 40vh;
-                width: 100%;
-            }
-
-            .sidebar-title {
-                font-size: 0.95rem;
-                margin: -0.75rem -0.75rem 0.75rem -0.75rem !important;
-                padding: 0.6rem 0.75rem !important;
-            }
-
-            .upload-button {
-                font-size: 0.85rem;
-                padding: 0.6rem;
-                width: 100%;
-            }
-
-            .elements-grid {
-                gap: 0.5rem;
-                grid-template-columns: repeat(3, 1fr);
-                width: 100%;
-            }
-
-            .tab-button {
-                font-size: 0.85rem;
-                padding: 0.4rem 0.6rem;
-            }
-
-            .canvas-area {
-                padding: 0.5rem;
-                width: 100%;
-            }
-
-            .design-title-bar {
-                gap: 0.5rem;
-                margin-bottom: 0.75rem;
-                width: 100%;
-                padding: 0;
-            }
-
-            .view-switcher-container {
-                gap: 0.5rem;
-                width: 100%;
-            }
-
-            .view-label {
-                font-size: 0.85rem;
-            }
-
-            .canvas-wrapper {
-                padding: 0.5rem;
-                width: 100%;
-                margin: 0;
-            }
-
-            .canvas {
-                height: 280px;
-                width: 100%;
-            }
-
-            .dimension-label {
-                font-size: 0.65rem;
-                padding: 0.15rem 0.3rem;
-            }
-
-            .view-3d-button {
-                padding: 0.3rem 0.6rem;
-            }
-
-            .view-3d-button img {
-                width: 14px;
-                height: 14px;
-            }
-
-            .view-3d-button span {
-                font-size: 0.75rem;
-            }
-
-            .control-button {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.6rem;
-                white-space: nowrap;
-                min-width: 70px;
-            }
-
-            .right-sidebar {
-                padding: 0.75rem;
-                width: 100%;
-            }
-
-            .section-title {
-                font-size: 0.9rem;
-                margin-bottom: 0.75rem;
-                padding-bottom: 0.4rem;
-            }
-
-            .control-group {
-                margin-bottom: 1rem;
-                width: 100%;
-            }
-
-            .control-label {
-                font-size: 0.8rem;
-                margin-bottom: 0.4rem;
-            }
-
-            .input-field {
-                font-size: 0.85rem;
-                padding: 0.5rem;
-                width: 100%;
-            }
-
-            .color-grid {
-                gap: 0.5rem;
-                grid-template-columns: repeat(3, 1fr);
-                width: 100%;
-            }
-
-            .color-item {
-                min-height: 40px;
-            }
-
-            #canvas-3d {
-                height: 280px;
-                width: 100%;
-            }
-
-            .modal-content {
-                width: 90%;
-                max-width: 90vw;
-                margin: 30% auto;
-                padding: 1.25rem;
-                box-sizing: border-box;
-            }
-
-            .modal-icon {
-                font-size: 2.5rem;
-                margin-bottom: 0.75rem;
-            }
-
-            .modal-title {
-                font-size: 1.1rem;
-                margin-bottom: 0.4rem;
-            }
-
-            .modal-message {
-                font-size: 0.85rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .modal-button {
-                padding: 0.6rem 1.5rem;
-                font-size: 0.9rem;
-            }
-
-            .action-buttons {
-                margin-top: 0.75rem;
-                gap: 0.4rem;
-                width: 100%;
-                padding: 0 0.5rem;
-            }
-
-            .action-button {
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
-                max-width: 150px;
-            }
-
-            .loading-overlay .spinner {
-                width: 50px;
-                height: 50px;
-            }
-
-            .loading-content p {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .elements-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .canvas {
-                height: 250px;
-            }
-
-            #canvas-3d {
-                height: 250px;
-            }
-
-            .control-button {
-                font-size: 0.7rem;
-                padding: 0.35rem 0.5rem;
-                min-width: 60px;
-            }
-
-            .action-button {
-                font-size: 0.8rem;
-                padding: 0.5rem 0.8rem;
-            }
-
-            .canvas-area {
-                padding: 0.25rem;
-            }
-
-            .canvas-wrapper {
-                padding: 0.25rem;
-            }
-        }
+/* Konten dari customization_style.css */
+:root {
+    --primary-color: #FF611A; 
+    --dark-blue-main: #074159; 
+    --teal-main: #23C8B8; 
+    --dark-blue-text: #001B24;
+    --light-gray: #f4f7f6;
+    --text-color: var(--dark-blue-text);
+    --secondary-text-color: #555;
+    --white: #ffffff;
+    --card-bg: #fff;
+    --sidebar-bg: #f9f9f9;
+    --border-color: #e0e0e0;
+}
+
+/* Pastikan body dan html memiliki tinggi penuh */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Mencegah scrollbar muncul pada layout penuh layar */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Kontainer utama yang akan mengisi seluruh viewport */
+.customization-container {
+    display: flex;
+    width: 100%;
+    height: 100vh; /* Menggunakan vh agar tinggi mengikuti viewport */
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Pengaturan sidebar */
+.sidebar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: var(--sidebar-bg);
+    overflow-y: auto;
+}
+
+.left-sidebar {
+    width: 250px;
+    border-right: 1px solid var(--border-color);
+}
+
+.right-sidebar {
+    width: 300px;
+    border-left: 1px solid var(--border-color);
+    position: relative;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.sidebar h3 {
+    font-size: 1.2rem;
+    color: var(--dark-blue-main);
+}
+
+.sidebar-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.sidebar-content::-webkit-scrollbar {
+    width: 8px;
+}
+.sidebar-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.design-section {
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+.design-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-blue-text);
+    margin-bottom: 15px;
+}
+
+.add-image-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--teal-main);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+.add-image-btn:hover {
+    background-color: var(--dark-blue-main);
+}
+
+.upload-info {
+    font-size: 0.8rem;
+    color: var(--secondary-text-color);
+    margin-top: 5px;
+    text-align: center;
+}
+
+.element-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.design-element-item {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+.design-element-item:hover {
+    border-color: var(--teal-main);
+}
+
+.design-element-item.fa-solid, .design-element-item.fa-regular {
+    font-size: 3rem; 
+    text-align: center;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    color: var(--secondary-text-color);
+}
+.design-element-item.fa-solid:hover, .design-element-item.fa-regular:hover {
+    border-color: var(--teal-main);
+    color: var(--teal-main);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.storage-info {
+    font-size: 0.8rem;
+    color: #999;
+    text-align: center;
+    display: block;
+}
+
+/* Area utama untuk tampilan 3D */
+.main-design-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: var(--light-gray);
+    height: 100%; /* Atur tinggi penuh di sini */
+}
+.design-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.design-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark-blue-main);
+}
+
+.live-view-feature {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.live-view-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--secondary-text-color);
+}
+
+.toggle-view-btn {
+    background-color: var(--dark-blue-main);
+    color: var(--white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.toggle-view-btn:hover {
+    background-color: var(--teal-main);
+}
+
+/* Kontainer untuk kanvas, dibuat fleksibel */
+.canvas-container {
+    flex-grow: 1; 
+    display: flex;
+    gap: 20px;
+    position: relative;
+    height: 100%; /* Menjamin kontainer canvas mengisi sisa ruang */
+}
+
+.canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    height: 100%;
+}
+
+.canvas-area.single-3d-view {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+/* Elemen kanvas Three.js, atur agar mengisi kontainer utamanya */
+#three-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.design-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    background-color: var(--card-bg);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-btn {
+    background-color: var(--light-gray);
+    color: var(--dark-blue-text);
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.control-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+.zoom-level {
+    font-weight: 600;
+}
+
+.view-mode {
+    font-weight: 600;
+}
+
+.properties-section {
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+.properties-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-blue-text);
+    margin-bottom: 15px;
+}
+
+.size-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 80px;
+}
+
+.input-group label {
+    font-size: 0.8rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.material-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.material-item {
+    text-align: center;
+    cursor: pointer;
+}
+
+.material-icon-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 5px;
+    border: 3px solid transparent;
+    transition: border-color 0.2s ease;
+    object-fit: cover;
+}
+.material-item:hover .material-icon-img,
+.material-item.active .material-icon-img {
+    border-color: var(--teal-main);
+}
+
+.color-options {
+    display: flex;
+    gap: 15px;
+}
+
+.color-item {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.color-item:hover {
+    transform: scale(1.1);
+}
+.color-item.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 97, 26, 0.4);
+}
+
+.save-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 97, 26, 0.3);
+}
+.save-btn:hover {
+    background-color: #e64a19;
+}
+
+.side-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+.side-btn {
+    background-color: var(--light-gray);
+    color: var(--dark-blue-text);
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.side-btn.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+.side-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+.side-btn.active:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .customization-container {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    .left-sidebar, .right-sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-left: none;
+        padding-bottom: 0;
+    }
+    .right-sidebar {
+        order: -1;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .main-design-area {
+        height: 80vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar-header {
+        justify-content: center;
+    }
+    .close-sidebar-btn {
+        display: none;
+    }
+    .main-design-area {
+        padding: 10px;
+    }
+    .design-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    .design-title {
+        font-size: 1.3rem;
+    }
+    .live-view-feature {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .design-footer {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
     </style>
 </head>
 <body>
-    <div class="editor-container">
-        <aside class="left-sidebar">
-            <h3 class="sidebar-title" style="background-color: #ffffff; color: #074159; padding: 0.75rem 1.5rem; margin: -1.5rem -1.5rem 1.5rem -1.5rem;">Unggah & Desain</h3>
-            
-            <div id="upload-tab">
-                <div class="upload-section">
-                    <input type="file" id="image-upload" class="upload-input" accept="image/*" multiple>
-                    <button class="upload-button" onclick="document.getElementById('image-upload').click()">
-                        + Tambah Gambar
-                    </button>
-                    <p style="font-size: 0.85rem; color: #666; text-align: center; margin-top: 0.5rem;">Mendukung JPG, PNG, SVG</p>
-                </div>
 
-                <div id="uploaded-images-grid" class="elements-grid">
-                    </div>
+    <div class="customization-container">
+        
+        <div class="sidebar left-sidebar">
+            <div class="sidebar-header">
+                <h3>Unggah & Desain</h3>
             </div>
-
-            <div id="elements-tab">
-                <h3 class="sidebar-title">
-                    Elemen
-                </h3>
-                <div class="elements-grid" id="elements-grid">
-                    <div class="element-item" data-element="product1">
-                        <img src="{{ asset('assets/img/product1.png') }}" alt="Product 1">
-                    </div>
-                    <div class="element-item" data-element="product2">
-                        <img src="{{ asset('assets/img/product2.png') }}" alt="Product 2">
-                    </div>
-                    <div class="element-item" data-element="product3">
-                        <img src="{{ asset('assets/img/product3.png') }}" alt="Product 3">
-                    </div>
-                    <div class="element-item" data-element="product4">
-                        <img src="{{ asset('assets/img/product4.png') }}" alt="Product 4">
-                    </div>
-                    <div class="element-item" data-element="product5">
-                        <img src="{{ asset('assets/img/product5.png') }}" alt="Product 5">
-                    </div>
-                    <div class="element-item" data-element="product6">
-                        <img src="{{ asset('assets/img/product6.png') }}" alt="Product 6">
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <main class="canvas-area">
-            <div class="design-title-bar">
-                <span style="font-size: 1.5rem; font-weight: 700; color: #074159; display: flex; align-items: center; gap: 0.5rem;">
-                    Desain Kotak Kemasan Khusus
-                    <span style="font-weight: 400; color: #999; cursor: pointer; font-size: 1.5rem;">×</span>
-                </span>
-                <div class="view-switcher-container">
-                    <span class="view-label">2D Pack + 3D Live View</span>
-                    <button class="view-3d-button" data-view="3d">
-                        <img src="{{ asset('assets/img/3D.svg') }}" alt="3D" width="18" height="18">
-                        <span>3D</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="canvas-wrapper">
-                <div class="canvas" id="design-canvas">
-                    <div class="dimension-label dimension-horizontal" style="top: 10px;">120.6 mm</div>
-                    <div class="dimension-label dimension-horizontal" style="bottom: 10px;">161.1 mm</div>
-                    <div class="dimension-label dimension-vertical" style="left: 10px;">60.6 mm</div>
+            <div class="sidebar-content">
+                <div class="design-section">
+                    <button class="add-image-btn"><i class="fas fa-plus-square"></i> Tambah Gambar</button>
+                    <p class="upload-info">Mendukung JPG, PNG, SVG.</p>
+                    <input type="file" id="upload-custom-image" accept="image/*" style="display: none;">
                 </div>
                 
-                <!-- 3D Canvas -->
-                <div id="canvas-3d"></div>
-            </div>
-
-            <div class="canvas-controls">
-                    <button class="control-button" id="undo-btn" title="Undo">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 7v6h6"/>
-                            <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/>
-                        </svg>
-                    </button>
-                    <button class="control-button" id="redo-btn" title="Redo">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 7v6h-6"/>
-                            <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"/>
-                        </svg>
-                    </button>
-                    <div class="zoom-display">
-                        <button class="control-button" id="zoom-out" title="Zoom Out">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="M21 21l-4.35-4.35"/>
-                                <line x1="8" y1="11" x2="14" y2="11"/>
-                            </svg>
-                        </button>
-                        <span id="zoom-level">100%</span>
-                        <button class="control-button" id="zoom-in" title="Zoom In">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="M21 21l-4.35-4.35"/>
-                                <line x1="11" y1="8" x2="11" y2="14"/>
-                                <line x1="8" y1="11" x2="14" y2="11"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <button class="control-button" id="reset-view" title="Reset View">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0118.8-4.3M22 12.5a10 10 0 01-18.8 4.2"/>
-                        </svg>
-                    </button>
-                    <button class="control-button" id="luar-btn" title="Luar" style="padding: 0 1rem; width: auto; border-radius: 20px; font-weight: 600; font-size: 0.95rem;">
-                        Luar
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.25rem;">
-                            <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            <path d="M9 12l2 2 4-4"/>
-                        </svg>
-                    </button>
-                </div>
-        </main>
-
-        <aside class="right-sidebar">
-            <h3 class="sidebar-title" style="background-color: #f0f0f0; color: #074159; padding: 0.75rem 1.5rem; margin: -1.5rem -1.5rem 1.5rem -1.5rem;">Properti</h3>
-
-            <div class="property-section">
-                <h3 class="property-title">Ukuran</h3>
-                <div class="dimension-group">
-                    <div class="dimension-item">
-                        <span class="dimension-label-text">Panjang</span>
-                        <input type="text" class="dimension-input" value="120.6 mm" id="dimension-length">
-                    </div>
-                    <div class="dimension-item">
-                        <span class="dimension-label-text">Lebar</span>
-                        <input type="text" class="dimension-input" value="60.6 mm" id="dimension-width">
+                <div class="design-section">
+                    <h4>Elemen</h4>
+                    <div class="element-grid">
+                        <img src="{{ asset('assets/img/product1.png') }}" alt="Kotak Kemasan Khusus" class="design-element-item" data-type="box-special">
+                        <img src="{{ asset('assets/img/product2.png') }}" alt="Karton Bergelombang" class="design-element-item" data-type="box-corrugated">
+                        <img src="{{ asset('assets/img/product3.png') }}" alt="Kemasan Ramah Lingkungan" class="design-element-item" data-type="box-eco">
+                        <img src="{{ asset('assets/img/product4.png') }}" alt="Display & Promosi" class="design-element-item" data-type="box-display">
+                        <img src="{{ asset('assets/img/product5.png') }}" alt="Kemasan Makanan" class="design-element-item" data-type="box-food">
+                        <img src="{{ asset('assets/img/product6.png') }}" alt="Kemasan Kosmetik" class="design-element-item" data-type="box-cosmetic">
+                        <i class="fas fa-th design-element-item" data-type="pattern"></i>
+                        <i class="fas fa-tags design-element-item" data-type="sticker"></i>
                     </div>
                 </div>
-                <div class="dimension-item">
-                    <span class="dimension-label-text">Tinggi</span>
-                    <input type="text" class="dimension-input" value="161.1 mm" id="dimension-height">
+
+                <div class="design-footer">
+                    <span class="storage-info">1.5 / 100MB digunakan</span>
                 </div>
             </div>
+        </div>
 
-            <div class="property-section">
-                <h3 class="property-title">Material</h3>
-                <div class="material-grid">
-                    <div class="material-item selected" data-material="karton">
-                        <div class="material-circle" style="background-image: url('{{ asset('assets/img/product1.png') }}');"></div>
-                        <span class="material-name">Karton</span>
+        <div class="main-design-area">
+            <div class="design-header">
+                <h2 class="design-title">Desain Kotak Kemasan Khusus</h2>
+                <div class="live-view-feature">
+                    <span class="live-view-text">3D Live View</span>
+                </div>
+            </div>
+            <div class="canvas-container">
+                <div class="canvas-area single-3d-view">
+                    <canvas id="three-canvas"></canvas>
+                </div>
+            </div>
+            <div class="design-footer">
+                <div class="control-group">
+                    <button class="control-btn" id="undo-btn"><i class="fas fa-undo"></i></button>
+                    <button class="control-btn" id="redo-btn"><i class="fas fa-redo"></i></button>
+                </div>
+                <div class="control-group zoom-control">
+                    <button class="control-btn" id="zoom-out-btn"><i class="fas fa-search-minus"></i></button>
+                    <span class="zoom-level" id="zoom-level">100%</span>
+                    <button class="control-btn" id="zoom-in-btn"><i class="fas fa-search-plus"></i></button>
+                </div>
+                <div class="control-group">
+                    <span class="view-mode">Luar</span>
+                    <button class="control-btn" id="toggle-view-mode"><i class="fas fa-sync-alt"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar right-sidebar">
+            <div class="sidebar-header">
+                <button class="close-sidebar-btn" id="close-right-sidebar"><i class="fas fa-times"></i></button>
+                <h3>Properti</h3>
+            </div>
+            <div class="sidebar-content">
+
+                <div class="properties-section">
+                    <h4>Jenis Box</h4>
+                    <div class="box-type-options">
+                        <div class="material-item active" data-box-type="tall-box">
+                            <img src="{{ asset('assets/img/tinggi.png') }}" alt="Ikon Box Tinggi" class="material-icon-img">
+                            <p>Tinggi</p>
+                        </div>
+                        <div class="material-item" data-box-type="wide-box">
+                            <img src="{{ asset('assets/img/lebar.png') }}" alt="Ikon Box Lebar" class="material-icon-img">
+                            <p>Lebar</p>
+                        </div>
+                        <div class="material-item" data-box-type="cube-box">
+                            <img src="{{ asset('assets/img/kubus.png') }}" alt="Ikon Box Kubus" class="material-icon-img">
+                            <p>Kubus</p>
+                        </div>
                     </div>
-                    <div class="material-item" data-material="daur-ulang">
-                        <div class="material-circle" style="background-image: url('{{ asset('assets/img/product2.png') }}');"></div>
-                        <span class="material-name">Daur Ulang</span>
+                </div>
+
+                <div class="properties-section">
+                    <h4>Pilih Sisi</h4>
+                    <div class="side-selection">
+                        <button class="side-btn active" data-side="front">Depan</button>
+                        <button class="side-btn" data-side="back">Belakang</button>
+                        <button class="side-btn" data-side="left">Kiri</button>
+                        <button class="side-btn" data-side="right">Kanan</button>
+                        <button class="side-btn" data-side="top">Atas</button>
+                        <button class="side-btn" data-side="bottom">Bawah</button>
                     </div>
-                    <div class="material-item" data-material="kraft">
-                        <div class="material-circle" style="background-image: url('{{ asset('assets/img/product3.png') }}');"></div>
-                        <span class="material-name">Kraft</span>
+                </div>
+                
+                <div class="properties-section">
+                    <h4>Ukuran</h4>
+                    <div class="size-inputs">
+                        <div class="input-group">
+                            <label>Panjang</label>
+                            <input type="number" value="120" id="prop-length">
+                        </div>
+                        <div class="input-group">
+                            <label>Lebar</label>
+                            <input type="number" value="60" id="prop-width">
+                        </div>
+                        <div class="input-group">
+                            <label>Tinggi</label>
+                            <input type="number" value="160" id="prop-height">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="properties-section">
+                    <h4>Material</h4>
+                    <div class="material-options">
+                        <div class="material-item active" data-material="cardboard">
+                            <img src="{{ asset('assets/img/product1.png') }}" alt="Ikon Karton" class="material-icon-img">
+                            <p>Karton</p>
+                        </div>
+                        <div class="material-item" data-material="recycled">
+                            <img src="{{ asset('assets/img/product2.png') }}" alt="Ikon Daur Ulang" class="material-icon-img">
+                            <p>Daur Ulang</p>
+                        </div>
+                        <div class="material-item" data-material="kraft">
+                            <img src="{{ asset('assets/img/product3.png') }}" alt="Ikon Kraft" class="material-icon-img">
+                            <p>Kraft</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="properties-section">
+                    <h4>Warna Kemasan</h4>
+                    <div class="color-options">
+                        <div class="color-item active" style="background-color: #f0e68c;" data-color="#f0e68c"></div>
+                        <div class="color-item" style="background-color: #e6e6fa;" data-color="#e6e6fa"></div>
+                        <div class="color-item" style="background-color: #d3d3d3;" data-color="#d3d3d3"></div>
+                        <div class="color-item" style="background-color: #add8e6;" data-color="#add8e6"></div>
+                        <div class="color-item" style="background-color: #ffb6c1;" data-color="#ffb6c1"></div>
+                        <div class="color-item" style="background-color: #90ee90;" data-color="#90ee90"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="property-section">
-                <h3 class="property-title">Warna Kemasan</h3>
-                <div class="color-grid">
-                    <div class="color-item selected" style="background-color: #FFD700;" data-color="gold"></div>
-                    <div class="color-item" style="background-color: #E8E8E8;" data-color="silver"></div>
-                    <div class="color-item" style="background-color: #F5F5F5;" data-color="white"></div>
-                    <div class="color-item" style="background-color: #87CEEB;" data-color="lightblue"></div>
-                    <div class="color-item" style="background-color: #FFB6C1;" data-color="pink"></div>
-                    <div class="color-item" style="background-color: #90EE90;" data-color="lightgreen"></div>
-                </div>
+            <div class="sidebar-footer">
+                <button class="save-btn"><i class="fas fa-save"></i> Simpan</button>
             </div>
-        </aside>
-    </div>
-
-    <div class="action-buttons">
-        <button class="action-button button-exit" id="exit-button">Luar</button>
-        <button class="action-button button-save" id="save-button">
-            Simpan
-        </button>
-    </div>
-
-    <div id="success-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-icon">✓</div>
-            <h2 class="modal-title">Desain Tersimpan!</h2>
-            <p class="modal-text">Desain Anda telah berhasil disimpan dan didownload sebagai gambar PNG ke perangkat lokal.</p>
-            <button class="modal-button" onclick="closeModal()">OK, Mengerti</button>
         </div>
     </div>
 
-    <div id="loading-overlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
-    </div>
-
     <script>
-        // Design Editor State
-        let designState = {
-            title: 'Desain Kotak Kemasan Khusus',
-            dimensions: {
-                length: 120.6,
-                width: 60.6,
-                height: 161.1
-            },
-            material: 'karton',
-            color: 'gold',
-            elements: [],
-            uploadedImages: [],
-            zoom: 100,
-            history: [],
-            historyIndex: -1
-        };
+// Konten dari customization.js
+document.addEventListener('DOMContentLoaded', function() {
+    // === Inisialisasi Scene 3D Three.js ===
+    const canvasArea3d = document.getElementById('three-canvas');
+    if (!canvasArea3d) {
+        console.error("Elemen canvas dengan ID 'three-canvas' tidak ditemukan.");
+        return;
+    }
 
-        let isDragging = false;
-        let isResizing = false;
-        let currentElement = null;
-        let currentHandle = null;
-        let offsetX = 0;
-        let offsetY = 0;
-        let elementIdCounter = 0;
-        let currentView = '2d';
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, canvasArea3d.offsetWidth / canvasArea3d.offsetHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({
+        canvas: canvasArea3d,
+        alpha: true
+    });
+    renderer.setSize(canvasArea3d.offsetWidth, canvasArea3d.offsetHeight);
 
-        // 3D Scene Variables
-        let scene, camera, renderer, box3D;
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
 
-        // View Switching
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', function() {
-                this.parentElement.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
 
-        // Image Upload Handler
-        document.getElementById('image-upload').addEventListener('change', function(e) {
-            const files = e.target.files;
-            const grid = document.getElementById('uploaded-images-grid');
-            
-            Array.from(files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const imageData = event.target.result;
-                        designState.uploadedImages.push(imageData);
-                        
-                        const div = document.createElement('div');
-                        div.className = 'element-item';
-                        div.innerHTML = `<img src="${imageData}" alt="Uploaded Image">`;
-                        div.addEventListener('click', function() {
-                            addElementToCanvas(imageData, 'image');
-                        });
-                        grid.appendChild(div);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        });
-
-        // Add Element to Canvas
-        function addElementToCanvas(src, type) {
-            const canvas = document.getElementById('design-canvas');
-            const element = document.createElement('div');
-            element.className = 'draggable-element';
-            element.id = 'element-' + (++elementIdCounter);
-            
-            const img = document.createElement('img');
-            img.src = src;
-            element.appendChild(img);
-            
-            // Add resize handles
-            ['nw', 'ne', 'sw', 'se'].forEach(pos => {
-                const handle = document.createElement('div');
-                handle.className = `resize-handle ${pos}`;
-                handle.dataset.handle = pos;
-                element.appendChild(handle);
-            });
-            
-            element.style.left = Math.random() * (canvas.offsetWidth - 150) + 'px';
-            element.style.top = Math.random() * (canvas.offsetHeight - 150) + 'px';
-            element.style.width = '150px';
-            element.style.height = '150px';
-            
-            canvas.appendChild(element);
-            
-            designState.elements.push({
-                id: element.id,
-                src: src,
-                type: type,
-                x: parseInt(element.style.left),
-                y: parseInt(element.style.top),
-                width: 150,
-                height: 150
-            });
-            
-            makeDraggable(element);
-            makeResizable(element);
-            saveHistory();
+    // === Model 3D Box & Material ===
+    let box;
+    const boxModels = {
+        'tall-box': {
+            length: 120,
+            width: 60,
+            height: 160
+        },
+        'wide-box': {
+            length: 160,
+            width: 120,
+            height: 60
+        },
+        'cube-box': {
+            length: 100,
+            width: 100,
+            height: 100
         }
+    };
+    const defaultColor = '#f0e68c';
+    const textureLoader = new THREE.TextureLoader();
+    let currentMaterialColor = defaultColor;
+    let activeSide = 'front'; // Default sisi aktif
 
-        // Make Element Draggable
-        function makeDraggable(element) {
-            element.addEventListener('mousedown', function(e) {
-                if (e.target.classList.contains('resize-handle')) return;
-                
-                isDragging = true;
-                currentElement = element;
-                offsetX = e.clientX - element.offsetLeft;
-                offsetY = e.clientY - element.offsetTop;
-                element.classList.add('selected');
-                
-                document.querySelectorAll('.draggable-element').forEach(el => {
-                    if (el !== element) el.classList.remove('selected');
-                });
-            });
-        }
+    // Mapping sisi ke indeks material Three.js BoxGeometry
+    const sideMap = {
+        'right': 0,
+        'left': 1,
+        'top': 2,
+        'bottom': 3,
+        'front': 4,
+        'back': 5
+    };
+    const materials = []; // Akan diisi dengan material untuk setiap sisi
 
-        // Make Element Resizable
-        function makeResizable(element) {
-            element.querySelectorAll('.resize-handle').forEach(handle => {
-                handle.addEventListener('mousedown', function(e) {
-                    e.stopPropagation();
-                    isResizing = true;
-                    currentElement = element;
-                    currentHandle = this.dataset.handle;
-                    
-                    document.querySelectorAll('.draggable-element').forEach(el => {
-                        el.classList.remove('selected');
-                    });
-                    element.classList.add('selected');
-                });
-            });
-        }
-
-        document.addEventListener('mousemove', function(e) {
-            if (isDragging && currentElement && !isResizing) {
-                const canvas = document.getElementById('design-canvas');
-                const canvasRect = canvas.getBoundingClientRect();
-                
-                let newX = e.clientX - canvasRect.left - offsetX;
-                let newY = e.clientY - canvasRect.top - offsetY;
-                
-                newX = Math.max(0, Math.min(newX, canvas.offsetWidth - currentElement.offsetWidth));
-                newY = Math.max(0, Math.min(newY, canvas.offsetHeight - currentElement.offsetHeight));
-                
-                currentElement.style.left = newX + 'px';
-                currentElement.style.top = newY + 'px';
-            } else if (isResizing && currentElement) {
-                const rect = currentElement.getBoundingClientRect();
-                const canvas = document.getElementById('design-canvas');
-                const canvasRect = canvas.getBoundingClientRect();
-                
-                let newWidth = currentElement.offsetWidth;
-                let newHeight = currentElement.offsetHeight;
-                let newX = parseInt(currentElement.style.left);
-                let newY = parseInt(currentElement.style.top);
-                
-                if (currentHandle.includes('e')) {
-                    newWidth = e.clientX - rect.left;
-                }
-                if (currentHandle.includes('w')) {
-                    const deltaX = e.clientX - rect.left;
-                    newWidth = currentElement.offsetWidth - deltaX;
-                    newX = parseInt(currentElement.style.left) + deltaX;
-                }
-                if (currentHandle.includes('s')) {
-                    newHeight = e.clientY - rect.top;
-                }
-                if (currentHandle.includes('n')) {
-                    const deltaY = e.clientY - rect.top;
-                    newHeight = currentElement.offsetHeight - deltaY;
-                    newY = parseInt(currentElement.style.top) + deltaY;
-                }
-                
-                // Minimum size 50x50
-                if (newWidth >= 50 && newHeight >= 50) {
-                    currentElement.style.width = newWidth + 'px';
-                    currentElement.style.height = newHeight + 'px';
-                    currentElement.style.left = newX + 'px';
-                    currentElement.style.top = newY + 'px';
-                }
-            }
-        });
-
-        document.addEventListener('mouseup', function() {
-            if (isDragging || isResizing) {
-                if (currentElement) {
-                    const elementData = designState.elements.find(el => el.id === currentElement.id);
-                    if (elementData) {
-                        elementData.x = parseInt(currentElement.style.left);
-                        elementData.y = parseInt(currentElement.style.top);
-                        elementData.width = currentElement.offsetWidth;
-                        elementData.height = currentElement.offsetHeight;
-                    }
-                    saveHistory();
-                }
-                
-                isDragging = false;
-                isResizing = false;
-                currentElement = null;
-                currentHandle = null;
-            }
-        });
-
-        // Element Selection
-        document.querySelectorAll('.element-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const img = this.querySelector('img');
-                if (img) {
-                    addElementToCanvas(img.src, 'element');
-                }
-            });
-        });
-
-        // Material Selection
-        document.querySelectorAll('.material-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.material-item').forEach(i => i.classList.remove('selected'));
-                this.classList.add('selected');
-                designState.material = this.dataset.material;
-                saveHistory();
-            });
-        });
-
-        // Color Selection
-        document.querySelectorAll('.color-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.color-item').forEach(i => i.classList.remove('selected'));
-                this.classList.add('selected');
-                designState.color = this.dataset.color;
-                document.getElementById('design-canvas').style.backgroundColor = this.style.backgroundColor;
-                saveHistory();
-            });
-        });
-
-        // Zoom Controls
-        let zoomLevel = 100;
-        document.getElementById('zoom-in').addEventListener('click', function() {
-            if (zoomLevel < 200) {
-                zoomLevel += 10;
-                updateZoom();
-            }
-        });
-
-        document.getElementById('zoom-out').addEventListener('click', function() {
-            if (zoomLevel > 50) {
-                zoomLevel -= 10;
-                updateZoom();
-            }
-        });
-
-        document.getElementById('reset-view').addEventListener('click', function() {
-            zoomLevel = 100;
-            updateZoom();
-        });
-
-        function updateZoom() {
-            const canvas = document.getElementById('design-canvas');
-            canvas.style.transform = `scale(${zoomLevel / 100})`;
-            document.getElementById('zoom-level').textContent = zoomLevel + '%';
-            designState.zoom = zoomLevel;
-        }
-
-        // History Management
-        function saveHistory() {
-            const currentState = {
-                elements: JSON.parse(JSON.stringify(designState.elements)),
-                material: designState.material,
-                color: designState.color,
-                zoom: designState.zoom
-            };
-            
-            designState.history = designState.history.slice(0, designState.historyIndex + 1);
-            designState.history.push(currentState);
-            designState.historyIndex++;
-        }
-
-        document.getElementById('undo-btn').addEventListener('click', function() {
-            if (designState.historyIndex > 0) {
-                designState.historyIndex--;
-                restoreState(designState.history[designState.historyIndex]);
-            }
-        });
-
-        document.getElementById('redo-btn').addEventListener('click', function() {
-            if (designState.historyIndex < designState.history.length - 1) {
-                designState.historyIndex++;
-                restoreState(designState.history[designState.historyIndex]);
-            }
-        });
-
-        function restoreState(state) {
-            // Clear canvas
-            const canvas = document.getElementById('design-canvas');
-            const elements = canvas.querySelectorAll('.draggable-element');
-            elements.forEach(el => el.remove());
-            
-            // Restore elements
-            designState.elements = JSON.parse(JSON.stringify(state.elements));
-            
-            // Re-create elements on canvas
-            designState.elements.forEach(elementData => {
-                const element = document.createElement('div');
-                element.className = 'draggable-element';
-                element.id = elementData.id;
-                element.style.left = elementData.x + 'px';
-                element.style.top = elementData.y + 'px';
-                element.style.width = elementData.width + 'px';
-                element.style.height = elementData.height + 'px';
-                
-                const img = document.createElement('img');
-                img.src = elementData.src;
-                element.appendChild(img);
-                
-                // Add resize handles
-                ['nw', 'ne', 'sw', 'se'].forEach(pos => {
-                    const handle = document.createElement('div');
-                    handle.className = `resize-handle ${pos}`;
-                    handle.dataset.handle = pos;
-                    element.appendChild(handle);
-                });
-                
-                canvas.appendChild(element);
-                makeDraggable(element);
-                makeResizable(element);
-            });
-            
-            // Restore other properties
-            designState.material = state.material;
-            designState.color = state.color;
-            designState.zoom = state.zoom;
-            
-            // Update UI
-            document.querySelectorAll('.material-item').forEach(item => {
-                item.classList.toggle('selected', item.dataset.material === state.material);
-            });
-            
-            document.querySelectorAll('.color-item').forEach(item => {
-                item.classList.toggle('selected', item.dataset.color === state.color);
-            });
-            
-            zoomLevel = state.zoom;
-            updateZoom();
-        }
-
-        // Save Design - Export as PNG Image
-        document.getElementById('save-button').addEventListener('click', function() {
-            const loadingOverlay = document.getElementById('loading-overlay');
-            loadingOverlay.style.display = 'flex';
-            
-            const designData = {
-                ...designState,
-                timestamp: new Date().toISOString(),
-                id: 'design-' + Date.now()
-            };
-            
-            setTimeout(() => {
-                try {
-                    // Save to localStorage
-                    let savedDesigns = JSON.parse(localStorage.getItem('sikemas_designs')) || [];
-                    savedDesigns.push(designData);
-                    localStorage.setItem('sikemas_designs', JSON.stringify(savedDesigns));
-                    localStorage.setItem('sikemas_latest_design', JSON.stringify(designData));
-                    
-                    // Export canvas as PNG image
-                    const canvas = document.getElementById('design-canvas');
-                    
-                    // Create temporary canvas untuk capture
-                    const tempCanvas = document.createElement('canvas');
-                    const ctx = tempCanvas.getContext('2d');
-                    
-                    // Set size sesuai canvas asli
-                    tempCanvas.width = canvas.offsetWidth;
-                    tempCanvas.height = canvas.offsetHeight;
-                    
-                    // Fill background
-                    ctx.fillStyle = canvas.style.backgroundColor || '#fafafa';
-                    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-                    
-                    // Draw semua elemen ke canvas
-                    const elements = canvas.querySelectorAll('.draggable-element');
-                    let loadedImages = 0;
-                    const totalImages = elements.length;
-                    
-                    if (totalImages === 0) {
-                        // Tidak ada elemen, langsung download canvas kosong
-                        downloadCanvasAsImage(tempCanvas);
-                        loadingOverlay.style.display = 'none';
-                        document.getElementById('success-modal').style.display = 'block';
-                        return;
-                    }
-                    
-                    elements.forEach(element => {
-                        const img = element.querySelector('img');
-                        if (img) {
-                            const tempImg = new Image();
-                            tempImg.crossOrigin = 'anonymous';
-                            tempImg.onload = function() {
-                                const x = parseInt(element.style.left) || 0;
-                                const y = parseInt(element.style.top) || 0;
-                                const width = element.offsetWidth;
-                                const height = element.offsetHeight;
-                                
-                                ctx.drawImage(tempImg, x, y, width, height);
-                                
-                                loadedImages++;
-                                if (loadedImages === totalImages) {
-                                    downloadCanvasAsImage(tempCanvas);
-                                    loadingOverlay.style.display = 'none';
-                                    document.getElementById('success-modal').style.display = 'block';
-                                }
-                            };
-                            tempImg.onerror = function() {
-                                loadedImages++;
-                                if (loadedImages === totalImages) {
-                                    downloadCanvasAsImage(tempCanvas);
-                                    loadingOverlay.style.display = 'none';
-                                    document.getElementById('success-modal').style.display = 'block';
-                                }
-                            };
-                            tempImg.src = img.src;
-                        }
-                    });
-                    
-                } catch (error) {
-                    console.error('Error saving design:', error);
-                    alert('Gagal menyimpan desain. Error: ' + error.message);
-                    loadingOverlay.style.display = 'none';
-                }
-            }, 500);
-        });
-        
-        function downloadCanvasAsImage(canvas) {
-            // Convert canvas to blob
-            canvas.toBlob(function(blob) {
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `Desain-Kemasan-${Date.now()}.png`;
-                link.click();
-                URL.revokeObjectURL(url);
-            }, 'image/png');
-        }
-
-        // Exit Button
-        document.getElementById('exit-button').addEventListener('click', function() {
-            if (confirm('Apakah Anda yakin ingin keluar? Perubahan yang tidak disimpan akan hilang.')) {
-                window.location.href = '{{ url('/') }}';
-            }
-        });
-
-        // Luar Button (di canvas controls)
-        document.getElementById('luar-btn').addEventListener('click', function() {
-            if (confirm('Apakah Anda yakin ingin keluar? Perubahan yang tidak disimpan akan hilang.')) {
-                window.location.href = '{{ url('/') }}';
-            }
-        });
-
-        // Close Modal
-        function closeModal() {
-            document.getElementById('success-modal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('success-modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Prevent default untuk input fields
-            const isInputField = document.activeElement.tagName === 'INPUT' || 
-                                document.activeElement.tagName === 'TEXTAREA';
-            
-            if (e.key === 'Delete' || e.key === 'Backspace') {
-                if (!isInputField) {
-                    const selected = document.querySelector('.draggable-element.selected');
-                    if (selected) {
-                        e.preventDefault();
-                        selected.remove();
-                        designState.elements = designState.elements.filter(el => el.id !== selected.id);
-                        saveHistory();
-                    }
-                }
-            }
-            
-            if (e.ctrlKey && e.key === 'z') {
-                e.preventDefault();
-                document.getElementById('undo-btn').click();
-            }
-            
-            if (e.ctrlKey && (e.key === 'y' || (e.shiftKey && e.key === 'Z'))) {
-                e.preventDefault();
-                document.getElementById('redo-btn').click();
-            }
-            
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                document.getElementById('save-button').click();
-            }
-        });
-
-        // Dimension Input Change Handler
-        const dimensionInputs = {
-            length: document.getElementById('dimension-length'),
-            width: document.getElementById('dimension-width'),
-            height: document.getElementById('dimension-height')
-        };
-
-        const dimensionLabels = {
-            horizontal1: document.querySelector('.dimension-label.dimension-horizontal[style*="top"]'),
-            horizontal2: document.querySelector('.dimension-label.dimension-horizontal[style*="bottom"]'),
-            vertical: document.querySelector('.dimension-label.dimension-vertical')
-        };
-
-        // Update dimension labels when input changes
-        if (dimensionInputs.length) {
-            dimensionInputs.length.addEventListener('input', function() {
-                if (dimensionLabels.horizontal1) {
-                    dimensionLabels.horizontal1.textContent = this.value;
-                }
-            });
-        }
-
-        if (dimensionInputs.width) {
-            dimensionInputs.width.addEventListener('input', function() {
-                if (dimensionLabels.vertical) {
-                    dimensionLabels.vertical.textContent = this.value;
-                }
-            });
-        }
-
-        if (dimensionInputs.height) {
-            dimensionInputs.height.addEventListener('input', function() {
-                if (dimensionLabels.horizontal2) {
-                    dimensionLabels.horizontal2.textContent = this.value;
-                }
-            });
-        }
-
-        // 3D View Toggle - Updated for new button structure
-        const view3DButton = document.querySelector('.view-3d-button[data-view]');
-        let is3DView = false;
-        
-        if (view3DButton) {
-            view3DButton.addEventListener('click', function() {
-                is3DView = !is3DView;
-                currentView = is3DView ? '3d' : '2d';
-                
-                if (is3DView) {
-                    // Switch to 3D view
-                    document.getElementById('design-canvas').style.display = 'none';
-                    document.getElementById('canvas-3d').style.display = 'block';
-                    this.style.backgroundColor = '#00b4a8';
-                    if (!renderer) {
-                        init3DScene();
-                    }
-                    render3DCanvas();
+    // Fungsi untuk membuat model box 3D atau memperbarui dimensinya
+    function createBox(length, width, height) {
+        if (box) {
+            scene.remove(box);
+            box.geometry.dispose();
+            if (box.material) {
+                if (Array.isArray(box.material)) {
+                    box.material.forEach(mat => mat.dispose());
                 } else {
-                    // Switch back to 2D view
-                    document.getElementById('design-canvas').style.display = 'block';
-                    document.getElementById('canvas-3d').style.display = 'none';
-                    this.style.backgroundColor = '#074159';
+                    box.material.dispose();
+                }
+            }
+        }
+
+        const geometry = new THREE.BoxGeometry(length, height, width);
+
+        // Inisialisasi material untuk 6 sisi
+        materials.length = 0; // Bersihkan array materials
+        for (let i = 0; i < 6; i++) {
+            materials.push(new THREE.MeshLambertMaterial({
+                color: currentMaterialColor
+            }));
+        }
+
+        box = new THREE.Mesh(geometry, materials);
+        scene.add(box);
+    }
+
+    // Fungsi untuk memperbarui warna dasar semua sisi box
+    function updateBoxColor(color) {
+        currentMaterialColor = color;
+        if (box) {
+            materials.forEach(mat => {
+                if (!mat.map) { // Hanya ubah warna jika tidak ada tekstur (gambar)
+                    mat.color.set(color);
                 }
             });
         }
+    }
 
-        // Initialize 3D Scene
-        function init3DScene() {
-            const container = document.getElementById('canvas-3d');
-            
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf5f5ff);
-            
-            camera = new THREE.PerspectiveCamera(75, container.offsetWidth / 600, 0.1, 1000);
-            camera.position.set(3, 3, 5);
-            camera.lookAt(0, 0, 0);
-            
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.offsetWidth, 600);
-            container.appendChild(renderer.domElement);
-            
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(5, 10, 7);
-            scene.add(directionalLight);
-            
-            const geometry = new THREE.BoxGeometry(2, 3, 1);
-            const material = new THREE.MeshPhongMaterial({ 
-                color: 0xFFD700,
-                shininess: 50
+    // Fungsi untuk menerapkan tekstur ke sisi yang aktif
+    function applyTextureToActiveSide(imageSrc) {
+        const sideIndex = sideMap[activeSide];
+        if (box && materials[sideIndex]) {
+            textureLoader.load(imageSrc, (texture) => {
+                materials[sideIndex].map = texture;
+                materials[sideIndex].color.set(0xffffff); // Set warna putih agar tekstur terlihat jelas
+                materials[sideIndex].needsUpdate = true;
+            }, undefined, (err) => {
+                console.error('Error loading texture:', err);
             });
-            box3D = new THREE.Mesh(geometry, material);
-            scene.add(box3D);
+        }
+    }
+
+    // Fungsi untuk mengganti jenis box
+    function switchBoxModel(type) {
+        const model = boxModels[type];
+        if (model) {
+            createBox(model.length, model.width, model.height);
+        }
+    }
+
+    // Inisialisasi box pertama kali
+    switchBoxModel('tall-box');
+    camera.position.z = 300;
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // === Kontrol Properti Sidebar Kanan ===
+    const propLengthInput = document.getElementById('prop-length');
+    const propWidthInput = document.getElementById('prop-width');
+    const propHeightInput = document.getElementById('prop-height');
+    const boxTypeOptions = document.querySelectorAll('.box-type-options .material-item');
+    const sideButtons = document.querySelectorAll('.side-selection .side-btn');
+    const materialOptions = document.querySelectorAll('.material-options .material-item');
+    const colorOptions = document.querySelectorAll('.color-options .color-item');
+
+    // 1. Tombol Jenis Box
+    boxTypeOptions.forEach(item => {
+        item.addEventListener('click', function() {
+            boxTypeOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            const boxType = this.dataset.boxType;
+            const model = boxModels[boxType];
+            propLengthInput.value = model.length;
+            propWidthInput.value = model.width;
+            propHeightInput.value = model.height;
+            createBox(model.length, model.width, model.height); // Perbarui box dengan dimensi baru
+        });
+    });
+
+    // 2. Input Ukuran
+    [propLengthInput, propWidthInput, propHeightInput].forEach(input => {
+        input.addEventListener('change', function() {
+            const length = parseFloat(propLengthInput.value);
+            const width = parseFloat(propWidthInput.value);
+            const height = parseFloat(propHeightInput.value);
+            createBox(length, width, height); // Perbarui box dengan dimensi baru
+        });
+    });
+
+    // 3. Tombol Material
+    const materialImageSources = {
+        'cardboard': "{{ asset('assets/img/product1.png') }}",
+        'recycled': "{{ asset('assets/img/product2.png') }}",
+        'kraft': "{{ asset('assets/img/product3.png') }}"
+    };
+
+    materialOptions.forEach(item => {
+        item.addEventListener('click', function() {
+            materialOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            const materialType = this.dataset.material;
+            console.log(`Material diubah menjadi: ${materialType}`);
             
-            const gridHelper = new THREE.GridHelper(10, 10);
-            scene.add(gridHelper);
-            
-            function animate() {
-                requestAnimationFrame(animate);
-                if (currentView === '3d' && box3D) {
-                    box3D.rotation.y += 0.005;
-                    renderer.render(scene, camera);
-                }
+            // Terapkan gambar material sebagai tekstur ke SEMUA sisi
+            const imageSrc = materialImageSources[materialType];
+            if (imageSrc) {
+                textureLoader.load(imageSrc, (texture) => {
+                    // Terapkan tekstur ke semua 6 sisi
+                    materials.forEach(mat => {
+                        mat.map = texture;
+                        mat.color.set(0xffffff); // Set warna putih agar tekstur terlihat jelas
+                        mat.needsUpdate = true;
+                    });
+                }, undefined, (err) => {
+                    console.error('Error loading texture:', err);
+                });
             }
-            animate();
-        }
+        });
+    });
 
-        function render3DCanvas() {
-            if (renderer && scene && camera) {
-                renderer.render(scene, camera);
+
+    // 4. Pilihan Warna
+    colorOptions.forEach(item => {
+        item.addEventListener('click', function() {
+            colorOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            const color = this.dataset.color;
+            updateBoxColor(color);
+        });
+    });
+
+    // 5. Tombol Pilih Sisi
+    sideButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            sideButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            activeSide = this.dataset.side;
+            console.log(`Sisi aktif: ${activeSide}`);
+            highlightActiveSide();
+        });
+    });
+
+    // Fungsi untuk memberikan highlight pada sisi yang aktif (opsional)
+    function highlightActiveSide() {
+        if (!box) return;
+
+        // Reset semua material ke warna dasar atau tekstur yang ada
+        materials.forEach((mat, index) => {
+            if (mat.originalColor) {
+                mat.color.set(mat.originalColor);
+                delete mat.originalColor;
             }
-        }
-
-        function update3DColor() {
-            if (box3D) {
-                const colorMap = {
-                    'gold': 0xFFD700,
-                    'silver': 0xE8E8E8,
-                    'white': 0xF5F5F5,
-                    'lightblue': 0x87CEEB,
-                    'pink': 0xFFB6C1,
-                    'lightgreen': 0x90EE90
-                };
-                box3D.material.color.setHex(colorMap[designState.color] || 0xFFD700);
+            if (mat.originalMap) {
+                mat.map = mat.originalMap;
+                delete mat.originalMap;
             }
-        }
-
-        // Update color selection untuk 3D
-        const originalColorHandler = document.querySelectorAll('.color-item');
-        document.querySelectorAll('.color-item').forEach(item => {
-            item.addEventListener('click', function() {
-                update3DColor();
-            });
+            mat.needsUpdate = true;
         });
 
-        // Initialize
-        saveHistory();
+        const sideIndex = sideMap[activeSide];
+        if (materials[sideIndex]) {
+            materials[sideIndex].originalColor = materials[sideIndex].color.clone();
+            materials[sideIndex].originalMap = materials[sideIndex].map;
+            materials[sideIndex].color.set(0x00ff00);
+            materials[sideIndex].map = null; // Hapus tekstur saat highlight
+            materials[sideIndex].needsUpdate = true;
+        }
+    }
+
+
+    // === Kontrol Sidebar Kiri (Desain) ===
+    // 1. Tombol Tambah Gambar
+    const addImageBtn = document.querySelector('.add-image-btn');
+    const uploadInput = document.getElementById('upload-custom-image');
+    addImageBtn.addEventListener('click', () => {
+        uploadInput.click();
+    });
+
+    uploadInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (f) => {
+                applyTextureToActiveSide(f.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 2. Tombol Elemen Desain (gambar)
+    const designElements = document.querySelectorAll('.design-element-item');
+    designElements.forEach(item => {
+        item.addEventListener('click', function() {
+            let imgSrc;
+            if (this.tagName === 'IMG') {
+                // Mengambil URL dari atribut src yang sudah diperbarui
+                imgSrc = this.src; 
+            } else if (this.tagName === 'I') {
+                // Untuk ikon Font Awesome, kita perlu menggunakan gambar placeholder
+                const dataType = this.dataset.type;
+                if (dataType === 'pattern') {
+                    imgSrc = 'https://via.placeholder.com/600x600?text=Pola';
+                } else if (dataType === 'sticker') {
+                    imgSrc = 'https://via.placeholder.com/600x600?text=Stiker';
+                }
+            }
+
+            if (imgSrc) {
+                applyTextureToActiveSide(imgSrc);
+            }
+        });
+    });
+
+
+    // === Kontrol Bawah (Zoom, Undo, Redo, Simpan) ===
+    const zoomInBtn = document.getElementById('zoom-in-btn');
+    const zoomOutBtn = document.getElementById('zoom-out-btn');
+    const zoomLevelSpan = document.getElementById('zoom-level');
+    let currentZoom = 1;
+
+    function updateCameraZoom() {
+        const newZ = 300 / currentZoom;
+        camera.position.z = newZ;
+        controls.update();
+        zoomLevelSpan.textContent = `${Math.round(currentZoom * 100)}%`;
+    }
+
+    zoomInBtn.addEventListener('click', () => {
+        currentZoom = Math.min(2, currentZoom + 0.1);
+        updateCameraZoom();
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+        currentZoom = Math.max(0.5, currentZoom - 0.1);
+        updateCameraZoom();
+    });
+
+    // TODO: Implementasi Undo/Redo untuk Three.js akan jauh lebih kompleks
+    // karena melibatkan snapshot status material dan tekstur untuk setiap sisi.
+    // Untuk saat ini, kita akan membuat alert sederhana.
+    document.getElementById('undo-btn').addEventListener('click', () => {
+        alert('Fungsi Undo (riwayat perubahan tekstur) belum diimplementasikan sepenuhnya untuk 3D.');
+    });
+
+    document.getElementById('redo-btn').addEventListener('click', () => {
+        alert('Fungsi Redo (riwayat perubahan tekstur) belum diimplementasikan sepenuhnya untuk 3D.');
+    });
+
+    // Tombol Simpan (akan mengunduh tampilan 3D saat ini)
+    document.querySelector('.save-btn').addEventListener('click', () => {
+        renderer.render(scene, camera); // Render scene untuk memastikan tampilan terbaru
+        const dataURL = renderer.domElement.toDataURL("image/png");
+        const link = document.createElement('a');
+        link.download = 'desain_kemasan_3D.png';
+        link.href = dataURL;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        alert('Tampilan 3D kemasan disimpan sebagai file PNG!');
+    });
+
+    // Inisialisasi highlight sisi aktif saat DOM dimuat
+    highlightActiveSide();
+});
     </script>
 </body>
 </html>

@@ -325,6 +325,26 @@
             margin: 0;
         }
 
+        /* Responsive khusus untuk bagian Mengapa Memilih Sikemas agar tetap horizontal tanpa scroll */
+        @media (max-width: 600px) {
+            .why-us-grid { 
+                display: flex; 
+                justify-content: center; 
+                gap: 1rem; 
+                flex-wrap: wrap; 
+                margin-top: 2.5rem;
+            }
+            .why-us-card {
+                width: 165px; 
+                padding: 1.15rem .9rem 1.35rem .9rem; 
+                box-shadow: 0 3px 10px rgba(0,0,0,.07); 
+            }
+            .why-us-icon {height: 36px; margin-bottom: .6rem;}
+            .why-us-icon img {height: 34px;}
+            .why-us-title {font-size: 13.8px; margin-bottom: .42rem;}
+            .why-us-description {font-size: 11.8px; line-height: 1.4;}
+        }
+
 
         /* Hero Section */
         .hero-section {
@@ -673,6 +693,15 @@
             gap: 2rem;
         }
 
+        /* Center the third commitment card below the first two */
+        .commitment-grid .commitment-card:nth-child(3) {
+            grid-column: 1 / -1; /* span full width of grid */
+            max-width: 360px; /* limit width for nicer centering */
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: .75rem; /* slight spacing from top row */
+        }
+
         .commitment-card {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -752,28 +781,30 @@
         .domino-nav {
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 3.5rem;
-            margin-bottom: 0.5rem;
-            padding: 3rem 0;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1.75rem;
+            padding: 2.5rem 0 2rem;
+            margin: 0 0 1rem 0;
         }
 
         /* .domino-tab (Ini adalah card utama) */
         .domino-tab {
             position: relative;
-            width: 130px;
-            height: 250px;
-            background: linear-gradient(145deg, #095a7c, #074159);
-            border-radius: 8px;
-            color: white;
+            width: 140px;
+            height: 240px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            border: none;
+            transition: transform .25s ease, box-shadow .25s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 0; /* gambar penuh */
             font-family: 'Besley', serif;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+            background: none;
+            border: none;
         }
 
         /* .domino-tab span (Teks di dalam card) */
@@ -787,7 +818,8 @@
 
         /* .domino-tab:hover (Efek saat di-hover) */
         .domino-tab:hover {
-            transform: translate(6px, -6px);
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(0,0,0,.22);
         }
 
 
@@ -859,19 +891,17 @@
         /* 1. Atur tombol agar hanya gambar yang terlihat */
         /*  untuk memperbesar ukuran */
         .domino-nav .domino-tab {
-            border: none;
-            background: none;
-            padding: 0;
-            cursor: pointer;
             max-width: 160px;
-            width: 80%;
+            width: 140px; /* konsisten dengan height */
         }
 
         /* 2. Pastikan gambar responsif di dalam tombol */
         .domino-nav .domino-tab img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             display: block;
+            transition: transform .25s ease;
         }
 
         /* 3. Logika untuk menukar gambar */
@@ -898,11 +928,22 @@
             display: none;
         }
 
-        .domino-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;/ margin-bottom: 25px;
+        /* Duplikat .domino-nav dihapus & disatukan di atas */
+
+        /* Hover efek halus pada gambar tanpa mengubah ukuran keseluruhan */
+        .domino-tab:hover img {
+            transform: scale(1.04);
+        }
+
+        .domino-tab:active, .domino-tab.active {
+            transform: none; /* tetap stabil saat klik */
+            box-shadow: 0 4px 12px rgba(0,0,0,.18);
+        }
+
+        /* Responsive kecil: rapikan ukuran agar tidak terlalu besar */
+        @media (max-width: 600px) {
+            .domino-tab { width: 110px; height: 200px; }
+            .domino-nav { gap: 1rem; padding: 1.75rem 0 1.25rem; }
         }
 
         /*CSS ALUR PROSES KAMI*/
@@ -1303,25 +1344,35 @@
                 margin-bottom: 3rem;
                 padding: 0;
             }
-
+            /* Rework mobile domino cards to tall 3D style + horizontal scroll */
+            .domino-nav {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding: 0.5rem 0 0.5rem;
+                gap: 0.75rem;
+                -webkit-overflow-scrolling: touch;
+            }
+            .domino-nav::-webkit-scrollbar {height: 5px;}
+            .domino-nav::-webkit-scrollbar-thumb {background: rgba(7,65,89,.4); border-radius: 3px;}
             .domino-tab,
             .domino-tab:hover,
             .domino-tab.active {
-                width: calc(50% - 0.5rem);
-                height: 60px;
-                transform: none;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                width: 120px;
+                height: 190px;
                 margin: 0;
-            }
-
-            .domino-tab span {
+                background: none; /* revert to image */
+                box-shadow: none;
                 transform: none;
-                font-size: 0.875rem;
+                padding: 0;
             }
-
-            .domino-tab:last-child {
-                width: 100%;
-            }
+            .domino-tab span {display:none;}
+            .domino-tab img {display:block; filter: drop-shadow(4px 4px 8px rgba(0,0,0,.25));}
+            .domino-tab.active .img-inactive {display:none;}
+            .domino-tab.active .img-active {display:block;}
+            /* Hindari mengecil saat diklik (active state) */
+            .domino-tab:active {transform: none;}
+            .domino-tab.active {transform: none;}
+            .domino-tab img {height:100%; object-fit:cover;}
 
             .domino-content-wrapper {
                 text-align: center;
@@ -1427,6 +1478,89 @@
             }
         }
 
+        /* Mobile tuning for product cards */
+        @media (max-width: 640px) {
+            .products-grid {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 1rem;
+                overflow-x: auto;
+                padding: 0 0 8px 0;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            .products-grid::-webkit-scrollbar {
+                height: 6px;
+            }
+            .products-grid::-webkit-scrollbar-thumb {
+                background: #ff5722;
+                border-radius: 3px;
+            }
+            .product-card {
+                flex: 0 0 240px;
+                scroll-snap-align: start;
+                border-radius: 10px;
+            }
+            .product-image {
+                height: 160px;
+            }
+            .product-content {
+                padding: 1rem 1.25rem;
+            }
+            .product-title {
+                font-size: 1.125rem;
+                margin-bottom: 0.5rem;
+            }
+            .product-description {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            .product-button {
+                padding: 0.6rem 1.25rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-card {
+                max-width: 260px;
+            }
+            .product-image {
+                height: 130px;
+            }
+            .product-content {
+                padding: 0.9rem 1rem;
+            }
+            .product-title {
+                font-size: 1rem;
+            }
+            .product-description {
+                font-size: 0.88rem;
+            }
+            .product-button {
+                padding: 0.55rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Responsive: rapihkan tata letak komitmen 2 kolom + kartu ketiga penuh */
+        @media (max-width: 900px) {
+            .commitment-grid {grid-template-columns: repeat(2, 1fr); gap: 1rem 1.2rem;}
+            .commitment-grid .commitment-card:nth-child(3) {grid-column: 1 / -1; max-width: 440px; margin-top: .5rem;}
+        }
+        @media (max-width: 640px) {
+            .commitment-section {padding: 3rem 1.1rem;}
+            .commitment-grid {grid-template-columns: repeat(2, 1fr); gap: .75rem .85rem;}
+            .commitment-grid .commitment-card:nth-child(3) {max-width: 400px;}
+            .commitment-card {padding: .95rem .75rem 1rem; min-height: 185px; box-shadow: 0 2px 6px rgba(0,0,0,.12);}
+            .commitment-icon {height: 46px; margin-bottom: .65rem;}
+            .commitment-icon img {height: 40px;}
+            .commitment-icon.icon-efisiensi {height: 52px;}
+            .commitment-icon.icon-efisiensi img {height: 48px;}
+            .commitment-title {font-size: 15.5px; margin-bottom: .35rem;}
+            .commitment-description {font-size: 12.2px; line-height: 1.38; -webkit-line-clamp: 5;}
+        }
+
         /* CSS Untuk Artikel Section dari file Anda */
         .skm-articles {
             background: #F4F7F6;
@@ -1472,8 +1606,13 @@
 
         @media (max-width: 600px) {
             .skm-a-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr); /* dua kolom di mobile */
+                gap: 14px;
             }
+            .skm-a-card .thumb { height: 120px; }
+            .skm-a-card .body { padding: 10px 12px 12px; }
+            .skm-a-card .title { font-size: 15px; margin-bottom: 6px; }
+            .skm-a-card .deskripsi { font-size: 13px; line-height: 1.5; margin-bottom: 10px; }
         }
 
         .skm-a-card {
@@ -1525,17 +1664,7 @@
         }
 
         @media (max-width: 640px) {
-            .skm-articles h2 {
-                font-size: 28px;
-            }
-
-            .skm-a-card .title {
-                font-size: 16px;
-            }
-
-            .skm-a-card .deskripsi {
-                font-size: 14px;
-            }
+            .skm-articles h2 { font-size: 26px; }
         }
 
         /* CSS Untuk Testimoni Section dari file Anda */

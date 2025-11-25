@@ -337,8 +337,15 @@
 
     @media (max-width: 600px) {
         .grid-produk {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr); /* dua kolom di mobile */
+            gap: 18px; /* sedikit diperkecil agar muat */
         }
+        .card-produk img {height: 180px;} /* kurangi tinggi gambar agar proporsional */
+        .card-produk-content {padding: 16px 14px;}
+        .card-produk-content h3 {font-size: 1rem; margin-bottom: 8px;}
+        .card-produk-content .deskripsi {font-size: 0.82rem; line-height: 1.4;}
+        .card-produk-content .harga {font-size: 1rem; margin: 12px 0;}
+        .btn-keranjang {padding: 10px; font-size: 0.85rem;}
 
         .header-produk h2,
         .header-produk-grid h2 {

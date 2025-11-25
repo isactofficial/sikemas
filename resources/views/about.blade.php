@@ -911,7 +911,20 @@
                 font-size: 2rem;
             }
             .business-line-cards {
-                gap: 20px;
+                grid-template-columns: repeat(2, 1fr); /* dua kolom di mobile */
+                gap: 16px;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+            .business-line-card h3 { font-size: 1.25rem; margin-bottom: 10px; }
+            .business-line-card p { font-size: 0.9rem; }
+            .business-line-card .card-image { aspect-ratio: 4/3; }
+            /* Pusatkan kartu "Karton Bergelombang" (kartu ke-3) di baris sendiri */
+            .business-line-cards .business-line-card:nth-child(3){
+                grid-column: 1 / -1; /* span dua kolom */
+                max-width: 340px; /* batasi agar tampak center */
+                margin-left: auto;
+                margin-right: auto;
             }
 
             /* Responsive for Values/FAQ Section */

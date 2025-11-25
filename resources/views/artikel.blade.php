@@ -56,7 +56,14 @@
 		.skm-wrap { max-width: 1100px; margin: 0 auto; padding: 14px 16px 30px; }
 		.skm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 		@media (max-width: 980px) { .skm-grid { grid-template-columns: repeat(2, 1fr); } }
-		@media (max-width: 640px) { .skm-grid { grid-template-columns: 1fr; } }
+		@media (max-width: 640px) { 
+			.skm-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+			.skm-card { padding: 14px; }
+			.skm-thumb { height: 130px; }
+			.skm-card h3 { font-size: 15px; }
+			.skm-deskripsi { font-size: 12.5px; line-height: 1.5; }
+			.skm-more { font-size: 13px; }
+		}
 
 		/* Card */
 		.skm-card { background: #fff; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.06); display: flex; flex-direction: column; padding: 16px; }

@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <style>
-/* Konten dari customization_style.css */
+/* Konten CSS untuk Desain dan Tata Letak */
 :root {
     --primary-color: #FF611A; 
     --dark-blue-main: #074159; 
@@ -29,12 +29,11 @@
     --border-color: #e0e0e0;
 }
 
-/* Pastikan body dan html memiliki tinggi penuh */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Mencegah scrollbar muncul pada layout penuh layar */
+    overflow: hidden; 
 }
 
 * {
@@ -51,11 +50,10 @@ body {
     min-height: 100vh;
 }
 
-/* Kontainer utama yang akan mengisi seluruh viewport */
 .customization-container {
     display: flex;
     width: 100%;
-    height: 100vh; /* Menggunakan vh agar tinggi mengikuti viewport */
+    height: 100vh;
     background-color: var(--card-bg);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
@@ -68,18 +66,34 @@ body {
     padding: 20px;
     background-color: var(--sidebar-bg);
     overflow-y: auto;
+    transition: width 0.3s ease, min-width 0.3s ease;
 }
 
 .left-sidebar {
     width: 250px;
+    min-width: 250px;
     border-right: 1px solid var(--border-color);
 }
 
 .right-sidebar {
     width: 300px;
+    min-width: 300px;
     border-left: 1px solid var(--border-color);
     position: relative;
+    transform: translateX(0);
+    transition: transform 0.3s ease, width 0.3s ease, min-width 0.3s ease;
 }
+
+.right-sidebar.hidden {
+    min-width: 0;
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-left: none;
+    overflow: hidden;
+    transform: translateX(100%);
+}
+
 
 .sidebar-header {
     display: flex;
@@ -199,7 +213,8 @@ body {
     flex-direction: column;
     padding: 20px;
     background-color: var(--light-gray);
-    height: 100%; /* Atur tinggi penuh di sini */
+    height: 100%; 
+    position: relative;
 }
 .design-header {
     display: flex;
@@ -207,6 +222,32 @@ body {
     align-items: center;
     margin-bottom: 20px;
 }
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back-btn {
+    background-color: var(--dark-blue-main);
+    color: var(--white);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    text-decoration: none; /* Tambahkan untuk tautan */
+}
+.back-btn:hover {
+    background-color: var(--primary-color);
+}
+
 
 .design-title {
     font-size: 1.5rem;
@@ -250,8 +291,37 @@ body {
     display: flex;
     gap: 20px;
     position: relative;
-    height: 100%; /* Menjamin kontainer canvas mengisi sisa ruang */
+    height: 100%;
 }
+
+/* Tombol untuk membuka sidebar kanan yang tersembunyi */
+#open-right-sidebar {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    width: 30px;
+    height: 60px;
+    border-radius: 5px 0 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+#open-right-sidebar:hover {
+    background-color: var(--dark-blue-main);
+}
+#open-right-sidebar.hidden {
+    display: none;
+}
+
 
 .canvas-area {
     flex: 1;
@@ -472,6 +542,7 @@ body {
         border-right: none;
         border-left: none;
         padding-bottom: 0;
+        min-width: unset;
     }
     .right-sidebar {
         order: -1;
@@ -480,6 +551,18 @@ body {
     .main-design-area {
         height: 80vh;
     }
+    .right-sidebar.hidden {
+        width: 100%; 
+        min-height: 0;
+        height: 0;
+        padding: 0;
+        border-bottom: none;
+        overflow: hidden;
+        transform: none; 
+    }
+    #open-right-sidebar {
+        display: none !important;
+    }
 }
 
 @media (max-width: 768px) {
@@ -487,7 +570,11 @@ body {
         justify-content: center;
     }
     .close-sidebar-btn {
-        display: none;
+        position: absolute;
+        right: 15px;
+        top: 20px;
+        z-index: 10;
+        display: block;
     }
     .main-design-area {
         padding: 10px;
@@ -507,6 +594,9 @@ body {
     .design-footer {
         flex-direction: column;
         gap: 15px;
+    }
+    .header-left {
+        justify-content: center;
     }
 }
     </style>
@@ -529,12 +619,12 @@ body {
                 <div class="design-section">
                     <h4>Elemen</h4>
                     <div class="element-grid">
-                        <img src="{{ asset('assets/img/product1.png') }}" alt="Kotak Kemasan Khusus" class="design-element-item" data-type="box-special">
-                        <img src="{{ asset('assets/img/product2.png') }}" alt="Karton Bergelombang" class="design-element-item" data-type="box-corrugated">
-                        <img src="{{ asset('assets/img/product3.png') }}" alt="Kemasan Ramah Lingkungan" class="design-element-item" data-type="box-eco">
-                        <img src="{{ asset('assets/img/product4.png') }}" alt="Display & Promosi" class="design-element-item" data-type="box-display">
-                        <img src="{{ asset('assets/img/product5.png') }}" alt="Kemasan Makanan" class="design-element-item" data-type="box-food">
-                        <img src="{{ asset('assets/img/product6.png') }}" alt="Kemasan Kosmetik" class="design-element-item" data-type="box-cosmetic">
+                        <img src="assets/img/product1.png" alt="Kotak Kemasan Khusus" class="design-element-item" data-type="box-special">
+                        <img src="assets/img/product2.png" alt="Karton Bergelombang" class="design-element-item" data-type="box-corrugated">
+                        <img src="assets/img/product3.png" alt="Kemasan Ramah Lingkungan" class="design-element-item" data-type="box-eco">
+                        <img src="assets/img/product4.png" alt="Display & Promosi" class="design-element-item" data-type="box-display">
+                        <img src="assets/img/product5.png" alt="Kemasan Makanan" class="design-element-item" data-type="box-food">
+                        <img src="assets/img/product6.png" alt="Kemasan Kosmetik" class="design-element-item" data-type="box-cosmetic">
                         <i class="fas fa-th design-element-item" data-type="pattern"></i>
                         <i class="fas fa-tags design-element-item" data-type="sticker"></i>
                     </div>
@@ -548,7 +638,12 @@ body {
 
         <div class="main-design-area">
             <div class="design-header">
-                <h2 class="design-title">Desain Kotak Kemasan Khusus</h2>
+                <div class="header-left">
+                    <a href="{{ route('home') }}" class="back-btn" title="Kembali ke Homepage">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h2 class="design-title">Desain Kotak Kemasan Khusus</h2>
+                </div>
                 <div class="live-view-feature">
                     <span class="live-view-text">3D Live View</span>
                 </div>
@@ -557,6 +652,7 @@ body {
                 <div class="canvas-area single-3d-view">
                     <canvas id="three-canvas"></canvas>
                 </div>
+                <button id="open-right-sidebar" class="hidden" title="Buka Properti"><i class="fas fa-chevron-right"></i></button>
             </div>
             <div class="design-footer">
                 <div class="control-group">
@@ -575,9 +671,9 @@ body {
             </div>
         </div>
 
-        <div class="sidebar right-sidebar">
+        <div class="sidebar right-sidebar" id="right-sidebar">
             <div class="sidebar-header">
-                <button class="close-sidebar-btn" id="close-right-sidebar"><i class="fas fa-times"></i></button>
+                <button class="close-sidebar-btn" id="close-right-sidebar" title="Tutup Properti"><i class="fas fa-times"></i></button>
                 <h3>Properti</h3>
             </div>
             <div class="sidebar-content">
@@ -586,15 +682,15 @@ body {
                     <h4>Jenis Box</h4>
                     <div class="box-type-options">
                         <div class="material-item active" data-box-type="tall-box">
-                            <img src="{{ asset('assets/img/tinggi.png') }}" alt="Ikon Box Tinggi" class="material-icon-img">
+                            <img src="assets/img/tinggi.png" alt="Ikon Box Tinggi" class="material-icon-img">
                             <p>Tinggi</p>
                         </div>
                         <div class="material-item" data-box-type="wide-box">
-                            <img src="{{ asset('assets/img/lebar.png') }}" alt="Ikon Box Lebar" class="material-icon-img">
+                            <img src="assets/img/lebar.png" alt="Ikon Box Lebar" class="material-icon-img">
                             <p>Lebar</p>
                         </div>
                         <div class="material-item" data-box-type="cube-box">
-                            <img src="{{ asset('assets/img/kubus.png') }}" alt="Ikon Box Kubus" class="material-icon-img">
+                            <img src="assets/img/kubus.png" alt="Ikon Box Kubus" class="material-icon-img">
                             <p>Kubus</p>
                         </div>
                     </div>
@@ -634,15 +730,15 @@ body {
                     <h4>Material</h4>
                     <div class="material-options">
                         <div class="material-item active" data-material="cardboard">
-                            <img src="{{ asset('assets/img/product1.png') }}" alt="Ikon Karton" class="material-icon-img">
+                            <img src="assets/img/product1.png" alt="Ikon Karton" class="material-icon-img">
                             <p>Karton</p>
                         </div>
                         <div class="material-item" data-material="recycled">
-                            <img src="{{ asset('assets/img/product2.png') }}" alt="Ikon Daur Ulang" class="material-icon-img">
+                            <img src="assets/img/product2.png" alt="Ikon Daur Ulang" class="material-icon-img">
                             <p>Daur Ulang</p>
                         </div>
                         <div class="material-item" data-material="kraft">
-                            <img src="{{ asset('assets/img/product3.png') }}" alt="Ikon Kraft" class="material-icon-img">
+                            <img src="assets/img/product3.png" alt="Ikon Kraft" class="material-icon-img">
                             <p>Kraft</p>
                         </div>
                     </div>
@@ -668,8 +764,32 @@ body {
     </div>
 
     <script>
-// Konten dari customization.js
+// =========================================================
+// SCRIPT JAVASCRIPT
+// =========================================================
 document.addEventListener('DOMContentLoaded', function() {
+    // === Logic Tambahan untuk Toggle Sidebar Kanan ===
+    const rightSidebar = document.getElementById('right-sidebar');
+    const closeSidebarBtn = document.getElementById('close-right-sidebar');
+    const openSidebarBtn = document.getElementById('open-right-sidebar');
+
+    function hideRightSidebar() {
+        rightSidebar.classList.add('hidden');
+        openSidebarBtn.classList.remove('hidden');
+    }
+
+    function showRightSidebar() {
+        rightSidebar.classList.remove('hidden');
+        openSidebarBtn.classList.add('hidden');
+    }
+
+    closeSidebarBtn.addEventListener('click', hideRightSidebar);
+    openSidebarBtn.addEventListener('click', showRightSidebar);
+    
+    // CATATAN: Logic Tombol Kembali (back-to-homepage-btn) telah dihapus karena navigasi
+    // sekarang ditangani langsung oleh tag <a> yang mengarah ke route('home') di HTML.
+
+
     // === Inisialisasi Scene 3D Three.js ===
     const canvasArea3d = document.getElementById('three-canvas');
     if (!canvasArea3d) {
@@ -683,7 +803,24 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas: canvasArea3d,
         alpha: true
     });
-    renderer.setSize(canvasArea3d.offsetWidth, canvasArea3d.offsetHeight);
+    
+    function resizeRenderer() {
+        renderer.setSize(canvasArea3d.offsetWidth, canvasArea3d.offsetHeight);
+        camera.aspect = canvasArea3d.offsetWidth / canvasArea3d.offsetHeight;
+        camera.updateProjectionMatrix();
+    }
+    resizeRenderer();
+    window.addEventListener('resize', resizeRenderer);
+
+    // Observer untuk mendeteksi perubahan lebar canvasArea3d saat sidebar di-toggle
+    const observer = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            if (entry.target === canvasArea3d.parentElement) {
+                resizeRenderer();
+            }
+        }
+    });
+    observer.observe(canvasArea3d.parentElement);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -697,21 +834,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // === Model 3D Box & Material ===
     let box;
     const boxModels = {
-        'tall-box': {
-            length: 120,
-            width: 60,
-            height: 160
-        },
-        'wide-box': {
-            length: 160,
-            width: 120,
-            height: 60
-        },
-        'cube-box': {
-            length: 100,
-            width: 100,
-            height: 100
-        }
+        'tall-box': { length: 120, width: 60, height: 160 },
+        'wide-box': { length: 160, width: 120, height: 60 },
+        'cube-box': { length: 100, width: 100, height: 100 }
     };
     const defaultColor = '#f0e68c';
     const textureLoader = new THREE.TextureLoader();
@@ -727,26 +852,23 @@ document.addEventListener('DOMContentLoaded', function() {
         'front': 4,
         'back': 5
     };
-    const materials = []; // Akan diisi dengan material untuk setiap sisi
+    const materials = []; 
 
-    // Fungsi untuk membuat model box 3D atau memperbarui dimensinya
     function createBox(length, width, height) {
         if (box) {
             scene.remove(box);
             box.geometry.dispose();
-            if (box.material) {
-                if (Array.isArray(box.material)) {
-                    box.material.forEach(mat => mat.dispose());
-                } else {
-                    box.material.dispose();
-                }
+            if (Array.isArray(box.material)) {
+                box.material.forEach(mat => mat.dispose());
+            } else if (box.material) {
+                box.material.dispose();
             }
         }
 
         const geometry = new THREE.BoxGeometry(length, height, width);
 
         // Inisialisasi material untuk 6 sisi
-        materials.length = 0; // Bersihkan array materials
+        materials.length = 0;
         for (let i = 0; i < 6; i++) {
             materials.push(new THREE.MeshLambertMaterial({
                 color: currentMaterialColor
@@ -757,19 +879,18 @@ document.addEventListener('DOMContentLoaded', function() {
         scene.add(box);
     }
 
-    // Fungsi untuk memperbarui warna dasar semua sisi box
     function updateBoxColor(color) {
         currentMaterialColor = color;
         if (box) {
             materials.forEach(mat => {
-                if (!mat.map) { // Hanya ubah warna jika tidak ada tekstur (gambar)
+                // Hanya ubah warna jika tidak ada tekstur yang disematkan
+                if (!mat.map) { 
                     mat.color.set(color);
                 }
             });
         }
     }
 
-    // Fungsi untuk menerapkan tekstur ke sisi yang aktif
     function applyTextureToActiveSide(imageSrc) {
         const sideIndex = sideMap[activeSide];
         if (box && materials[sideIndex]) {
@@ -783,7 +904,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Fungsi untuk mengganti jenis box
     function switchBoxModel(type) {
         const model = boxModels[type];
         if (model) {
@@ -791,7 +911,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Inisialisasi box pertama kali
+    // Inisialisasi Box Awal
     switchBoxModel('tall-box');
     camera.position.z = 300;
 
@@ -821,7 +941,7 @@ document.addEventListener('DOMContentLoaded', function() {
             propLengthInput.value = model.length;
             propWidthInput.value = model.width;
             propHeightInput.value = model.height;
-            createBox(model.length, model.width, model.height); // Perbarui box dengan dimensi baru
+            createBox(model.length, model.width, model.height);
         });
     });
 
@@ -831,15 +951,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const length = parseFloat(propLengthInput.value);
             const width = parseFloat(propWidthInput.value);
             const height = parseFloat(propHeightInput.value);
-            createBox(length, width, height); // Perbarui box dengan dimensi baru
+            createBox(length, width, height);
         });
     });
 
     // 3. Tombol Material
     const materialImageSources = {
-        'cardboard': "{{ asset('assets/img/product1.png') }}",
-        'recycled': "{{ asset('assets/img/product2.png') }}",
-        'kraft': "{{ asset('assets/img/product3.png') }}"
+        'cardboard': "assets/img/product1.png", 
+        'recycled': "assets/img/product2.png",  
+        'kraft': "assets/img/product3.png"      
     };
 
     materialOptions.forEach(item => {
@@ -847,16 +967,13 @@ document.addEventListener('DOMContentLoaded', function() {
             materialOptions.forEach(opt => opt.classList.remove('active'));
             this.classList.add('active');
             const materialType = this.dataset.material;
-            console.log(`Material diubah menjadi: ${materialType}`);
             
-            // Terapkan gambar material sebagai tekstur ke SEMUA sisi
             const imageSrc = materialImageSources[materialType];
             if (imageSrc) {
                 textureLoader.load(imageSrc, (texture) => {
-                    // Terapkan tekstur ke semua 6 sisi
                     materials.forEach(mat => {
                         mat.map = texture;
-                        mat.color.set(0xffffff); // Set warna putih agar tekstur terlihat jelas
+                        mat.color.set(0xffffff);
                         mat.needsUpdate = true;
                     });
                 }, undefined, (err) => {
@@ -883,17 +1000,16 @@ document.addEventListener('DOMContentLoaded', function() {
             sideButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             activeSide = this.dataset.side;
-            console.log(`Sisi aktif: ${activeSide}`);
             highlightActiveSide();
         });
     });
 
-    // Fungsi untuk memberikan highlight pada sisi yang aktif (opsional)
+    // Fungsi untuk memberikan highlight pada sisi yang aktif
     function highlightActiveSide() {
         if (!box) return;
 
-        // Reset semua material ke warna dasar atau tekstur yang ada
-        materials.forEach((mat, index) => {
+        // Reset semua material
+        materials.forEach((mat) => {
             if (mat.originalColor) {
                 mat.color.set(mat.originalColor);
                 delete mat.originalColor;
@@ -907,17 +1023,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const sideIndex = sideMap[activeSide];
         if (materials[sideIndex]) {
+            // Simpan kondisi asli dan beri highlight hijau
             materials[sideIndex].originalColor = materials[sideIndex].color.clone();
             materials[sideIndex].originalMap = materials[sideIndex].map;
             materials[sideIndex].color.set(0x00ff00);
-            materials[sideIndex].map = null; // Hapus tekstur saat highlight
+            materials[sideIndex].map = null;
             materials[sideIndex].needsUpdate = true;
         }
     }
 
 
     // === Kontrol Sidebar Kiri (Desain) ===
-    // 1. Tombol Tambah Gambar
+    // 1. Tambah Gambar
     const addImageBtn = document.querySelector('.add-image-btn');
     const uploadInput = document.getElementById('upload-custom-image');
     addImageBtn.addEventListener('click', () => {
@@ -935,16 +1052,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 2. Tombol Elemen Desain (gambar)
+    // 2. Elemen Desain (gambar)
     const designElements = document.querySelectorAll('.design-element-item');
     designElements.forEach(item => {
         item.addEventListener('click', function() {
             let imgSrc;
             if (this.tagName === 'IMG') {
-                // Mengambil URL dari atribut src yang sudah diperbarui
                 imgSrc = this.src; 
             } else if (this.tagName === 'I') {
-                // Untuk ikon Font Awesome, kita perlu menggunakan gambar placeholder
                 const dataType = this.dataset.type;
                 if (dataType === 'pattern') {
                     imgSrc = 'https://via.placeholder.com/600x600?text=Pola';
@@ -960,7 +1075,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    // === Kontrol Bawah (Zoom, Undo, Redo, Simpan) ===
+    // === Kontrol Bawah (Zoom, Simpan) ===
     const zoomInBtn = document.getElementById('zoom-in-btn');
     const zoomOutBtn = document.getElementById('zoom-out-btn');
     const zoomLevelSpan = document.getElementById('zoom-level');
@@ -983,20 +1098,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCameraZoom();
     });
 
-    // TODO: Implementasi Undo/Redo untuk Three.js akan jauh lebih kompleks
-    // karena melibatkan snapshot status material dan tekstur untuk setiap sisi.
-    // Untuk saat ini, kita akan membuat alert sederhana.
-    document.getElementById('undo-btn').addEventListener('click', () => {
-        alert('Fungsi Undo (riwayat perubahan tekstur) belum diimplementasikan sepenuhnya untuk 3D.');
-    });
-
-    document.getElementById('redo-btn').addEventListener('click', () => {
-        alert('Fungsi Redo (riwayat perubahan tekstur) belum diimplementasikan sepenuhnya untuk 3D.');
-    });
-
-    // Tombol Simpan (akan mengunduh tampilan 3D saat ini)
+    // FUNGSI SIMPAN/UNDUH PNG 3D
     document.querySelector('.save-btn').addEventListener('click', () => {
-        renderer.render(scene, camera); // Render scene untuk memastikan tampilan terbaru
+        renderer.render(scene, camera);
         const dataURL = renderer.domElement.toDataURL("image/png");
         const link = document.createElement('a');
         link.download = 'desain_kemasan_3D.png';
@@ -1007,8 +1111,8 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Tampilan 3D kemasan disimpan sebagai file PNG!');
     });
 
-    // Inisialisasi highlight sisi aktif saat DOM dimuat
-    highlightActiveSide();
+    // Panggil highlightActiveSide setelah inisialisasi selesai
+    highlightActiveSide(); 
 });
     </script>
 </body>

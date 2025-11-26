@@ -1986,7 +1986,7 @@
         </div>
     </section>
 
-    <section class="free-design-section" aria-labelledby="free-design-title">
+    <section class="free-design-section" aria-labelledby="free-design-title" id="konsul">>
         <div class="free-design-overlay"></div>
         <div class="free-design-container">
             <p class="free-design-subtitle">konsultasi</p>
@@ -2401,6 +2401,7 @@
             }
         });
     </script>
+    @include('components.chatbot')
 </body>
 
 </html>

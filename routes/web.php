@@ -14,6 +14,7 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Admin\FreeConsultationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\BotManController;
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -57,6 +58,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/invoice/{id}', [CartController::class, 'showInvoice'])->name('invoice.show');
 });
 
+// BotMan Chatbot Routes
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle'])->name('botman.handle');
+Route::get('/botman/test', [BotManController::class, 'test'])->name('botman.test');
 // ============================================
 // ADMIN ROUTES (Protected)
 // ============================================

@@ -1456,4 +1456,5 @@
 </script>
 
 </body>
+@include('components.chatbot')
 </html>

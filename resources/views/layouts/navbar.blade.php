@@ -25,6 +25,12 @@
             </ul>
 
             <div class="skm-mobile-user-wrapper">
+                {{-- **START: SEARCH MOBILE BARU** --}}
+                <a href="{{ route('search') }}" class="skm-mobile-link skm-mobile-search">
+                    <i class="fas fa-search"></i> Cari
+                </a>
+                {{-- **END: SEARCH MOBILE BARU** --}}
+
                 {{-- **HTML TRANSLATE MOBILE** --}}
                 <div class="skm-mobile-link translate-mobile-wrapper">
                     <div id="google_translate_element_mobile"></div>
@@ -75,6 +81,18 @@
         </div>
 
         <div class="skm-right-icons">
+            {{-- **START: SEARCH BAR DESKTOP BARU** --}}
+            <form action="{{ route('search') }}" method="GET" class="skm-search-form" id="skm-search-form" role="search">
+                <input type="search" name="q" placeholder="Cari artikel, produk..." class="skm-search-input" id="skm-search-input">
+                <button type="button" class="skm-search-toggle" id="skm-search-toggle" aria-label="Buka Kolom Pencarian">
+                    <svg class="skm-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 21L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+            {{-- **END: SEARCH BAR DESKTOP BARU** --}}
+
             <a href="{{ route('cart.index') }}" class="skm-cart-link" aria-label="Keranjang Belanja">
                 <svg class="skm-cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 2L7 7H21L19 2H9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -137,7 +155,7 @@
                             @csrf
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="skm-dropdown-item">Login</a>
+                        <a href="{{ route('login') }}" class="skm-dropdown-item skm-dropdown-login">Login</a>
                         <a href="{{ route('register') }}" class="skm-dropdown-item skm-dropdown-register">Daftar</a>
                     @endauth
                 </div>
@@ -163,33 +181,32 @@
             background: #ffffff; 
             border-bottom: 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            height: 80px;                 /* Samakan tinggi dengan index */
-            display: flex;                /* Vertically center contents */
+            height: 80px;
+            display: flex;
             align-items: center;
         }
         
         .skm-container { 
-            max-width: 1400px;            /* Samakan lebar kontainer */
+            max-width: 1400px;
             margin: 0 auto; 
-            padding: 1rem 3rem;           /* = 16px 48px, sesuai index */
-            display: flex;                /* Selaraskan dengan index */
+            padding: 1rem 3rem;
+            display: flex;
             align-items: center; 
-            gap: 16px; 
+            gap: 15px; /* Mengurangi gap sedikit karena ada search bar baru */
             width: 100%;
         }
         
         .skm-logo img { height: 50px; width: auto; display: block; }
         
         /* Right group (menu + user) */
-    .skm-right { display: flex; align-items: center; gap: 2rem; margin-left: auto; }
-        /* Menu aligned inside right group */
+        .skm-right { display: flex; align-items: center; gap: 2rem; margin-left: auto; }
         .skm-menu { margin: 0; }
 
         .skm-navbar .skm-links { 
             list-style: none; 
             display: flex; 
             align-items: center; 
-            gap: 2rem;                 /* Samakan jarak item menu dengan index */
+            gap: 2rem;
             margin: 0; 
             padding: 0; 
             box-sizing: border-box;
@@ -197,8 +214,8 @@
         .skm-navbar .skm-links a { 
             text-decoration: none; 
             color: var(--skm-link); 
-            font-weight: 500;          /* Samakan ketebalan font dengan index */
-            font-size: 1rem;           /* Samakan ukuran teks dengan index */
+            font-weight: 500;
+            font-size: 1rem;
             letter-spacing: 0.2px;
             position: relative;
             transition: color 0.25s ease, transform 0.18s ease, text-shadow 0.18s ease;
@@ -235,6 +252,79 @@
             align-items: center;
             gap: 15px;
         }
+
+        /* --- START: CSS BARU UNTUK SEARCH BAR DESKTOP --- */
+        .skm-search-form {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 32px;
+            width: 32px; /* Awalnya hanya selebar ikon */
+            transition: width 0.3s ease;
+        }
+
+        .skm-search-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: var(--skm-link);
+            transition: color 0.2s, background 0.2s;
+            position: absolute;
+            right: 0;
+            z-index: 10;
+        }
+        
+        .skm-search-toggle:hover {
+            background-color: #f0f0f0;
+        }
+
+        .skm-search-input {
+            width: 0;
+            padding: 0;
+            border: 1px solid transparent;
+            border-radius: 16px;
+            height: 32px;
+            font-size: 14px;
+            background: #f8f8f8;
+            transition: width 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            color: var(--skm-link);
+        }
+
+        /* State when active (expanded) */
+        .skm-search-form.active {
+            width: 200px; /* Lebar total form saat aktif */
+        }
+        
+        .skm-search-form.active .skm-search-input {
+            width: 100%; /* Penuhi lebar form */
+            padding: 0 40px 0 15px; /* Padding untuk teks, dan ruang untuk ikon submit/toggle */
+            border-color: #ddd;
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .skm-search-form.active .skm-search-toggle {
+            color: white;
+            background-color: var(--skm-link);
+            border-radius: 0 16px 16px 0;
+            width: 40px;
+            height: 32px;
+        }
+        
+        .skm-search-form.active .skm-search-toggle:hover {
+            background-color: var(--skm-link-hover);
+        }
+        /* --- END: CSS BARU UNTUK SEARCH BAR DESKTOP --- */
+
 
         /* Cart Icon */
         .skm-cart-link {
@@ -290,7 +380,7 @@
             background: transparent;
             border: none;
             padding: 0;
-            line-height: 1; /* keep svg perfectly centered */
+            line-height: 1;
             cursor: pointer;
             transition: background 0.2s ease;
         }
@@ -328,6 +418,7 @@
             font-size: 12px;
         }
 
+        /* Item dropdown biasa */
         .skm-dropdown-item {
             display: block;
             padding: 0.75rem 1rem;
@@ -352,6 +443,22 @@
             margin: 0.5rem 0;
         }
 
+        /* CSS Login/Daftar di Dropdown (rata tengah) - Sesuai permintaan sebelumnya */
+        .skm-dropdown-login {
+            margin: 0.5rem 1rem; 
+            padding: 0.75rem 1rem;
+            text-align: center; 
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid var(--skm-link);
+            color: var(--skm-link) !important;
+            background-color: transparent;
+        }
+        .skm-dropdown-login:hover {
+            background-color: var(--skm-link) !important;
+            color: white !important;
+        }
+
         .skm-dropdown-register {
             margin: 0.5rem 1rem;
             padding: 0.75rem 1rem;
@@ -364,6 +471,8 @@
         .skm-dropdown-register:hover {
             background-color: #e64a19 !important;
         }
+        /* --- AKHIR CSS MODIFIKASI LOGIN/DAFTAR --- */
+
 
         /* Mobile user section - hidden by default */
         .skm-mobile-user-wrapper { display: none; }
@@ -444,14 +553,13 @@
                 text-align: center; 
                 border-bottom: 1px solid #E6EEF0; 
             }
-            /* tone down transform on mobile to reduce layout jump */
             .skm-navbar .skm-links a:hover,
             .skm-navbar .skm-links a:focus-visible,
             .skm-navbar .skm-links a.touch-hover { transform: scale(1.02); }
             .skm-navbar .skm-links a::after { bottom: 0; }
             .skm-navbar .skm-links li:last-child a { border-bottom: 0; }
             
-            /* Hide desktop cart and user dropdown */
+            /* Hide desktop search, cart and user dropdown */
             .skm-right-icons { display: none; }
             
             /* Show mobile user section */
@@ -490,10 +598,6 @@
                 background: #f5f5f5;
             }
             
-            .skm-mobile-link i {
-                margin-right: 8px;
-            }
-            
             .skm-mobile-register {
                 background-color: #ff5722;
                 color: white !important;
@@ -507,7 +611,7 @@
 
             /* Mobile Translate Fix */
             .translate-mobile-wrapper {
-                padding: 0; /* Hapus padding default skm-mobile-link */
+                padding: 0;
                 text-align: left;
                 border-bottom: 0;
             }
@@ -523,27 +627,22 @@
         /* --- END: Responsive --- */
 
 
-        /* --- START: Google Translate CSS (DARI FILE BARU) --- */
-
-        /* Sembunyikan Mobile di Desktop */
+        /* --- START: Google Translate CSS --- */
         #google_translate_element_mobile {
             display: none !important;
         }
         
-        /* Sembunyikan Desktop di Mobile */
         @media (max-width: 900px) {
             #google_translate_element_desktop {
                 display: none !important;
             }
         }
         
-        /* Google Translate Container */
         #google_translate_element_desktop,
         #google_translate_element_mobile {
             display: inline-block;
         }
 
-        /* Google Translate Gadget Styling */
         .goog-te-gadget {
             font-family: 'Poppins', sans-serif !important;
             font-size: 0 !important;
@@ -576,7 +675,6 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
         }
 
-        /* Hide Google branding text and replace with icon/text */
         .goog-te-gadget-simple .goog-te-menu-value span:first-child {
             display: none;
         }
@@ -587,7 +685,6 @@
             font-weight: 500;
         }
 
-        /* Hide Google Translate banner and notifications */
         .goog-te-banner-frame {
             display: none !important;
         }
@@ -602,7 +699,6 @@
             width: 0 !important;
         }
 
-        /* Untuk navbar transparan di homepage */
         .home-page .navbar .goog-te-gadget .goog-te-combo {
             background: rgba(255, 255, 255, 0.15) !important;
             backdrop-filter: blur(10px) !important;
@@ -676,6 +772,52 @@
                     }
                 });
             }
+
+            // --- START: SEARCH BAR DESKTOP LOGIC BARU ---
+            const searchForm = document.getElementById('skm-search-form');
+            const searchInput = document.getElementById('skm-search-input');
+            const searchToggle = document.getElementById('skm-search-toggle');
+
+            if (searchForm && searchInput && searchToggle) {
+                // Function to expand the search bar
+                function expandSearch() {
+                    searchForm.classList.add('active');
+                    searchInput.focus();
+                    searchToggle.setAttribute('type', 'submit'); // Ganti menjadi submit saat expanded
+                    searchToggle.setAttribute('aria-label', 'Cari');
+                }
+
+                // Function to collapse the search bar
+                function collapseSearch() {
+                    // Hanya collapse jika input kosong
+                    if (searchInput.value.trim() === '') {
+                        searchForm.classList.remove('active');
+                        searchToggle.setAttribute('type', 'button'); // Kembalikan menjadi button
+                        searchToggle.setAttribute('aria-label', 'Buka Kolom Pencarian');
+                    }
+                }
+
+                // Event listener for the icon click
+                searchToggle.addEventListener('click', function(e) {
+                    // Jika belum aktif, expand. Jika sudah aktif, biarkan submit form.
+                    if (!searchForm.classList.contains('active')) {
+                        e.preventDefault(); // Cegah submit saat expand
+                        expandSearch();
+                    }
+                });
+                
+                // Event listener for focusout (blur)
+                searchInput.addEventListener('blur', collapseSearch);
+
+                // Handle form submission when input is empty (prevents submission and collapses)
+                searchForm.addEventListener('submit', function(e) {
+                    if (searchInput.value.trim() === '') {
+                        e.preventDefault();
+                        collapseSearch();
+                    }
+                });
+            }
+            // --- END: SEARCH BAR DESKTOP LOGIC BARU ---
             
             // Load cart count on page load
             @auth

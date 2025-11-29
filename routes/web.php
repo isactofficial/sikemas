@@ -15,6 +15,10 @@ use App\Http\Controllers\Admin\FreeConsultationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\BotManController;
+use App\Http\Controllers\ArticlePublicController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\SearchController; // <<< [TAMBAHAN: Import SearchController]
+
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -31,6 +35,12 @@ Route::get('/', function () {
 Route::get('/edit-design', function () {
     return view('edit-design');
 })->name('edit.design');
+
+// ============================================
+// SEARCH ROUTE
+// ============================================
+Route::get('/search', [SearchController::class, 'index'])->name('search'); // <<< [TAMBAHAN: Route Pencarian]
+
 // ============================================
 // GOOGLE OAUTH ROUTES
 // ============================================
@@ -234,11 +244,12 @@ Route::get('/produk', function () {
     return view('produk', compact('products'));
 })->middleware('track.page:produk')->name('produk');
 
-use App\Http\Controllers\ArticlePublicController;
-use App\Http\Controllers\CommentController;
+// Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
+// Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
 
 Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
 Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
+
 
 // =====================
 // COMMENTS (auth only)
@@ -289,33 +300,6 @@ Route::get('/test/404', function () {
     abort(404); // 404 - Not Found
 });
 
-// =================================================================
-// PERBAIKAN DI SINI:
-// Baris-baris yang rusak (yang mengandung '4OF_PAGES')
-// telah dihapus.
-// =================================================================
-
-/*
-|---------------------------------
-| RUTE UNTUK TESTING HALAMAN ERROR
-|---------------------------------
-*/
-Route::get('/test/400', function () {
-    abort(400); // 400 - Bad Request
-});
-
-Route::get('/test/401', function () {
-    abort(401); // 401 - Unauthorized
-});
-
-Route::get('/test/403', function () {
-    abort(403); // 403 - Forbidden
-});
-
-Route::get('/test/404', function () {
-    abort(404); // 404 - Not Found
-});
-
 Route::get('/test/413', function () {
     abort(413); // 413 - Payload Too Large
 });
@@ -323,6 +307,3 @@ Route::get('/test/413', function () {
 Route::get('/test/429', function () {
     abort(429); // 429 - Too Many Requests
 });
-
-// Route AJAX dihapus dari sini karena sudah dipindahkan
-// ke dalam grup admin di atas.

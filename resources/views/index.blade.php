@@ -693,14 +693,7 @@
             gap: 2rem;
         }
 
-        /* Center the third commitment card below the first two */
-        .commitment-grid .commitment-card:nth-child(3) {
-            grid-column: 1 / -1; /* span full width of grid */
-            max-width: 360px; /* limit width for nicer centering */
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: .75rem; /* slight spacing from top row */
-        }
+        /* Desktop: keep three cards in one row; mobile overrides below */
 
         .commitment-card {
             background: rgba(255, 255, 255, 0.1);
@@ -1546,12 +1539,12 @@
         /* Responsive: rapihkan tata letak komitmen 2 kolom + kartu ketiga penuh */
         @media (max-width: 900px) {
             .commitment-grid {grid-template-columns: repeat(2, 1fr); gap: 1rem 1.2rem;}
-            .commitment-grid .commitment-card:nth-child(3) {grid-column: 1 / -1; max-width: 440px; margin-top: .5rem;}
+            .commitment-grid .commitment-card:nth-child(3) {grid-column: 1 / -1; justify-self: center; max-width: 440px; margin: .5rem auto 0;}
         }
         @media (max-width: 640px) {
             .commitment-section {padding: 3rem 1.1rem;}
             .commitment-grid {grid-template-columns: repeat(2, 1fr); gap: .75rem .85rem;}
-            .commitment-grid .commitment-card:nth-child(3) {max-width: 400px;}
+            .commitment-grid .commitment-card:nth-child(3) {grid-column: 1 / -1; justify-self: center; max-width: 400px; margin-left: auto; margin-right: auto;}
             .commitment-card {padding: .95rem .75rem 1rem; min-height: 185px; box-shadow: 0 2px 6px rgba(0,0,0,.12);}
             .commitment-icon {height: 46px; margin-bottom: .65rem;}
             .commitment-icon img {height: 40px;}

@@ -91,6 +91,18 @@
 		.skm-page-btn[disabled] { background: #8AA2AD; color: #EAF1F3; cursor: not-allowed; }
 		.skm-page-btn[disabled]::before { border-color: #EAF1F3; }
 		.skm-page-label { color: #6B8791; font-size: 14px; white-space: nowrap; }
+
+	/* === Card size uniform overrides === */
+	.skm-grid { align-items: stretch; }
+	.skm-card { display:flex; flex-direction:column; height:100%; }
+	.skm-card-body { display:flex; flex-direction:column; flex:1; }
+	.skm-thumb { aspect-ratio:4/3; height:auto; max-height:150px; }
+	.skm-deskripsi { display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; min-height:4.8em; }
+	.skm-more { margin-top:auto; }
+	@media (max-width:640px){
+		.skm-deskripsi { -webkit-line-clamp:5; min-height:6em; }
+		.skm-thumb { max-height:118px; }
+	}
 	</style>
 </head>
 <body class="skm-page">

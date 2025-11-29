@@ -279,31 +279,33 @@
 }
 
 .btn-keranjang {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
-    padding: 12px;
+    min-height: 42px;
+    padding: 10px 14px;
     background-color: var(--skm-blue);
     color: var(--skm-white);
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Besley', serif;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.25s ease, transform 0.08s ease, box-shadow 0.25s ease;
     text-align: center;
-    flex-shrink: 0; /* Tombol tidak boleh menyusut */
-    margin-top: 0; /* Tidak perlu margin-top karena harga sudah punya margin */
+    flex-shrink: 0;
+    margin-top: auto; /* anchor to bottom of card */
+    box-shadow: 0 3px 10px rgba(7, 65, 89, 0.22);
 }
 
 
-    .btn-keranjang:hover {
-        background-color: var(--skm-blue-2);
-    }
+    .btn-keranjang:hover {background-color: var(--skm-blue-2); box-shadow: 0 5px 14px rgba(7,65,89,.28);}
+    .btn-keranjang:active {transform: translateY(1px);} 
 
-    .btn-keranjang i {
-        margin-right: 8px;
-    }
+    .btn-keranjang i {margin: 0; font-size: 1rem;}
 
     /* Tombol Lihat Semua Produk */
     .btn-show-all {
@@ -336,16 +338,14 @@
     }
 
     @media (max-width: 600px) {
-        .grid-produk {
-            grid-template-columns: repeat(2, 1fr); /* dua kolom di mobile */
-            gap: 18px; /* sedikit diperkecil agar muat */
-        }
-        .card-produk img {height: 180px;} /* kurangi tinggi gambar agar proporsional */
-        .card-produk-content {padding: 16px 14px;}
-        .card-produk-content h3 {font-size: 1rem; margin-bottom: 8px;}
-        .card-produk-content .deskripsi {font-size: 0.82rem; line-height: 1.4;}
-        .card-produk-content .harga {font-size: 1rem; margin: 12px 0;}
-        .btn-keranjang {padding: 10px; font-size: 0.85rem;}
+        .grid-produk {grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: stretch;}
+        .card-produk {display: flex; flex-direction: column;}
+        .card-produk img {aspect-ratio: 4 / 3; width: 100%; height: auto; max-height: 170px; object-fit: cover;}
+        .card-produk-content {padding: 14px 12px; display: flex; flex-direction: column; flex: 1;}
+        .card-produk-content h3 {font-size: .95rem; margin: 0 0 6px;}
+        .card-produk-content .deskripsi {font-size: .78rem; line-height: 1.35; margin: 0 0 10px; flex: 1;}
+        .card-produk-content .harga {font-size: .95rem; margin: 6px 0 10px;}
+        .btn-keranjang {min-height: 38px; padding: 9px 10px; font-size: .85rem; border-radius: 9px;}
 
         .header-produk h2,
         .header-produk-grid h2 {

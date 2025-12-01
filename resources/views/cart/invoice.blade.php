@@ -30,9 +30,9 @@
             
             /* Warna Kustom Sesuai Permintaan */
             --color-faktur: #FF611A; 
-            --color-label: #555555; /* Warna label, tgl ttd, & info perusahaan */
+            --color-label: #555555;
             --color-value: #001B24; 
-            --color-status-lunas: #23C8B8; /* Warna status */
+            --color-status-lunas: #23C8B8;
             --color-total-bg: #F4F7F6; 
         }
 
@@ -47,6 +47,35 @@
             background-color: var(--skm-light-gray);
             padding: 20px;
             color: #333;
+        }
+
+        /* Tombol Back */
+        .back-button-wrapper {
+            max-width: 900px;
+            margin: 0 auto 20px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: var(--skm-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: var(--skm-teal);
+            color: white;
+        }
+
+        .btn-back i {
+            font-size: 1rem;
         }
 
         .invoice-container {
@@ -69,14 +98,12 @@
         .header-left { display: block; }
         .logo-img { height: 50px; margin-bottom: 15px; }
         
-        /* DIPERBARUI: Memastikan warna 555555 */
         .company-info {
             font-size: 0.9rem;
             line-height: 1.6;
-            color: var(--color-label); /* 555555 */
+            color: var(--color-label);
         }
         .company-info strong {
-            /* Style strong dihapus agar tidak beda warna */
             color: inherit;
             font-weight: 600; 
         }
@@ -100,7 +127,6 @@
             font-weight: 600;
         }
         
-        /* DIPERBARUI: Warna status selalu 23C8B8 */
         .status-value {
             color: var(--color-status-lunas) !important; 
             font-weight: 700 !important;
@@ -208,7 +234,6 @@
             font-weight: 700;
         }
 
-        /* Garis biru di bawah tabel */
         .invoice-footer-line {
             height: 2px;
             background-color: var(--skm-blue);
@@ -216,7 +241,6 @@
             margin-bottom: 30px; 
         }
         
-        /* Kotak Terima Kasih */
         .invoice-footer {
             text-align: center;
             font-size: 0.9rem;
@@ -227,7 +251,6 @@
             margin-bottom: 30px; 
         }
         
-        /* Seksi Info Pembayaran & Catatan */
         .payment-notes-section {
             display: flex;
             justify-content: space-between;
@@ -272,7 +295,7 @@
             white-space: pre-line;
         }
         
-        /* 5. Tanda Tangan (DIPERBARUI) */
+        /* 5. Tanda Tangan */
         .signatures {
             display: flex;
             justify-content: space-between; 
@@ -281,40 +304,35 @@
         }
         .signature-box { 
             width: 250px; 
-            /* BARU: Menggunakan flex column */
             display: flex;
             flex-direction: column;
         }
         
         .signature-label-wrapper {
-            /* BARU: Kotak untuk tanggal (atau kosong) */
-            min-height: 3em; /* Cukup untuk 2 baris tanggal */
+            min-height: 3em;
             font-size: 0.9rem;
-            color: var(--color-label); /* 555555 */
+            color: var(--color-label);
             margin-bottom: 5px; 
         }
         
         .signature-title {
             font-weight: 600;
             font-size: 1rem;
-            color: var(--skm-blue); /* 074159 */
-            /* BARU: Pastikan urutan */
+            color: var(--skm-blue);
             order: 2;
         }
         
         .signature-space {
-            height: 70px; /* Jarak untuk tanda tangan */
-            /* BARU: Pastikan urutan */
+            height: 70px;
             order: 3;
         }
         
         .signature-line {
-            border-top: 1px solid var(--skm-blue); /* Garis 074159 */
-            /* BARU: Pastikan urutan */
+            border-top: 1px solid var(--skm-blue);
             order: 4;
         }
         
-        /* 7. Tombol Aksi (Jangan Dicetak) */
+        /* 7. Tombol Aksi */
         .action-buttons { margin-top: 30px; text-align: center; }
         .btn {
             display: inline-block;
@@ -335,25 +353,210 @@
         .btn-secondary:hover { background-color: #e0e0e0; }
         .btn i { margin-right: 8px; }
 
+        /* ========================================
+           RESPONSIVE MOBILE STYLES
+        ======================================== */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .back-button-wrapper {
+                padding: 0 10px;
+            }
+
+            .btn-back {
+                font-size: 0.85rem;
+                padding: 8px 16px;
+            }
+
+            .invoice-container {
+                padding: 20px 15px;
+            }
+
+            /* Header - Stack Vertical */
+            .invoice-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .header-left, .header-right {
+                width: 100%;
+                text-align: left;
+            }
+
+            .logo-img {
+                height: 40px;
+            }
+
+            .company-info {
+                font-size: 0.8rem;
+            }
+
+            .invoice-title {
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+            }
+
+            .invoice-details-list {
+                font-size: 0.85rem;
+            }
+
+            /* Info Boxes - Stack Vertical */
+            .invoice-info {
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 20px;
+                margin-bottom: 30px;
+            }
+
+            .info-box {
+                flex-basis: 100%;
+                padding: 12px 15px;
+            }
+
+            .info-box strong {
+                font-size: 1rem;
+            }
+
+            /* Table Responsive - Horizontal Scroll */
+            .invoice-table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .invoice-table {
+                min-width: 600px; /* Prevent table from becoming too small */
+            }
+
+            .invoice-table th, .invoice-table td {
+                padding: 10px 8px;
+                font-size: 0.85rem;
+            }
+
+            .invoice-table tfoot td {
+                font-size: 0.9rem;
+                padding: 10px 8px;
+            }
+
+            /* Payment & Notes - Stack Vertical */
+            .payment-notes-section {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .info-box-new {
+                flex-basis: 100%;
+                padding: 15px;
+            }
+
+            .info-box-new strong.with-underline {
+                font-size: 1rem;
+            }
+
+            .info-box-new p {
+                font-size: 0.85rem;
+            }
+
+            /* Signatures - Stack Vertical or Reduce Size */
+            .signatures {
+                flex-direction: column;
+                gap: 30px;
+                margin-top: 30px;
+            }
+
+            .signature-box {
+                width: 100%;
+            }
+
+            .signature-label-wrapper {
+                font-size: 0.85rem;
+            }
+
+            .signature-title {
+                font-size: 0.95rem;
+            }
+
+            .signature-space {
+                height: 50px;
+            }
+
+            /* Action Buttons - Stack Vertical */
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Extra Small Devices (< 480px) */
+        @media screen and (max-width: 480px) {
+            .invoice-title {
+                font-size: 1.5rem;
+            }
+
+            .invoice-details-list {
+                font-size: 0.8rem;
+            }
+
+            .detail-label {
+                display: block;
+                margin-bottom: 2px;
+            }
+
+            .invoice-table {
+                min-width: 500px;
+            }
+
+            .invoice-table th, .invoice-table td {
+                padding: 8px 5px;
+                font-size: 0.75rem;
+            }
+
+            .invoice-table tfoot td {
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+        }
+
         @media print {
             body { padding: 0; background-color: white; }
             .invoice-container { box-shadow: none; border-radius: 0; max-width: 100%; padding: 10px; }
-            .action-buttons { 
+            .action-buttons, .back-button-wrapper { 
                 display: none; 
             }
         }
         
-        /* Style khusus untuk proses download PDF */
         .pdf-hiding .signatures,
         .pdf-hiding .payment-notes-section,
         .pdf-hiding .invoice-footer,
-        .pdf-hiding .action-buttons {
+        .pdf-hiding .action-buttons,
+        .pdf-hiding .back-button-wrapper {
             display: none !important;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
+    {{-- Tombol Back --}}
+    <div class="back-button-wrapper no-print">
+        <a href="{{ route('cart.index') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i>
+            Kembali ke Keranjang
+        </a>
+    </div>
 
     <div class="invoice-container" id="invoice-to-download">
         
@@ -420,59 +623,60 @@
         </div>
 
         @php
-            // Hitung Subtotal, Pajak, Biaya Pengiriman, dan Total
             $subtotal = $order->items->sum('subtotal');
-            $pajak = $subtotal * 0.11; // Pajak 11%
-            $biaya_pengiriman = $order->shipping_cost ?? 20000; // Ambil dari database atau default
+            $pajak = $subtotal * 0.11;
+            $biaya_pengiriman = $order->shipping_cost ?? 20000;
             $total_keseluruhan = $subtotal + $pajak + $biaya_pengiriman;
         @endphp
 
-        <table class="invoice-table">
-            <thead>
-                <tr>
-                    <th>Deskripsi Barang</th>
-                    <th class="text-right">Kuantitas</th>
-                    <th class="text-right">Harga Satuan</th>
-                    <th class="text-right">Jumlah</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($order->items as $item)
-                <tr>
-                    <td class="item-description">{{ $item->product_name }}</td>
-                    <td class="text-right">{{ $item->quantity }}</td>
-                    <td class="text-right">Rp {{ number_format($item->unit_price, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>Subtotal</td> 
-                    <td class="no-border"></td> 
-                    <td class="no-border"></td> 
-                    <td class="total-value">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td>Pajak (11%)</td>
-                    <td class="no-border"></td>
-                    <td class="no-border"></td>
-                    <td class="total-value">Rp {{ number_format($pajak, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td>Biaya Pengiriman</td>
-                    <td class="no-border"></td>
-                    <td class="no-border"></td>
-                    <td class="total-value">Rp {{ number_format($biaya_pengiriman, 0, ',', '.') }}</td>
-                </tr>
-                <tr class="grand-total">
-                    <td>Total Keseluruhan</td>
-                    <td class="no-border"></td>
-                    <td class="no-border"></td>
-                    <td class="total-value">Rp {{ number_format($total_keseluruhan, 0, ',', '.') }}</td>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="invoice-table-wrapper">
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>Deskripsi Barang</th>
+                        <th class="text-right">Qty</th>
+                        <th class="text-right">Harga</th>
+                        <th class="text-right">Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($order->items as $item)
+                    <tr>
+                        <td class="item-description">{{ $item->product_name }}</td>
+                        <td class="text-right">{{ $item->quantity }}</td>
+                        <td class="text-right">Rp {{ number_format($item->unit_price, 0, ',', '.') }}</td>
+                        <td class="text-right">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Subtotal</td> 
+                        <td class="no-border"></td> 
+                        <td class="no-border"></td> 
+                        <td class="total-value">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Pajak (11%)</td>
+                        <td class="no-border"></td>
+                        <td class="no-border"></td>
+                        <td class="total-value">Rp {{ number_format($pajak, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Biaya Pengiriman</td>
+                        <td class="no-border"></td>
+                        <td class="no-border"></td>
+                        <td class="total-value">Rp {{ number_format($biaya_pengiriman, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr class="grand-total">
+                        <td>Total Keseluruhan</td>
+                        <td class="no-border"></td>
+                        <td class="no-border"></td>
+                        <td class="total-value">Rp {{ number_format($total_keseluruhan, 0, ',', '.') }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
         
         <div class="invoice-footer-line"></div>
         
@@ -515,7 +719,9 @@ Setelah pembayaran, harap konfirmasi ke nomor berikut: 0812-3456-7890</p>
             </div>
         </div>
 
-    </div> <div class="action-buttons no-print">
+    </div>
+
+    <div class="action-buttons no-print">
         <button id="btn-download-pdf" class="btn btn-primary">
             <i class="fas fa-file-pdf"></i> Download PDF
         </button>
@@ -525,55 +731,38 @@ Setelah pembayaran, harap konfirmasi ke nomor berikut: 0812-3456-7890</p>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script>
         document.getElementById('btn-download-pdf').addEventListener('click', function () {
-            
-            // Ambil elemen yang akan di-download
             const element = document.getElementById('invoice-to-download');
-            
-            // Ambil nomor invoice dari blade untuk nama file
             const invoiceNumber = '{{ $order->invoice_number }}'; 
             
             const opt = {
-              margin:       [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right (dalam inch)
+              margin:       [0.5, 0.5, 0.5, 0.5],
               filename:     'Faktur-' + invoiceNumber + '.pdf',
               image:        { type: 'jpeg', quality: 0.98 },
               html2canvas:  { scale: 2, useCORS: true },
               jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // Tambahkan class khusus ke body untuk menyembunyikan elemen
             document.body.classList.add('pdf-hiding');
 
-            // Generate PDF
             html2pdf().from(element).set(opt).save().then(function() {
-                // Hapus class setelah selesai
                 document.body.classList.remove('pdf-hiding');
             });
         });
     </script>
     
     <script>
-        // Jalankan skrip ini setelah semua elemen halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {
-            
-            // 1. Ambil parameter dari URL
             const urlParams = new URLSearchParams(window.location.search);
             
-            // 2. Cek apakah parameter 'download' ada dan nilainya 'true'
             if (urlParams.get('download') === 'true') {
-                
-                // 3. Tampilkan pesan di console (opsional)
                 console.log('Perintah download terdeteksi. Memulai download otomatis...');
                 
-                // 4. Cari tombol download yang sudah ada di halaman ini
-                // Pastikan ID-nya 'btn-download-pdf'
                 const downloadButton = document.getElementById('btn-download-pdf');
                 
                 if (downloadButton) {
-                    // 5. "Klik" tombol itu secara otomatis
                     downloadButton.click();
                 } else {
                     console.error('Tombol download (#btn-download-pdf) tidak ditemukan untuk auto-download.');
@@ -581,5 +770,5 @@ Setelah pembayaran, harap konfirmasi ke nomor berikut: 0812-3456-7890</p>
             }
         });
     </script>
-    </body>
+</body>
 </html>

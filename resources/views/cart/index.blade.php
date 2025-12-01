@@ -599,7 +599,6 @@
         </div>
         @endif
         @else
-        <!-- Guest mode: same layout populated from localStorage -->
         <div class="cart-content" id="guestCartContent" style="display:none;">
             <div class="cart-items">
                 <h2 class="cart-items-title">Item Pesanan (<span id="guest-items-count">0</span>)</h2>
@@ -660,7 +659,6 @@
             });
         });
 
-        // === LANGKAH 2: UBAH BAGIAN INI ===
         // Remove item (Versi SweetAlert)
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -683,7 +681,6 @@
                 });
             });
         });
-        // === AKHIR BAGIAN YANG DIUBAH ===
 
         // Update cart item function
         function updateCartItem(itemId, quantity, inputElement) {
@@ -809,13 +806,38 @@
                     arr[idx].quantity = q; saveGuestItems(arr); renderGuestCart();
                 });
             });
+
+            // ===============================================
+            //  PERUBAHAN YANG ANDA MINTA ADA DI SINI
+            // ===============================================
             list.querySelectorAll('.remove-btn').forEach(btn=>{
                 btn.addEventListener('click',()=>{
-                    const idx = parseInt(btn.dataset.idx);
-                    const arr = loadGuestItems();
-                    arr.splice(idx,1); saveGuestItems(arr); renderGuestCart();
+                    const idx = parseInt(btn.dataset.idx); // Ambil index item
+                    
+                    // Tampilkan SweetAlert
+                    Swal.fire({
+                        title: 'Hapus Produk?',
+                        text: "Anda yakin ingin menghapus produk ini dari keranjang?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#074159', // Warna biru (sesuai tema)
+                        cancelButtonColor: '#FF611A',  // Warna oranye (sesuai tema)
+                        confirmButtonText: 'Ya, Hapus',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Jika dikonfirmasi, jalankan logika hapus (localStorage)
+                            const arr = loadGuestItems();
+                            arr.splice(idx,1); 
+                            saveGuestItems(arr); 
+                            renderGuestCart(); // Render ulang keranjang
+                        }
+                    });
                 });
             });
+            // ===============================================
+            //  AKHIR PERUBAHAN
+            // ===============================================
         }
         document.addEventListener('DOMContentLoaded', renderGuestCart);
         @endauth

@@ -2170,7 +2170,7 @@
         </div>
     </section>
 
-    <section class="free-design-section" aria-labelledby="free-design-title">
+    <section class="free-design-section" aria-labelledby="free-design-title" id="konsul">>
         <div class="free-design-overlay"></div>
         <div class="free-design-container">
             <p class="free-design-subtitle">konsultasi</p>
@@ -2308,7 +2308,7 @@
         <div class="sp-container">
             <h2 id="sp-title">Siap memulai proyek Anda?</h2>
             <p>Hubungi kami hari ini untuk konsultasi gratis dan wujudkan kemasan impian Anda.</p>
-            <a href="#" class="sp-button" aria-label="Hubungi Kami">Hubungi Kami</a>
+            <a href="{{ url('/about') }}#kontak-kami" class="sp-button" aria-label="Hubungi Kami">Hubungi Kami</a>
         </div>
     </section>
 
@@ -2585,6 +2585,7 @@
             }
         });
     </script>
+    @include('components.chatbot')
 </body>
 
 </html>

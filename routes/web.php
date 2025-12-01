@@ -14,8 +14,11 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Admin\FreeConsultationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\RatingController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\BotManController;
+use App\Http\Controllers\ArticlePublicController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\SearchController; // <<< [TAMBAHAN: Import SearchController]
+
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -35,6 +38,12 @@ Route::post('/contact/store', [ContactController::class, 'store'])->name('contac
 Route::get('/edit-design', function () {
     return view('edit-design');
 })->name('edit.design');
+
+// ============================================
+// SEARCH ROUTE
+// ============================================
+Route::get('/search', [SearchController::class, 'index'])->name('search'); // <<< [TAMBAHAN: Route Pencarian]
+
 // ============================================
 // GOOGLE OAUTH ROUTES
 // ============================================
@@ -62,6 +71,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/invoice/{id}', [CartController::class, 'showInvoice'])->name('invoice.show');
 });
 
+// BotMan Chatbot Routes
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle'])->name('botman.handle');
+Route::get('/botman/test', [BotManController::class, 'test'])->name('botman.test');
 // ============================================
 // ADMIN ROUTES (Protected)
 // ============================================
@@ -136,19 +148,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Testimonies CRUD
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
-    // Transactions CRUD (include create & store so admin can add manual transactions)
+    // Transactions CRUD
     Route::resource('transactions', TransactionController::class)->names('transactions');
+    
     // Free Consultations CRUD (Admin)
     Route::resource('free-consultations', FreeConsultationController::class)
         ->only(['index', 'edit', 'update','destroy'])
         ->names('free-consultations');
 
-    // Route Manajemen Pesan
-    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-    Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
-    // Route untuk mengubah status baca/belum
-    Route::patch('/admin/messages/{id}/toggle-read', [MessageController::class, 'toggleRead'])
-    ->name('messages.toggleRead');
+    // Route AJAX dipindahkan ke dalam grup admin agar aman
+    // dan namanya otomatis menjadi 'admin.users.addresses'
+    Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+        ->name('users.addresses');
 });
 
 
@@ -236,11 +247,12 @@ Route::get('/produk', function () {
     return view('produk', compact('products'));
 })->middleware('track.page:produk')->name('produk');
 
-use App\Http\Controllers\ArticlePublicController;
-use App\Http\Controllers\CommentController;
+// Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
+// Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
 
 Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
 Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
+
 
 // =====================
 // COMMENTS (auth only)
@@ -270,9 +282,31 @@ Route::post('/submit-rating', [RatingController::class, 'store'])
      ->middleware('auth:web') // Pastikan menggunakan guard 'web' atau 'auth' saja
      ->name('submit.rating');
 
-// Transactions CRUD
-Route::resource('transactions', TransactionController::class);
+/*
+|---------------------------------
+| RUTE UNTUK TESTING HALAMAN ERROR
+|---------------------------------
+*/
+Route::get('/test/400', function () {
+    abort(400); // 400 - Bad Request
+});
 
-// AJAX endpoint for getting user addresses
-Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
-    ->name('users.addresses');
+Route::get('/test/401', function () {
+    abort(401); // 401 - Unauthorized
+});
+
+Route::get('/test/403', function () {
+    abort(403); // 403 - Forbidden
+});
+
+Route::get('/test/404', function () {
+    abort(404); // 404 - Not Found
+});
+
+Route::get('/test/413', function () {
+    abort(413); // 413 - Payload Too Large
+});
+
+Route::get('/test/429', function () {
+    abort(429); // 429 - Too Many Requests
+});

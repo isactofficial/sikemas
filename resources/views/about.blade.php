@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>About - SIKEMAS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1303,12 +1304,11 @@
         </div>
     </section>
 
-    <section class="contact-section" id="contact-section">
-        <div class="contact-wrapper">
-            <div class="contact-header">
-                <h1 class="contact-section-title">Mari Terhubung dengan Sikemas</h1>
-                <p>Punya pertanyaan, ide kolaborasi, atau ingin berbagi cerita? Tim profesional kami siap melayani Anda.
-                </p>
+    <section class="contact-section" id="kontak-kami">
+    <div class="contact-wrapper">
+        <div class="contact-header">
+            <h1 class="contact-section-title">Mari Terhubung dengan Sikemas</h1>
+                <p>Punya pertanyaan, ide kolaborasi, atau ingin berbagi cerita? Tim profesional kami siap melayani Anda.</p>
             </div>
 
             <div class="contact-card">
@@ -1491,6 +1491,7 @@
     </script>
 
     @include('layouts.footer')
+    @include('components.chatbot')
 
 </body>
 

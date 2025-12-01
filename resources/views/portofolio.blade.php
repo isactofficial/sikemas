@@ -108,8 +108,36 @@
         .skm-result-card h3{color:#074159;font-size:18px;font-weight:800;margin-bottom:6px}
         .skm-result-card p{color:#355a68;font-size:14px;line-height:1.6}
         @media (max-width:900px){
-            .skm-result-grid{grid-template-columns:1fr;gap:14px}
-            .skm-results{padding:10px 10px 22px}
+            .skm-results{padding:10px 10px 24px}
+            .skm-results h2{font-size:26px;margin:0 0 12px}
+            .skm-result-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+            .skm-result-card{padding:12px;box-shadow:0 6px 16px rgba(7,65,89,.07)}
+            .skm-result-card h3{font-size:15px;margin-bottom:4px}
+            .skm-result-card p{font-size:12.5px;line-height:1.5}
+            .skm-result-card img{aspect-ratio:3/2}
+            /* Pusatkan kartu ketiga (Kemasan Ramah Lingkungan) di baris sendiri */
+            .skm-result-grid .skm-result-card:nth-child(3){
+                grid-column:1 / -1; /* rentang penuh */
+                max-width:340px; /* batasi lebar agar tampak terpusat */
+                margin-left:auto;
+                margin-right:auto;
+            }
+        }
+        @media (max-width:560px){
+            .skm-result-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+            .skm-results h2{font-size:24px}
+            .skm-result-card{padding:10px}
+            .skm-result-card img{aspect-ratio:4/3}
+            .skm-result-card h3{font-size:14px}
+            .skm-result-card p{font-size:11.8px}
+            .skm-result-grid .skm-result-card:nth-child(3){
+                grid-column:1 / -1;
+                max-width:320px;
+            }
+        }
+        @media (max-width:400px){
+            .skm-result-grid{grid-template-columns:1fr;gap:12px}
+            .skm-result-card img{aspect-ratio:16/10}
         }
     </style>
 </section>

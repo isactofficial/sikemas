@@ -259,6 +259,11 @@
     color: var(--skm-new-teal-1);
     margin: 0 0 10px 0;
     flex-shrink: 0; /* Judul tidak boleh menyusut */
+    /* Batasi tinggi judul agar kartu tidak memanjang */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* tampilkan max 2 baris */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-produk-content .deskripsi {
@@ -268,6 +273,11 @@
     margin: 0 0 auto 0; /* margin-bottom: auto mendorong elemen di bawahnya */
     flex-grow: 0; /* Tidak perlu flex-grow */
     flex-shrink: 0; /* Deskripsi tidak boleh menyusut */
+    /* Clamp deskripsi agar tinggi kartu konsisten */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* desktop/tablet: max 3 baris */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-produk-content .harga {
@@ -279,31 +289,33 @@
 }
 
 .btn-keranjang {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
-    padding: 12px;
+    min-height: 42px;
+    padding: 10px 14px;
     background-color: var(--skm-blue);
     color: var(--skm-white);
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Besley', serif;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.25s ease, transform 0.08s ease, box-shadow 0.25s ease;
     text-align: center;
-    flex-shrink: 0; /* Tombol tidak boleh menyusut */
-    margin-top: 0; /* Tidak perlu margin-top karena harga sudah punya margin */
+    flex-shrink: 0;
+    margin-top: auto; /* anchor to bottom of card */
+    box-shadow: 0 3px 10px rgba(7, 65, 89, 0.22);
 }
 
 
-    .btn-keranjang:hover {
-        background-color: var(--skm-blue-2);
-    }
+    .btn-keranjang:hover {background-color: var(--skm-blue-2); box-shadow: 0 5px 14px rgba(7,65,89,.28);}
+    .btn-keranjang:active {transform: translateY(1px);} 
 
-    .btn-keranjang i {
-        margin-right: 8px;
-    }
+    .btn-keranjang i {margin: 0; font-size: 1rem;}
 
     /* Tombol Lihat Semua Produk */
     .btn-show-all {
@@ -336,9 +348,15 @@
     }
 
     @media (max-width: 600px) {
-        .grid-produk {
-            grid-template-columns: 1fr;
-        }
+        .grid-produk {grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: stretch;}
+        .card-produk {display: flex; flex-direction: column;}
+        .card-produk img {aspect-ratio: 4 / 3; width: 100%; height: auto; max-height: 170px; object-fit: cover;}
+        .card-produk-content {padding: 14px 12px; display: flex; flex-direction: column; flex: 1;}
+        .card-produk-content h3 {font-size: .95rem; margin: 0 0 6px;}
+        /* Hindari deskripsi mendorong tinggi kartu berlebih di mobile */
+        .card-produk-content .deskripsi {font-size: .78rem; line-height: 1.35; margin: 0 0 10px; flex: 0 0 auto; -webkit-line-clamp: 2;}
+        .card-produk-content .harga {font-size: .95rem; margin: 6px 0 10px;}
+        .btn-keranjang {min-height: 38px; padding: 9px 10px; font-size: .85rem; border-radius: 9px;}
 
         .header-produk h2,
         .header-produk-grid h2 {
@@ -353,6 +371,18 @@
             font-size: 0.9rem;
             padding: 8px 15px;
         }
+    }
+
+    /* --- Extra-narrow screens (extreme small widths) --- */
+    @media (max-width: 360px) {
+        .grid-produk { grid-template-columns: 1fr; gap: 12px; }
+        .card-produk { border-radius: 12px; }
+        .card-produk img { max-height: 150px; }
+        .card-produk-content { padding: 12px 10px; }
+        .card-produk-content h3 { font-size: .9rem; }
+        .card-produk-content .deskripsi { font-size: .74rem; -webkit-line-clamp: 2; }
+        .card-produk-content .harga { font-size: .9rem; margin: 6px 0 8px; }
+        .btn-keranjang { min-height: 34px; font-size: .8rem; padding: 8px 10px; }
     }
 
     /* --- STYLING DETAIL PRODUK --- */

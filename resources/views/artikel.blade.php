@@ -58,7 +58,7 @@
 		@media (max-width: 980px) { .skm-grid { grid-template-columns: repeat(2, 1fr); } }
 		@media (max-width: 640px) { 
 			.skm-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-			.skm-card { padding: 14px; }
+			.skm-card { padding: 14px; min-height: 280px; }
 			.skm-thumb { height: 130px; }
 			.skm-card h3 { font-size: 15px; }
 			.skm-deskripsi { font-size: 12.5px; line-height: 1.5; }
@@ -70,12 +70,13 @@
 			/* Layout */
 			.skm-grid { grid-template-columns: 1fr; gap: 12px; }
 			.skm-wrap { padding: 10px 12px 24px; }
-			/* Hero */
-			.skm-hero { padding: 26px 12px 10px; }
-			.skm-title { font-size: 26px; }
-			.skm-sub { font-size: 12px; }
-			/* Filter pills */
-			.skm-filters { padding: 12px; }
+			/* Card */
+			.skm-card { padding: 12px; border-radius: 10px; min-height: 260px; }
+			.skm-thumb { max-height: 110px; }
+			.skm-card h3 { font-size: 13.5px; line-height: 1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+			/* Clamp description harder for extra-narrow screens to keep shape */
+			.skm-deskripsi { font-size: 11.8px; line-height: 1.45; -webkit-line-clamp:2; min-height: calc(1.45em * 2); }
+			.skm-more { font-size: 12px; }
 			.skm-pill { font-size: 12px; padding: 6px 10px; }
 			/* Card */
 			.skm-card { padding: 12px; border-radius: 10px; }
@@ -125,7 +126,7 @@
 	.skm-more { margin-top:auto; }
 	@media (max-width:640px){
 		/* Reduce description to 3 lines for smaller screens, keep uniform height */
-		.skm-deskripsi { -webkit-line-clamp:3; min-height: calc(1.5em * 3); line-height:1.5; }
+		.skm-deskripsi { -webkit-line-clamp:3; min-height: calc(1.45em * 3); line-height:1.45; }
 		.skm-thumb { max-height:118px; }
 	}
 	</style>

@@ -65,6 +65,29 @@
 			.skm-more { font-size: 13px; }
 		}
 
+		/* Extra-narrow screens (keep cards compact on very small widths) */
+		@media (max-width: 360px) {
+			/* Layout */
+			.skm-grid { grid-template-columns: 1fr; gap: 12px; }
+			.skm-wrap { padding: 10px 12px 24px; }
+			/* Hero */
+			.skm-hero { padding: 26px 12px 10px; }
+			.skm-title { font-size: 26px; }
+			.skm-sub { font-size: 12px; }
+			/* Filter pills */
+			.skm-filters { padding: 12px; }
+			.skm-pill { font-size: 12px; padding: 6px 10px; }
+			/* Card */
+			.skm-card { padding: 12px; border-radius: 10px; }
+			.skm-thumb { max-height: 110px; }
+			.skm-card h3 { font-size: 14px; line-height: 1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+			.skm-deskripsi { font-size: 12px; line-height: 1.5; -webkit-line-clamp:3; min-height: 4.2em; }
+			.skm-more { font-size: 12.5px; }
+			/* Pager */
+			.skm-page-btn { width: 38px; height: 38px; }
+			.skm-page-label { font-size: 12px; }
+		}
+
 		/* Card */
 		.skm-card { background: #fff; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.06); display: flex; flex-direction: column; padding: 16px; }
 		/* Inset image inside card padding */
@@ -72,8 +95,9 @@
 			.skm-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 		.skm-card-body { padding: 0; display: flex; flex-direction: column; gap: 10px; }
 		.skm-meta { color: #78929C; font-size: 12px; margin-top: 10px; }
-			.skm-card h3 { font-size: 18px; color: var(--skm-blue); margin: 2px 0 0; line-height: 1.35; font-weight: 800; }
-			.skm-deskripsi { color: var(--skm-gray); font-size: 14px; line-height: 1.55; margin: 0; }
+			.skm-card h3 { font-size: 18px; color: var(--skm-blue); margin: 2px 0 0; line-height: 1.35; font-weight: 800; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+			/* Description: base 4-line clamp for consistent card height */
+			.skm-deskripsi { color: var(--skm-gray); font-size: 14px; line-height: 1.55; margin: 0; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; min-height: calc(1.55em * 4); }
 		/* CTA with arrow, no bullet */
 		.skm-more { margin-top: 6px; color: var(--skm-accent); font-weight: 800; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
 		.skm-more::before { content: none; }
@@ -97,10 +121,11 @@
 	.skm-card { display:flex; flex-direction:column; height:100%; }
 	.skm-card-body { display:flex; flex-direction:column; flex:1; }
 	.skm-thumb { aspect-ratio:4/3; height:auto; max-height:150px; }
-	.skm-deskripsi { display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; min-height:4.8em; }
+	.skm-deskripsi { display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; min-height: calc(1.55em * 4); }
 	.skm-more { margin-top:auto; }
 	@media (max-width:640px){
-		.skm-deskripsi { -webkit-line-clamp:5; min-height:6em; }
+		/* Reduce description to 3 lines for smaller screens, keep uniform height */
+		.skm-deskripsi { -webkit-line-clamp:3; min-height: calc(1.5em * 3); line-height:1.5; }
 		.skm-thumb { max-height:118px; }
 	}
 	</style>

@@ -259,6 +259,11 @@
     color: var(--skm-new-teal-1);
     margin: 0 0 10px 0;
     flex-shrink: 0; /* Judul tidak boleh menyusut */
+    /* Batasi tinggi judul agar kartu tidak memanjang */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* tampilkan max 2 baris */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-produk-content .deskripsi {
@@ -268,6 +273,11 @@
     margin: 0 0 auto 0; /* margin-bottom: auto mendorong elemen di bawahnya */
     flex-grow: 0; /* Tidak perlu flex-grow */
     flex-shrink: 0; /* Deskripsi tidak boleh menyusut */
+    /* Clamp deskripsi agar tinggi kartu konsisten */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* desktop/tablet: max 3 baris */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-produk-content .harga {
@@ -343,7 +353,8 @@
         .card-produk img {aspect-ratio: 4 / 3; width: 100%; height: auto; max-height: 170px; object-fit: cover;}
         .card-produk-content {padding: 14px 12px; display: flex; flex-direction: column; flex: 1;}
         .card-produk-content h3 {font-size: .95rem; margin: 0 0 6px;}
-        .card-produk-content .deskripsi {font-size: .78rem; line-height: 1.35; margin: 0 0 10px; flex: 1;}
+        /* Hindari deskripsi mendorong tinggi kartu berlebih di mobile */
+        .card-produk-content .deskripsi {font-size: .78rem; line-height: 1.35; margin: 0 0 10px; flex: 0 0 auto; -webkit-line-clamp: 2;}
         .card-produk-content .harga {font-size: .95rem; margin: 6px 0 10px;}
         .btn-keranjang {min-height: 38px; padding: 9px 10px; font-size: .85rem; border-radius: 9px;}
 
@@ -360,6 +371,18 @@
             font-size: 0.9rem;
             padding: 8px 15px;
         }
+    }
+
+    /* --- Extra-narrow screens (extreme small widths) --- */
+    @media (max-width: 360px) {
+        .grid-produk { grid-template-columns: 1fr; gap: 12px; }
+        .card-produk { border-radius: 12px; }
+        .card-produk img { max-height: 150px; }
+        .card-produk-content { padding: 12px 10px; }
+        .card-produk-content h3 { font-size: .9rem; }
+        .card-produk-content .deskripsi { font-size: .74rem; -webkit-line-clamp: 2; }
+        .card-produk-content .harga { font-size: .9rem; margin: 6px 0 8px; }
+        .btn-keranjang { min-height: 34px; font-size: .8rem; padding: 8px 10px; }
     }
 
     /* --- STYLING DETAIL PRODUK --- */

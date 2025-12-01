@@ -32,6 +32,9 @@ Route::get('/', function () {
     return view('index', compact('articles'));
 })->middleware('track.page:home')->name('home');
 
+
+Route::post('/contact/store', [ContactController::class, 'store'])->name('contact.store');
+
 Route::get('/edit-design', function () {
     return view('edit-design');
 })->name('edit.design');

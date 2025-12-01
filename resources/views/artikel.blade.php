@@ -57,7 +57,38 @@
 		.skm-wrap { max-width: 1100px; margin: 0 auto; padding: 14px 16px 30px; }
 		.skm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 		@media (max-width: 980px) { .skm-grid { grid-template-columns: repeat(2, 1fr); } }
-		@media (max-width: 640px) { .skm-grid { grid-template-columns: 1fr; } }
+		@media (max-width: 640px) { 
+			.skm-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+			.skm-card { padding: 14px; min-height: 280px; }
+			.skm-thumb { height: 130px; }
+			.skm-card h3 { font-size: 15px; }
+			.skm-deskripsi { font-size: 12.5px; line-height: 1.5; }
+			.skm-more { font-size: 13px; }
+		}
+
+		/* Extra-narrow screens (keep cards compact on very small widths) */
+		@media (max-width: 360px) {
+			/* Layout */
+			.skm-grid { grid-template-columns: 1fr; gap: 12px; }
+			.skm-wrap { padding: 10px 12px 24px; }
+			/* Card */
+			.skm-card { padding: 12px; border-radius: 10px; min-height: 260px; }
+			.skm-thumb { max-height: 110px; }
+			.skm-card h3 { font-size: 13.5px; line-height: 1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+			/* Clamp description harder for extra-narrow screens to keep shape */
+			.skm-deskripsi { font-size: 11.8px; line-height: 1.45; -webkit-line-clamp:2; min-height: calc(1.45em * 2); }
+			.skm-more { font-size: 12px; }
+			.skm-pill { font-size: 12px; padding: 6px 10px; }
+			/* Card */
+			.skm-card { padding: 12px; border-radius: 10px; }
+			.skm-thumb { max-height: 110px; }
+			.skm-card h3 { font-size: 14px; line-height: 1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+			.skm-deskripsi { font-size: 12px; line-height: 1.5; -webkit-line-clamp:3; min-height: 4.2em; }
+			.skm-more { font-size: 12.5px; }
+			/* Pager */
+			.skm-page-btn { width: 38px; height: 38px; }
+			.skm-page-label { font-size: 12px; }
+		}
 
 		/* Card */
 		.skm-card { background: #fff; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.06); display: flex; flex-direction: column; padding: 16px; }
@@ -66,8 +97,9 @@
 			.skm-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 		.skm-card-body { padding: 0; display: flex; flex-direction: column; gap: 10px; }
 		.skm-meta { color: #78929C; font-size: 12px; margin-top: 10px; }
-			.skm-card h3 { font-size: 18px; color: var(--skm-blue); margin: 2px 0 0; line-height: 1.35; font-weight: 800; }
-			.skm-deskripsi { color: var(--skm-gray); font-size: 14px; line-height: 1.55; margin: 0; }
+			.skm-card h3 { font-size: 18px; color: var(--skm-blue); margin: 2px 0 0; line-height: 1.35; font-weight: 800; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+			/* Description: base 4-line clamp for consistent card height */
+			.skm-deskripsi { color: var(--skm-gray); font-size: 14px; line-height: 1.55; margin: 0; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; min-height: calc(1.55em * 4); }
 		/* CTA with arrow, no bullet */
 		.skm-more { margin-top: 6px; color: var(--skm-accent); font-weight: 800; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
 		.skm-more::before { content: none; }
@@ -85,6 +117,19 @@
 		.skm-page-btn[disabled] { background: #8AA2AD; color: #EAF1F3; cursor: not-allowed; }
 		.skm-page-btn[disabled]::before { border-color: #EAF1F3; }
 		.skm-page-label { color: #6B8791; font-size: 14px; white-space: nowrap; }
+
+	/* === Card size uniform overrides === */
+	.skm-grid { align-items: stretch; }
+	.skm-card { display:flex; flex-direction:column; height:100%; }
+	.skm-card-body { display:flex; flex-direction:column; flex:1; }
+	.skm-thumb { aspect-ratio:4/3; height:auto; max-height:150px; }
+	.skm-deskripsi { display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; min-height: calc(1.55em * 4); }
+	.skm-more { margin-top:auto; }
+	@media (max-width:640px){
+		/* Reduce description to 3 lines for smaller screens, keep uniform height */
+		.skm-deskripsi { -webkit-line-clamp:3; min-height: calc(1.45em * 3); line-height:1.45; }
+		.skm-thumb { max-height:118px; }
+	}
 	</style>
 </head>
 <body class="skm-page">

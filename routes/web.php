@@ -18,7 +18,8 @@ use App\Http\Controllers\BotManController;
 use App\Http\Controllers\ArticlePublicController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SearchController; // <<< [TAMBAHAN: Import SearchController]
-
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\MessageController;
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -150,11 +151,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Transactions CRUD
     Route::resource('transactions', TransactionController::class)->names('transactions');
-    
+
     // Free Consultations CRUD (Admin)
     Route::resource('free-consultations', FreeConsultationController::class)
         ->only(['index', 'edit', 'update','destroy'])
         ->names('free-consultations');
+
+    // Route Manajemen Pesan
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
+    // Route untuk mengubah status baca/belum
+    Route::patch('/admin/messages/{id}/toggle-read', [MessageController::class, 'toggleRead'])
+        ->name('messages.toggleRead');
 
     // Route AJAX dipindahkan ke dalam grup admin agar aman
     // dan namanya otomatis menjadi 'admin.users.addresses'

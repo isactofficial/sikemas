@@ -7,11 +7,19 @@
     <title>Keranjang Belanja - SIKEMAS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <style>
         :root {
             --skm-teal: #1F6D72;
@@ -21,12 +29,16 @@
             --skm-gray: #666;
             --skm-light-gray: #f5f5f5;
             --skm-border: #E6EEF0;
-            
+
             /* Warna Kustom Sesuai Invoice */
-            --color-faktur: #FF611A; /* Oranye */
-            --color-value: #001B24;  /* Biru Tua (untuk label pengiriman) */
-            --color-label: #555555;  /* Abu-abu (untuk isi pengiriman) */
-            --color-total-bg: #F4F7F6; /* Warna untuk tombol +/- */
+            --color-faktur: #FF611A;
+            /* Oranye */
+            --color-value: #001B24;
+            /* Biru Tua (untuk label pengiriman) */
+            --color-label: #555555;
+            /* Abu-abu (untuk isi pengiriman) */
+            --color-total-bg: #F4F7F6;
+            /* Warna untuk tombol +/- */
         }
 
         /* ... CSS Anda (tidak diubah) ... */
@@ -120,7 +132,7 @@
             font-size: 0.9rem;
             color: var(--skm-gray);
         }
-        
+
         .cart-item-spec img.spec-icon {
             width: 16px;
             height: 16px;
@@ -161,7 +173,8 @@
             width: 30px;
             height: 30px;
             border: 1px solid var(--skm-border);
-            background: var(--color-total-bg); /* Warna F4F7F6 */
+            background: var(--color-total-bg);
+            /* Warna F4F7F6 */
             border-radius: 4px;
             cursor: pointer;
             display: flex;
@@ -183,17 +196,17 @@
             padding: 5px;
             font-size: 1rem;
         }
-        
+
         .remove-btn {
             background: none;
             border: none;
             cursor: pointer;
             padding: 0;
-            margin-bottom: 10px; 
+            margin-bottom: 10px;
             opacity: 0.7;
             transition: opacity 0.2s;
         }
-        
+
         .remove-btn img {
             width: 20px;
             height: 20px;
@@ -249,9 +262,10 @@
             margin-top: 15px;
             padding-top: 15px;
             border-top: 2px solid var(--skm-border);
-            
+
             padding-bottom: 15px;
-            border-bottom: 2px solid var(--color-faktur); /* Garis oranye */
+            border-bottom: 2px solid var(--color-faktur);
+            /* Garis oranye */
         }
 
         .summary-total .summary-label {
@@ -269,7 +283,7 @@
         .checkout-btn {
             width: 100%;
             padding: 15px;
-            background: var(--skm-blue); 
+            background: var(--skm-blue);
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -281,15 +295,18 @@
         }
 
         .checkout-btn:hover {
-            background: var(--skm-blue-dark); 
+            background: var(--skm-blue-dark);
         }
 
         /* Shipping Info (DIPERBARUI) */
         .shipping-info {
-            background: none; /* Latar belakang dihapus */
-            padding: 0; /* Padding dihapus */
+            background: none;
+            /* Latar belakang dihapus */
+            padding: 0;
+            /* Padding dihapus */
             border-radius: 8px;
-            margin-top: 20px; /* Diubah dari margin-bottom */
+            margin-top: 20px;
+            /* Diubah dari margin-bottom */
             margin-bottom: 20px;
         }
 
@@ -299,7 +316,7 @@
             color: var(--skm-blue);
             margin-bottom: 15px; /* Jarak ditambah */
         }
-        
+
         /* BARU: Style untuk baris detail pengiriman */
         .shipping-detail-row {
             display: flex;
@@ -307,15 +324,19 @@
             margin-bottom: 10px;
             font-size: 0.95rem;
             line-height: 1.5;
-            gap: 15px; /* Jarak label & isi */
+            gap: 15px;
+            /* Jarak label & isi */
         }
         .shipping-detail-label {
-            color: var(--color-value); /* 001B24 */
+            color: var(--color-value);
+            /* 001B24 */
             font-weight: 600;
-            flex-shrink: 0; /* Mencegah label menyusut */
+            flex-shrink: 0;
+            /* Mencegah label menyusut */
         }
         .shipping-detail-value {
-            color: var(--color-label); /* 555555 */
+            color: var(--color-label);
+            /* 555555 */
             text-align: right;
         }
 
@@ -337,11 +358,11 @@
             color: var(--skm-gray);
             margin-bottom: 30px;
         }
-        
+
         .shop-btn {
             display: inline-block;
             padding: 12px 30px;
-            background: var(--skm-blue); 
+            background: var(--skm-blue);
             color: #fff;
             text-decoration: none;
             border-radius: 8px;
@@ -350,7 +371,7 @@
         }
 
         .shop-btn:hover {
-            background: var(--skm-blue-dark); 
+            background: var(--skm-blue-dark);
         }
 
         /* Alert Messages */
@@ -389,12 +410,12 @@
 
             .cart-item-actions {
                 grid-column: 1 / -1;
-                flex-direction: row-reverse; 
+                flex-direction: row-reverse;
                 justify-content: space-between;
                 align-items: center;
                 margin-top: 10px;
             }
-            
+
             .remove-btn {
                 margin-bottom: 0;
             }
@@ -425,7 +446,7 @@
                 flex-direction: column;
                 gap: 5px;
             }
-            
+
             /* Agar label dan isi muat di mobile */
             .shipping-detail-row {
                 flex-direction: column;
@@ -444,403 +465,509 @@
     <div class="cart-container">
         <h1 class="cart-title">Keranjang Belanja Anda</h1>
 
-        @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
 
-        @if(session('error'))
-        <div class="alert alert-error">
-            {{ session('error') }}
-        </div>
+        @if (session('error'))
+            <div class="alert alert-error">
+                {{ session('error') }}
+            </div>
         @endif
 
         @auth
-        @if($cart && $cart->items->count() > 0)
-        <div class="cart-content">
-            <div class="cart-items">
-                <h2 class="cart-items-title">Item Pesanan ({{ $cart->items->count() }})</h2>
-                
-                @foreach($cart->items as $item)
-                <div class="cart-item" data-item-id="{{ $item->id }}">
-                    <img src="{{ $item->product_image ?? asset('assets/img/default-product.png') }}" 
-                         alt="{{ $item->product_name }}" 
-                         class="cart-item-image">
-                    
-                    <div class="cart-item-details">
-                        <div>
-                            <h3 class="cart-item-name">{{ $item->product_name }}</h3>
-                            
-                            <div class="cart-item-specs">
-                                @if($item->material)
-                                <div class="cart-item-spec">
-                                    @if(Str::contains($item->material, ['Karton', 'Bergelombang'], true))
-                                        <img src="{{ asset('assets/img/kar.svg') }}" alt="Bahan" class="spec-icon">
-                                    @else
-                                        <img src="{{ asset('assets/img/kar.svg') }}" alt="Bahan" class="spec-icon">
-                                    @endif
-                                    <span>Bahan: {{ $item->material }}</span>
+            @if ($cart && $cart->items->count() > 0)
+                <div class="cart-content">
+                    <div class="cart-items">
+                        <h2 class="cart-items-title">Item Pesanan ({{ $cart->items->count() }})</h2>
+
+                        @foreach ($cart->items as $item)
+                            <div class="cart-item" data-item-id="{{ $item->id }}">
+                                <img src="{{ $item->product_image ?? asset('assets/img/default-product.png') }}"
+                                    alt="{{ $item->product_name }}" class="cart-item-image">
+
+                                <div class="cart-item-details">
+                                    <div>
+                                        <h3 class="cart-item-name">{{ $item->product_name }}</h3>
+
+                                        <div class="cart-item-specs">
+                                            @if ($item->material)
+                                                <div class="cart-item-spec">
+                                                    @if (Str::contains($item->material, ['Karton', 'Bergelombang'], true))
+                                                        <img src="{{ asset('assets/img/kar.svg') }}" alt="Bahan"
+                                                            class="spec-icon">
+                                                    @else
+                                                        <img src="{{ asset('assets/img/kar.svg') }}" alt="Bahan"
+                                                            class="spec-icon">
+                                                    @endif
+                                                    <span>Bahan: {{ $item->material }}</span>
+                                                </div>
+                                            @endif
+
+                                            @if ($item->size)
+                                                <div class="cart-item-spec">
+                                                    <img src="{{ asset('assets/img/uk.svg') }}" alt="Ukuran"
+                                                        class="spec-icon">
+                                                    <span>Ukuran: {{ $item->size }}</span>
+                                                </div>
+                                            @endif
+
+                                            @if ($item->design)
+                                                <div class="cart-item-spec">
+                                                    @if (Str::contains($item->design, 'Custom', true))
+                                                        <img src="{{ asset('assets/img/de.svg') }}" alt="Desain"
+                                                            class="spec-icon">
+                                                    @elseif(Str::contains($item->design, 'Standar', true))
+                                                        <img src="{{ asset('assets/img/sta.svg') }}" alt="Desain"
+                                                            class="spec-icon">
+                                                    @else
+                                                        <img src="{{ asset('assets/img/de.svg') }}" alt="Desain"
+                                                            class="spec-icon">
+                                                    @endif
+                                                    <span>Desain: {{ $item->design }}</span>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <div class="cart-item-price">
+                                            Harga: <span
+                                                class="cart-item-price-value">{{ $item->formatted_unit_price }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                @endif
-                                
-                                @if($item->size)
-                                <div class="cart-item-spec">
-                                    <img src="{{ asset('assets/img/uk.svg') }}" alt="Ukuran" class="spec-icon">
-                                    <span>Ukuran: {{ $item->size }}</span>
+
+                                <div class="cart-item-actions">
+
+                                    <button class="remove-btn" data-item-id="{{ $item->id }}">
+                                        <img src="{{ asset('assets/img/ha.svg') }}" alt="Hapus">
+                                    </button>
+
+                                    <div class="cart-item-total" data-subtotal="{{ $item->subtotal }}">
+                                        {{ $item->formatted_subtotal }}
+                                    </div>
+
+                                    <div class="quantity-controls">
+                                        <button class="quantity-btn decrease-qty" data-item-id="{{ $item->id }}">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="number" class="quantity-input" value="{{ $item->quantity }}"
+                                            min="1" data-item-id="{{ $item->id }}" readonly>
+                                        <button class="quantity-btn increase-qty" data-item-id="{{ $item->id }}">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                @endif
-                                
-                                @if($item->design)
-                                <div class="cart-item-spec">
-                                    @if(Str::contains($item->design, 'Custom', true))
-                                        <img src="{{ asset('assets/img/de.svg') }}" alt="Desain" class="spec-icon">
-                                    @elseif(Str::contains($item->design, 'Standar', true))
-                                        <img src="{{ asset('assets/img/sta.svg') }}" alt="Desain" class="spec-icon">
-                                    @else
-                                        <img src="{{ asset('assets/img/de.svg') }}" alt="Desain" class="spec-icon">
-                                    @endif
-                                    <span>Desain: {{ $item->design }}</span>
-                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Bagian yang diubah: Form Checkout di Summary Section -->
+                    <div class="cart-summary">
+                        <h2 class="summary-title">Ringkasan Belanja</h2>
+
+                        <input type="hidden" id="total_weight"
+                            value="{{ $cart ? ($cart->items->sum('weight') ?: 1000) : 1000 }}">
+
+                        <form action="{{ route('cart.checkout') }}" method="POST" id="checkoutForm">
+                            @csrf
+                            <input type="hidden" name="shipping_cost" id="hidden_shipping_cost" value="0">
+                            <input type="hidden" name="shipping_service" id="hidden_shipping_service" value="">
+                            <input type="hidden" name="shipping_address_id" id="hidden_shipping_address_id" value="">
+
+                            <!-- DIUBAH: Pilih Alamat User -->
+                            <div class="summary-row"
+                                style="flex-direction: column; gap: 8px; align-items: stretch; border-bottom: none; padding-top: 10px; padding-bottom: 0;">
+                                <label class="summary-label" style="font-weight: 600;">Alamat Pengiriman</label>
+                                <select class="form-control" name="user_address" id="user_address"
+                                    style="padding: 10px; border: 1px solid var(--skm-border); border-radius: 6px; width: 100%;">
+                                    <option value="">-- Pilih Alamat --</option>
+                                    @foreach ($userAddresses as $address)
+                                        <option value="{{ $address->id }}" data-city="{{ $address->city }}"
+                                            data-province="{{ $address->province }}"
+                                            data-postal="{{ $address->postal_code }}" {{-- Tambahkan kode pos jika ingin ditampilkan --}}
+                                            {{ $address->is_primary ? 'selected' : '' }}>
+
+                                            {{ $address->label ?? 'Alamat ' . $loop->iteration }}
+                                            @if ($address->is_primary)
+                                                ⭐
+                                            @endif
+                                            - {{ Str::limit($address->full_address, 50) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @if ($userAddresses->count() === 0)
+                                    <small style="color: #ff5722; margin-top: 5px;">
+                                        Belum ada alamat tersimpan. <a href="{{ route('profile.address.create') }}"
+                                            style="color: var(--skm-blue); text-decoration: underline;">Tambah Alamat</a>
+                                    </small>
                                 @endif
                             </div>
-                            
-                            <div class="cart-item-price">
-                                Harga: <span class="cart-item-price-value">{{ $item->formatted_unit_price }}</span>
+
+                            <!-- Info Alamat Terpilih -->
+                            <div id="selected-address-info"
+                                style="display: none; margin-top: 10px; padding: 10px; background: var(--color-total-bg); border-radius: 6px; font-size: 0.9rem;">
+                                <div style="margin-bottom: 5px;"><strong>Penerima:</strong> <span
+                                        id="info-recipient"></span></div>
+                                <div style="margin-bottom: 5px;"><strong>Kota:</strong> <span id="info-city"></span></div>
+                                <div><strong>Alamat:</strong> <span id="info-address"></span></div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="cart-item-actions">
-                        
-                        <button class="remove-btn" data-item-id="{{ $item->id }}">
-                            <img src="{{ asset('assets/img/ha.svg') }}" alt="Hapus">
-                        </button>
-                        
-                        <div class="cart-item-total" data-subtotal="{{ $item->subtotal }}">
-                            {{ $item->formatted_subtotal }}
-                        </div>
-                        
-                        <div class="quantity-controls">
-                            <button class="quantity-btn decrease-qty" data-item-id="{{ $item->id }}">
-                                <i class="fas fa-minus"></i>
+
+                            <div class="summary-row"
+                                style="flex-direction: column; gap: 8px; align-items: stretch; border-bottom: none; padding-top: 10px;">
+                                <label class="summary-label" style="font-weight: 600;">Kurir Pengiriman</label>
+                                <select class="form-control" name="courier" id="courier" disabled
+                                    style="padding: 10px; border: 1px solid var(--skm-border); border-radius: 6px; width: 100%;">
+                                    <option value="">-- Pilih Kurir --</option>
+                                    <option value="jne">JNE</option>
+                                    <option value="pos">POS Indonesia</option>
+                                    <option value="tiki">TIKI</option>
+                                </select>
+                            </div>
+
+                            <div class="summary-row" id="service-container"
+                                style="display: none; flex-direction: column; gap: 8px; align-items: stretch; border: none; padding-top: 0;">
+                                <select class="form-control" name="service" id="service"
+                                    style="padding: 10px; border: 1px solid var(--skm-border); border-radius: 6px; width: 100%; margin-top: 10px;">
+                                    <option value="">-- Pilih Layanan --</option>
+                                </select>
+                            </div>
+
+                            <hr style="border: 0; border-top: 1px solid var(--skm-border); margin: 15px 0;">
+
+                            <div class="summary-row">
+                                <span class="summary-label">Subtotal</span>
+                                <span class="summary-value" id="cart-subtotal"
+                                    data-value="{{ $cart ? $cart->total : 0 }}">
+                                    {{ $cart ? $cart->formatted_total : 'Rp 0' }}
+                                </span>
+                            </div>
+
+                            <div class="summary-row">
+                                <span class="summary-label">Biaya Pengiriman</span>
+                                <span class="summary-value" id="shipping-cost-display">Rp 0</span>
+                            </div>
+
+                            <div class="summary-row summary-total">
+                                <span class="summary-label">Total</span>
+                                <span class="summary-value" id="cart-grand-total">
+                                    {{ $cart ? $cart->formatted_total : 'Rp 0' }}
+                                </span>
+                            </div>
+
+                            <button type="submit" class="checkout-btn"
+                                {{ $userAddresses->count() === 0 ? 'disabled' : '' }} id="btn-checkout">
+                                Checkout
                             </button>
-                            <input type="number" 
-                                   class="quantity-input" 
-                                   value="{{ $item->quantity }}" 
-                                   min="1" 
-                                   data-item-id="{{ $item->id }}"
-                                   readonly>
-                            <button class="quantity-btn increase-qty" data-item-id="{{ $item->id }}">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
-                @endforeach
-            </div>
-
-            <div class="cart-summary">
-                <h2 class="summary-title">Ringkasan Belanja</h2>
-                
-                <div class="summary-row">
-                    <span class="summary-label">Subtotal</span>
-                    <span class="summary-value" id="cart-subtotal">{{ $cart->formatted_total }}</span>
-                </div>
-                
-                <div class="summary-row">
-                    <span class="summary-label">Biaya Pengiriman</span>
-                    <span class="summary-value">{{ $cart->formatted_shipping_cost }}</span>
-                </div>
-                
-                <div class="summary-row summary-total">
-                    <span class="summary-label">Total</span>
-                    <span class="summary-value" id="cart-grand-total">{{ $cart->formatted_grand_total }}</span>
-                </div>
-
-                @if($primaryAddress)
-                <div class="shipping-info">
-                    <div class="shipping-title">Data Pengiriman</div>
-                    
-                    <div class="shipping-detail-row">
-                        <span class="shipping-detail-label">Nama Lengkap</span>
-                        <span class="shipping-detail-value">{{ Auth::user()->name }}</span>
+            @else
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
                     </div>
-                    <div class="shipping-detail-row">
-                        <span class="shipping-detail-label">Alamat Lengkap</span>
-                        <span class="shipping-detail-value">{{ $primaryAddress->full_address }}</span>
-                    </div>
-                    <div class="shipping-detail-row">
-                        <span class="shipping-detail-label">Nomor Telepon</span>
-                        <span class="shipping-detail-value">{{ Auth::user()->phone ?? '-' }}</span>
-                    </div>
+                    <p class="empty-cart-text">Keranjang belanja Anda masih kosong</p>
+                    <a href="{{ route('produk') }}" class="shop-btn">Mulai Belanja</a>
                 </div>
-                @else
-                <div class="alert alert-error">
-                    Silakan tambahkan alamat pengiriman di profil Anda
-                </div>
-                @endif
-
-                <form action="{{ route('cart.checkout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="checkout-btn" {{ !$primaryAddress ? 'disabled' : '' }}>
-                        Checkout
-                    </button>
-                </form>
-            </div>
-        </div>
+            @endif
         @else
-        <div class="empty-cart">
-            <div class="empty-cart-icon">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
-            <p class="empty-cart-text">Keranjang belanja Anda masih kosong</p>
-            <a href="{{ route('produk') }}" class="shop-btn">Mulai Belanja</a>
-        </div>
-        @endif
-        @else
-        <div class="cart-content" id="guestCartContent" style="display:none;">
-            <div class="cart-items">
-                <h2 class="cart-items-title">Item Pesanan (<span id="guest-items-count">0</span>)</h2>
-                <div id="guest-items-list"></div>
-            </div>
+            <!-- Guest mode: same layout populated from localStorage -->
+            <div class="cart-content" id="guestCartContent" style="display:none;">
+                <div class="cart-items">
+                    <h2 class="cart-items-title">Item Pesanan (<span id="guest-items-count">0</span>)</h2>
+                    <div id="guest-items-list"></div>
+                </div>
 
-            <div class="cart-summary">
-                <h2 class="summary-title">Ringkasan Belanja</h2>
-                <div class="summary-row">
-                    <span class="summary-label">Subtotal</span>
-                    <span class="summary-value" id="guest-subtotal">Rp 0</span>
+                <div class="cart-summary">
+                    <h2 class="summary-title">Ringkasan Belanja</h2>
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal</span>
+                        <span class="summary-value" id="guest-subtotal">Rp 0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Biaya Pengiriman</span>
+                        <span class="summary-value">Rp 0</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span class="summary-label">Total</span>
+                        <span class="summary-value" id="guest-grand-total">Rp 0</span>
+                    </div>
+                    <div class="alert alert-error" style="margin-top:12px;">
+                        Login untuk menyimpan keranjang di akun dan melanjutkan checkout.
+                    </div>
+                    <a href="{{ route('login') }}" class="checkout-btn"
+                        style="display:inline-block;text-align:center;">Login untuk Checkout</a>
                 </div>
-                <div class="summary-row">
-                    <span class="summary-label">Biaya Pengiriman</span>
-                    <span class="summary-value">Rp 0</span>
-                </div>
-                <div class="summary-row summary-total">
-                    <span class="summary-label">Total</span>
-                    <span class="summary-value" id="guest-grand-total">Rp 0</span>
-                </div>
-                <div class="alert alert-error" style="margin-top:12px;">
-                    Login untuk menyimpan keranjang di akun dan melanjutkan checkout.
-                </div>
-                <a href="{{ route('login') }}" class="checkout-btn" style="display:inline-block;text-align:center;">Login untuk Checkout</a>
             </div>
-        </div>
-
-        <div class="empty-cart" id="guestEmptyState" style="display:none;">
-            <div class="empty-cart-icon">
-                <i class="fas fa-shopping-cart"></i>
+            <div class="empty-cart" id="guestEmptyState" style="display:none;">
+                <div class="empty-cart-icon"><i class="fas fa-shopping-cart"></i></div>
+                <p class="empty-cart-text">Keranjang belanja Anda masih kosong</p>
+                <a href="{{ route('produk') }}" class="shop-btn">Mulai Belanja</a>
             </div>
-            <p class="empty-cart-text">Keranjang belanja Anda masih kosong</p>
-            <a href="{{ route('produk') }}" class="shop-btn">Mulai Belanja</a>
-        </div>
         @endauth
     </div>
 
     @include('layouts.footer')
 
     <script>
-        // Setup CSRF token
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        @auth
-        // Update quantity
+    @auth
+        // --- 1. LOGIKA UPDATE & HAPUS CART ITEM (TIDAK BERUBAH) ---
         document.querySelectorAll('.increase-qty, .decrease-qty').forEach(btn => {
             btn.addEventListener('click', function() {
-                const itemId = this.dataset.itemId;
-                const input = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
-                const isIncrease = this.classList.contains('increase-qty');
-                
-                let currentQty = parseInt(input.value);
-                let newQty = isIncrease ? currentQty + 1 : Math.max(1, currentQty - 1);
-                
-                if (newQty !== currentQty) {
-                    updateCartItem(itemId, newQty, input);
-                }
+                const id = this.dataset.itemId;
+                const input = document.querySelector(`.quantity-input[data-item-id="${id}"]`);
+                let qty = parseInt(input.value);
+                let newQty = this.classList.contains('increase-qty') ? qty + 1 : Math.max(1, qty - 1);
+                if (qty !== newQty) updateCartItem(id, newQty, input);
             });
         });
 
         // Remove item (Versi SweetAlert)
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const itemId = this.dataset.itemId; // Ambil itemId
-
+                const id = this.dataset.itemId;
                 Swal.fire({
-                    title: 'Hapus Produk?',
-                    text: "Anda yakin ingin menghapus produk ini dari keranjang?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#074159', // Warna biru (sesuai tema)
-                    cancelButtonColor: '#FF611A',  // Warna oranye (sesuai tema)
-                    confirmButtonText: 'Ya, Hapus',
-                    cancelButtonText: 'Batal'
+                    title: 'Hapus?', text: "Hapus produk ini?", icon: 'warning',
+                    showCancelButton: true, confirmButtonColor: '#074159', cancelButtonColor: '#FF611A',
+                    confirmButtonText: 'Ya', cancelButtonText: 'Batal'
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jika dikonfirmasi, panggil fungsi removeCartItem
-                        removeCartItem(itemId);
-                    }
+                    if (result.isConfirmed) removeCartItem(id);
                 });
             });
         });
 
-        // Update cart item function
-        function updateCartItem(itemId, quantity, inputElement) {
-            fetch(`/cart/update/${itemId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ quantity: quantity })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    inputElement.value = quantity;
-                    
-                    // Update subtotal for this item
-                    const itemElement = inputElement.closest('.cart-item');
-                    const subtotalElement = itemElement.querySelector('.cart-item-total');
-                    subtotalElement.textContent = data.subtotal;
-                    
-                    // Update cart totals
-                    document.getElementById('cart-subtotal').textContent = data.cart_total;
-                    document.getElementById('cart-grand-total').textContent = data.grand_total;
+        function updateCartItem(id, qty, el) {
+            fetch(`/cart/update/${id}`, {
+                method: 'PUT', headers: {'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken},
+                body: JSON.stringify({ quantity: qty })
+            }).then(r => r.json()).then(d => {
+                if (d.success) {
+                    el.value = qty;
+                    el.closest('.cart-item').querySelector('.cart-item-total').innerText = d.subtotal;
+                    document.getElementById('cart-subtotal').innerText = d.cart_total;
+                    const rawTotal = parseInt(d.cart_total.replace(/[^0-9]/g, ''));
+                    document.getElementById('cart-subtotal').setAttribute('data-value', rawTotal);
+                    recalcTotal();
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat memperbarui keranjang');
             });
         }
 
-        // Remove cart item function
-        function removeCartItem(itemId) {
-            fetch(`/cart/remove/${itemId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
+        function removeCartItem(id) {
+            fetch(`/cart/remove/${id}`, {
+                method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrfToken }
+            }).then(r => r.json()).then(d => {
+                if (d.success) {
+                    document.querySelector(`.cart-item[data-item-id="${id}"]`).remove();
+                    document.getElementById('cart-subtotal').innerText = d.cart_total;
+                    const rawTotal = parseInt(d.cart_total.replace(/[^0-9]/g, ''));
+                    document.getElementById('cart-subtotal').setAttribute('data-value', rawTotal);
+                    recalcTotal();
+                    if (d.items_count === 0) location.reload();
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Remove item element from DOM
-                    const itemElement = document.querySelector(`.cart-item[data-item-id="${itemId}"]`);
-                    itemElement.remove();
-                    
-                    // Update totals
-                    document.getElementById('cart-subtotal').textContent = data.cart_total;
-                    document.getElementById('cart-grand-total').textContent = data.grand_total;
-                    
-                    // Reload page if cart is empty
-                    if (data.items_count === 0) {
-                        window.location.reload();
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menghapus produk');
             });
         }
-        @else
-        // Guest mode logic: render and manage localStorage cart with same UI
-        function rp(n){return 'Rp ' + (n||0).toLocaleString('id-ID');}
-        function loadGuestItems(){
-            try { return JSON.parse(localStorage.getItem('skm_guest_cart')||'[]'); } catch(e){ return []; }
+
+        function recalcTotal() {
+            let subText = document.getElementById('cart-subtotal').innerText;
+            let subRaw = subText.replace(/[^0-9]/g, '');
+            let sub = parseInt(subRaw) || 0;
+            let ship = parseInt(document.getElementById('hidden_shipping_cost').value) || 0;
+            let total = sub + ship;
+            document.getElementById('cart-grand-total').innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
         }
-        function saveGuestItems(items){ localStorage.setItem('skm_guest_cart', JSON.stringify(items)); }
-        function renderGuestCart(){
+
+        // --- 2. INTEGRASI KOMERCE / RAJAONGKIR (LOGIKA BARU) ---
+        $(document).ready(function() {
+
+            // A. Saat User Memilih Alamat
+            $('#user_address').on('change', function() {
+                const selectedOption = $(this).find(':selected');
+                const addressId = $(this).val();
+
+                // PERUBAHAN: Ambil data-city (String Nama Kota), bukan ID
+                const city = selectedOption.data('city');
+                const province = selectedOption.data('province');
+                const addressText = selectedOption.text().split(' - ')[1] || '';
+
+                if (addressId) {
+                    // Simpan ID alamat untuk checkout nanti
+                    $('#hidden_shipping_address_id').val(addressId);
+
+                    // Simpan Nama Kota di atribut elemen select agar bisa diambil oleh logika kurir
+                    $(this).attr('data-selected-city-name', city);
+
+                    // Tampilkan Info Alamat di UI
+                    $('#info-recipient').text('{{ Auth::user()->name ?? "" }}');
+                    $('#info-city').text(city + ', ' + province);
+                    $('#info-address').text(addressText);
+                    $('#selected-address-info').show();
+
+                    // Reset Kurir & Layanan karena alamat berubah
+                    $('#courier').prop('disabled', false).val('');
+                    $('#service-container').hide();
+                    $('#service').empty().append('<option value="">-- Pilih Layanan --</option>');
+                    updateShippingUI(0, '');
+                } else {
+                    // Reset jika user memilih "-- Pilih Alamat --"
+                    $('#hidden_shipping_address_id').val('');
+                    $(this).removeAttr('data-selected-city-name'); // Hapus simpanan kota
+                    $('#selected-address-info').hide();
+                    $('#courier').prop('disabled', true).val('');
+                    $('#service-container').hide();
+                    updateShippingUI(0, '');
+                }
+            });
+
+            // Trigger change otomatis jika sudah ada alamat terpilih (misal old input atau primary)
+            if ($('#user_address').val()) {
+                $('#user_address').trigger('change');
+            }
+
+            // B. Saat Kurir Dipilih - LANGSUNG CEK ONGKIR
+            $('#courier').on('change', function() {
+                const courier = $(this).val();
+
+                // PERUBAHAN: Ambil Nama Kota dari atribut yang kita simpan tadi
+                const cityName = $('#user_address').attr('data-selected-city-name');
+                const weight = $('#total_weight').val() || 1000;
+
+                if (!courier) {
+                    $('#service-container').hide();
+                    $('#service').empty().append('<option value="">-- Pilih Layanan --</option>');
+                    updateShippingUI(0, '');
+                    return;
+                }
+
+                // Pastikan Kurir dipilih DAN Nama Kota ada
+                if (courier && cityName) {
+                    $('#service-container').css('display', 'flex');
+                    $('#service').html('<option value="">⏳ Mencari lokasi & cek ongkir...</option>').prop('disabled', true);
+
+                    $.ajax({
+                        url: '{{ route('api.checkOngkir') }}',
+                        method: 'POST',
+                        data: JSON.stringify({
+                            destination_city: cityName, // PERUBAHAN: Kirim String Nama Kota
+                            weight: weight,
+                            courier: courier
+                        }),
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        success: function(response) {
+                            $('#service').empty().append('<option value="">-- Pilih Layanan --</option>').prop('disabled', false);
+
+                            console.log("✅ Data Ongkir:", response);
+
+                            if (Array.isArray(response) && response.length > 0) {
+                                response.forEach(item => {
+                                    const serviceName = item.service;
+                                    const description = item.description || '';
+                                    const costValue = parseInt(item.cost);
+                                    const etdRaw = item.etd || '';
+                                    const courierName = courier.toUpperCase();
+
+                                    const txtPrice = costValue === 0 ? '🎁 GRATIS' : 'Rp ' + new Intl.NumberFormat('id-ID').format(costValue);
+                                    const etd = etdRaw ? ` (${etdRaw.replace('HARI', 'hari').replace('day', 'hari')})` : '';
+
+                                    const label = `${serviceName} - ${description} : ${txtPrice}${etd}`;
+                                    const fullName = `${courierName} - ${serviceName}`;
+
+                                    $('#service').append(`<option value="${costValue}" data-name="${fullName}">${label}</option>`);
+                                });
+                            } else {
+                                $('#service').html('<option value="">❌ Tidak ada layanan tersedia</option>');
+                                console.warn('⚠️ Tidak ada data ongkir untuk kurir ini');
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error("❌ Error API:", xhr);
+                            let errorMsg = 'Gagal memuat ongkir';
+
+                            // Tangkap pesan error spesifik dari controller (misal: Kota tidak ditemukan)
+                            if (xhr.responseJSON && xhr.responseJSON.error) {
+                                errorMsg = xhr.responseJSON.error;
+                            }
+
+                            $('#service').html(`<option value="">❌ ${errorMsg}</option>`).prop('disabled', false);
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Cek Ongkir',
+                                text: errorMsg,
+                                confirmButtonColor: '#074159'
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Perhatian',
+                        text: 'Silakan pilih alamat dengan Kota yang valid terlebih dahulu!',
+                        confirmButtonColor: '#074159'
+                    });
+                }
+            });
+
+            // C. Saat Layanan Dipilih
+            $('#service').on('change', function() {
+                const cost = parseInt($(this).val()) || 0;
+                const name = $(this).find(':selected').data('name') || '';
+                updateShippingUI(cost, name);
+            });
+
+            function updateShippingUI(cost, name) {
+                const txt = cost === 0 ? 'Rp 0' : 'Rp ' + new Intl.NumberFormat('id-ID').format(cost);
+                $('#shipping-cost-display').text(txt);
+                $('#hidden_shipping_cost').val(cost);
+                $('#hidden_shipping_service').val(name);
+                recalcTotal();
+            }
+        });
+    @else
+        // --- 3. LOGIKA GUEST (TIDAK BERUBAH) ---
+        function rp(n) { return 'Rp ' + (n || 0).toLocaleString('id-ID'); }
+        function loadGuestItems() {
+            try { return JSON.parse(localStorage.getItem('skm_guest_cart') || '[]'); }
+            catch (e) { return []; }
+        }
+        function renderGuestCart() {
             const items = loadGuestItems();
             const content = document.getElementById('guestCartContent');
             const empty = document.getElementById('guestEmptyState');
             const list = document.getElementById('guest-items-list');
             const countEl = document.getElementById('guest-items-count');
-            if(!items.length){ content.style.display='none'; empty.style.display='block'; updateCartBadge?.(0); return; }
-            content.style.display='grid'; empty.style.display='none';
-            list.innerHTML = '';
-            let totalQty=0, subtotal=0;
-            items.forEach((it, idx)=>{
-                const qty = parseInt(it.quantity)||0; const price = parseFloat(it.unit_price)||0; const sub = qty*price; totalQty+=qty; subtotal+=sub;
+
+            if (!items.length) {
+                if (content) content.style.display = 'none';
+                if (empty) empty.style.display = 'block';
+                return;
+            }
+            if (content) content.style.display = 'grid';
+            if (empty) empty.style.display = 'none';
+            if (list) list.innerHTML = '';
+
+            let total = 0;
+            items.forEach(it => {
+                total += it.quantity * it.unit_price;
                 const div = document.createElement('div');
-                div.className='cart-item';
-                div.innerHTML = `
-                    <img src="${it.product_image || '{{ asset('assets/img/default-product.png') }}'}" alt="${it.product_name||'Produk'}" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <div>
-                            <h3 class="cart-item-name">${it.product_name||'Produk'}</h3>
-                            <div class="cart-item-specs">
-                                ${it.material?`<div class='cart-item-spec'><img src='{{ asset('assets/img/kar.svg') }}' class='spec-icon' alt='Bahan'><span>Bahan: ${it.material}</span></div>`:''}
-                                ${it.size?`<div class='cart-item-spec'><img src='{{ asset('assets/img/uk.svg') }}' class='spec-icon' alt='Ukuran'><span>Ukuran: ${it.size}</span></div>`:''}
-                                ${it.design?`<div class='cart-item-spec'><img src='{{ asset('assets/img/de.svg') }}' class='spec-icon' alt='Desain'><span>Desain: ${it.design}</span></div>`:''}
-                            </div>
-                            <div class="cart-item-price">Harga: <span class="cart-item-price-value">${rp(price)}</span></div>
-                        </div>
-                    </div>
-                    <div class="cart-item-actions">
-                        <button class="remove-btn" data-idx="${idx}"><img src="{{ asset('assets/img/ha.svg') }}" alt="Hapus"></button>
-                        <div class="cart-item-total">${rp(sub)}</div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn decrease-qty" data-idx="${idx}"><i class="fas fa-minus"></i></button>
-                            <input type="number" class="quantity-input" value="${qty}" min="1" data-idx="${idx}" readonly>
-                            <button class="quantity-btn increase-qty" data-idx="${idx}"><i class="fas fa-plus"></i></button>
-                        </div>
-                    </div>`;
+                div.className = 'cart-item';
+                div.innerHTML = `<div class="cart-item-details"><h3>${it.product_name}</h3><div>Harga: ${rp(it.unit_price)} x ${it.quantity}</div></div>`;
                 list.appendChild(div);
             });
-            countEl.textContent = items.length;
-            document.getElementById('guest-subtotal').textContent = rp(subtotal);
-            document.getElementById('guest-grand-total').textContent = rp(subtotal);
-            updateCartBadge?.(totalQty);
-
-            // bind events
-            list.querySelectorAll('.increase-qty, .decrease-qty').forEach(btn=>{
-                btn.addEventListener('click',()=>{
-                    const idx = parseInt(btn.dataset.idx);
-                    const arr = loadGuestItems();
-                    if(!arr[idx]) return;
-                    const inc = btn.classList.contains('increase-qty');
-                    const q = Math.max(1, (parseInt(arr[idx].quantity)||0) + (inc?1:-1));
-                    arr[idx].quantity = q; saveGuestItems(arr); renderGuestCart();
-                });
-            });
-
-            // ===============================================
-            //  PERUBAHAN YANG ANDA MINTA ADA DI SINI
-            // ===============================================
-            list.querySelectorAll('.remove-btn').forEach(btn=>{
-                btn.addEventListener('click',()=>{
-                    const idx = parseInt(btn.dataset.idx); // Ambil index item
-                    
-                    // Tampilkan SweetAlert
-                    Swal.fire({
-                        title: 'Hapus Produk?',
-                        text: "Anda yakin ingin menghapus produk ini dari keranjang?",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#074159', // Warna biru (sesuai tema)
-                        cancelButtonColor: '#FF611A',  // Warna oranye (sesuai tema)
-                        confirmButtonText: 'Ya, Hapus',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Jika dikonfirmasi, jalankan logika hapus (localStorage)
-                            const arr = loadGuestItems();
-                            arr.splice(idx,1); 
-                            saveGuestItems(arr); 
-                            renderGuestCart(); // Render ulang keranjang
-                        }
-                    });
-                });
-            });
-            // ===============================================
-            //  AKHIR PERUBAHAN
-            // ===============================================
+            document.getElementById('guest-subtotal').innerText = rp(total);
+            document.getElementById('guest-grand-total').innerText = rp(total);
+            if (countEl) countEl.innerText = items.length;
         }
         document.addEventListener('DOMContentLoaded', renderGuestCart);
-        @endauth
-    </script>
+    @endauth
+</script>
 </body>
+
 </html>

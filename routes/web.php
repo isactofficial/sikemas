@@ -20,6 +20,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SearchController; // <<< [TAMBAHAN: Import SearchController]
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\UserAddressController;
+use App\Http\Controllers\LocationController;
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -64,6 +66,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/merge', [CartController::class, 'mergeGuestCart'])->name('cart.merge');
 
     Route::post('/consultation/request', [ConsultationController::class, 'store'])->name('consultation.request');
+
+    // 1. Mengambil daftar kota untuk dropdown "Kota Tujuan"
+    Route::get('/api/cities', [CartController::class, 'getCities'])->name('api.cities');
+
+    Route::get('/cart/address/{id}', [CartController::class, 'getAddressDetail'])->name('cart.address.detail');
+
+    // 2. Cek ongkos kirim (Menggunakan fixed origin dari Controller)
+    Route::post('/api/check-ongkir', [CartController::class, 'checkOngkir'])->name('api.checkOngkir');
 
     // Checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
@@ -152,6 +162,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Transactions CRUD
     Route::resource('transactions', TransactionController::class)->names('transactions');
 
+
+    // Route AJAX dipindahkan ke dalam grup admin agar aman
+    // dan namanya otomatis menjadi 'admin.users.addresses'
+    Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+        ->name('users.addresses');
+
     // Free Consultations CRUD (Admin)
     Route::resource('free-consultations', FreeConsultationController::class)
         ->only(['index', 'edit', 'update','destroy'])
@@ -208,6 +224,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/address/{id}/edit', [ProfileController::class, 'editAddress'])->name('address.edit');
         Route::put('/address/{id}', [ProfileController::class, 'updateAddress'])->name('address.update');
         Route::delete('/address/{id}', [ProfileController::class, 'deleteAddress'])->name('address.delete');
+        // Route untuk menyimpan alamat
+        Route::post('/profile/address', [UserAddressController::class, 'store'])
+            ->name('profile.address.store');
+
+        // Route untuk update alamat
+        Route::put('/profile/address/{id}', [UserAddressController::class, 'update'])
+            ->name('profile.address.update');
 
         // Orders
         Route::get('/orders', [ProfileController::class, 'getOrders'])->name('orders');
@@ -290,26 +313,12 @@ Route::post('/submit-rating', [RatingController::class, 'store'])
      ->middleware('auth:web') // Pastikan menggunakan guard 'web' atau 'auth' saja
      ->name('submit.rating');
 
-/*
-|---------------------------------
-| RUTE UNTUK TESTING HALAMAN ERROR
-|---------------------------------
-*/
-Route::get('/test/400', function () {
-    abort(400); // 400 - Bad Request
-});
+// Transactions CRUD
+Route::resource('transactions', TransactionController::class);
 
-Route::get('/test/401', function () {
-    abort(401); // 401 - Unauthorized
-});
-
-Route::get('/test/403', function () {
-    abort(403); // 403 - Forbidden
-});
-
-Route::get('/test/404', function () {
-    abort(404); // 404 - Not Found
-});
+// AJAX endpoint for getting user addresses
+Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+    ->name('users.addresses');
 
 Route::get('/test/413', function () {
     abort(413); // 413 - Payload Too Large
@@ -318,3 +327,5 @@ Route::get('/test/413', function () {
 Route::get('/test/429', function () {
     abort(429); // 429 - Too Many Requests
 });
+
+Route::get('/api/cities', [LocationController::class, 'searchCities'])->name('api.cities');

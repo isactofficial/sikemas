@@ -567,6 +567,7 @@
                             <th>No Invoice</th>
                             <th>Pemesan</th>
                             <th>Nama Barang</th>
+                            <th>Biaya Ongkir</th>
                             <th>Harga Akhir</th>
                             <th>Pembayaran</th>
                             <th>Status Barang</th>
@@ -587,6 +588,7 @@
                                         <span style="color: #999;">-</span>
                                     @endif
                                 </td>
+                                <td data-label="Biaya Ongkir">Rp. {{ number_format($order->shipping_cost ?? 0, 0, ',', '.') }}</td>
                                 <td data-label="Harga Akhir">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</td>
 
                                 <td data-label="Pembayaran">
@@ -626,7 +628,7 @@
                                         <a href="{{ route('admin.transactions.edit', $order->id) }}" class="skm-icon-btn btn-edit" title="Edit Status">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
-                                        <button type="button" class="skm-icon-btn btn-delete" title="Delete Transaction" 
+                                        <button type="button" class="skm-icon-btn btn-delete" title="Delete Transaction"
                                             onclick="openDeleteModal('{{ $order->id }}', '{{ $order->invoice_number }}', '{{ $order->user->name ?? 'User Dihapus' }}')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
@@ -708,7 +710,7 @@
             document.getElementById('modalInvoiceNumber').textContent = invoiceNumber;
             document.getElementById('modalCustomerName').textContent = customerName;
             document.getElementById('deleteForm').action = `/admin/transactions/${orderId}`;
-            
+
             document.getElementById('deleteModalOverlay').classList.add('active');
             document.getElementById('deleteModal').classList.add('active');
             document.body.style.overflow = 'hidden';

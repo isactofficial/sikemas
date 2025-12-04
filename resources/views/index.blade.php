@@ -327,17 +327,17 @@
 
         /* Responsive khusus untuk bagian Mengapa Memilih Sikemas agar tetap horizontal tanpa scroll */
         @media (max-width: 600px) {
-            .why-us-grid { 
-                display: flex; 
-                justify-content: center; 
-                gap: 1rem; 
-                flex-wrap: wrap; 
+            .why-us-grid {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: wrap;
                 margin-top: 2.5rem;
             }
             .why-us-card {
-                width: 165px; 
-                padding: 1.15rem .9rem 1.35rem .9rem; 
-                box-shadow: 0 3px 10px rgba(0,0,0,.07); 
+                width: 165px;
+                padding: 1.15rem .9rem 1.35rem .9rem;
+                box-shadow: 0 3px 10px rgba(0,0,0,.07);
             }
             .why-us-icon {height: 36px; margin-bottom: .6rem;}
             .why-us-icon img {height: 34px;}
@@ -784,9 +784,11 @@
         /* .domino-tab (Ini adalah card utama) */
         .domino-tab {
             position: relative;
-            width: 140px;
-            height: 240px;
-            border-radius: 10px;
+            width: 130px;
+            height: 250px;
+            background: linear-gradient(145deg, #095a7c, #074159);
+            border-radius: 8px;
+            color: white;
             cursor: pointer;
             transition: transform .25s ease, box-shadow .25s ease;
             display: flex;
@@ -2170,7 +2172,7 @@
         </div>
     </section>
 
-    <section class="free-design-section" aria-labelledby="free-design-title" id="konsul">>
+    <section class="free-design-section" aria-labelledby="free-design-title">
         <div class="free-design-overlay"></div>
         <div class="free-design-container">
             <p class="free-design-subtitle">konsultasi</p>

@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use BotMan\BotMan\BotMan;
-use BotMan\BotMan\BotManFactory;
-use BotMan\BotMan\Drivers\DriverManager;
-use BotMan\Drivers\Web\WebDriver;
 use Illuminate\Support\Facades\Log;
 
 class BotManController extends Controller
@@ -14,90 +10,118 @@ class BotManController extends Controller
     /**
      * Handle incoming BotMan requests
      */
-    public function handle()
+    public function handle(Request $request)
     {
-        // Load Web Driver
-        DriverManager::loadDriver(WebDriver::class);
-        
-        $botman = app('botman');
+        try {
+            // Get message from request
+            $messageText = $request->input('message.text', '');
+            
+            if (empty($messageText)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Message text is required',
+                    'messages' => []
+                ], 400);
+            }
+
+            // Process message and get responses
+            $responses = $this->processMessage($messageText);
+
+            return response()->json([
+                'status' => 'success',
+                'messages' => $responses
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('BotMan Error: ' . $e->getMessage());
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan server',
+                'messages' => [
+                    [
+                        'text' => '⚠️ Maaf, terjadi kesalahan. Silakan coba lagi.',
+                        'type' => 'text'
+                    ]
+                ]
+            ], 500);
+        }
+    }
+
+    /**
+     * Process incoming message and return responses
+     */
+    private function processMessage($message)
+    {
+        $message = strtolower(trim($message));
+        $responses = [];
 
         // ===== GREETING & START =====
-        $botman->hears('(start|halo|hi|hello|hai|bantuan|help)', function (BotMan $bot) {
-            $this->startConversation($bot);
-        });
-
+        if (preg_match('/(start|halo|hi|hello|hai|bantuan|help)/i', $message)) {
+            $responses[] = ['text' => "👋 Halo! Selamat datang di SIKEMAS Assistant.", 'type' => 'text'];
+            $responses[] = ['text' => "Ketik 'menu' untuk melihat semua halaman yang tersedia.", 'type' => 'text'];
+        }
         // ===== MENU UTAMA =====
-        $botman->hears('(menu)', function (BotMan $bot) {
-            $this->showMainMenu($bot);
-        });
-
+        elseif (preg_match('/(menu)/i', $message)) {
+            $responses[] = ['text' => $this->getMainMenuText(), 'type' => 'text'];
+        }
         // ===== BERANDA =====
-        $botman->hears('(beranda|home|homepage)', function (BotMan $bot) {
-            $this->showBeranda($bot);
-        });
-
+        elseif (preg_match('/(beranda|home|homepage)/i', $message)) {
+            $responses[] = ['text' => $this->getBerandaText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== PRODUK =====
-        $botman->hears('(produk|product|products)', function (BotMan $bot) {
-            $this->showProduk($bot);
-        });
-
+        elseif (preg_match('/(produk|product|products)/i', $message)) {
+            $responses[] = ['text' => $this->getProdukText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== ARTIKEL =====
-        $botman->hears('(artikel|article|berita|news)', function (BotMan $bot) {
-            $this->showArtikel($bot);
-        });
-
+        elseif (preg_match('/(artikel|article|berita|news)/i', $message)) {
+            $responses[] = ['text' => $this->getArtikelText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== PORTOFOLIO =====
-        $botman->hears('(portofolio|portfolio|porto)', function (BotMan $bot) {
-            $this->showPortofolio($bot);
-        });
-
+        elseif (preg_match('/(portofolio|portfolio|porto)/i', $message)) {
+            $responses[] = ['text' => $this->getPortofolioText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== ABOUT US =====
-        $botman->hears('(about|about us|tentang|tentang kami)', function (BotMan $bot) {
-            $this->showAbout($bot);
-        });
-
+        elseif (preg_match('/(about|about us|tentang|tentang kami)/i', $message)) {
+            $responses[] = ['text' => $this->getAboutText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== PROFILE =====
-        $botman->hears('(profile|profil|akun|account)', function (BotMan $bot) {
-            $this->showProfile($bot);
-        });
-
+        elseif (preg_match('/(profile|profil|akun|account)/i', $message)) {
+            $responses[] = ['text' => $this->getProfileText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== KONSULTASI =====
-        $botman->hears('(konsultasi|consultation|consult)', function (BotMan $bot) {
-            $this->showKonsultasi($bot);
-        });
-
+        elseif (preg_match('/(konsultasi|consultation|consult)/i', $message)) {
+            $responses[] = ['text' => $this->getKonsultasiText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== KONTAK =====
-        $botman->hears('(kontak|contact|hubungi)', function (BotMan $bot) {
-            $this->showKontak($bot);
-        });
-
+        elseif (preg_match('/(kontak|contact|hubungi)/i', $message)) {
+            $responses[] = ['text' => $this->getKontakText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== TERIMA KASIH =====
-        $botman->hears('(terima kasih|thanks|thank you|makasih|thx)', function (BotMan $bot) {
-            $bot->reply('✨ Sama-sama! Senang bisa membantu Anda. 😊');
-            $this->askForMore($bot);
-        });
-
+        elseif (preg_match('/(terima kasih|thanks|thank you|makasih|thx)/i', $message)) {
+            $responses[] = ['text' => '✨ Sama-sama! Senang bisa membantu Anda. 😊', 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== FALLBACK =====
-        $botman->fallback(function (BotMan $bot) {
-            $this->fallbackResponse($bot);
-        });
+        else {
+            $responses[] = ['text' => "🤔 Maaf, saya tidak mengerti perintah tersebut.\n\nKetik 'menu' untuk melihat semua halaman yang tersedia.", 'type' => 'text'];
+        }
 
-        $botman->listen();
+        return $responses;
     }
 
     /**
-     * Start conversation with greeting
+     * Get main menu text
      */
-    private function startConversation(BotMan $bot)
-    {
-        $bot->reply("👋 Halo! Selamat datang di SIKEMAS Assistant.");
-        $bot->reply("Ketik 'menu' untuk melihat semua halaman yang tersedia.");
-    }
-
-    /**
-     * Show main menu with all pages
-     */
-    private function showMainMenu(BotMan $bot)
+    private function getMainMenuText()
     {
         $message = "📋 **MENU HALAMAN SIKEMAS**\n\n";
         $message .= "Ketik salah satu untuk mengakses halaman:\n\n";
@@ -109,14 +133,13 @@ class BotManController extends Controller
         $message .= "👤 **profile** - Kelola profil (perlu login)\n\n";
         $message .= "💬 **konsultasi** - Konsultasi gratis\n";
         $message .= "📞 **kontak** - Hubungi kami";
-        
-        $bot->reply($message);
+        return $message;
     }
 
     /**
-     * Show Beranda page
+     * Get beranda text
      */
-    private function showBeranda(BotMan $bot)
+    private function getBerandaText()
     {
         $url = route('beranda');
         
@@ -128,14 +151,13 @@ class BotManController extends Controller
         $message .= "• Testimoni pelanggan\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Kunjungi Beranda</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
+        return $message;
     }
 
     /**
-     * Show Produk page
+     * Get produk text
      */
-    private function showProduk(BotMan $bot)
+    private function getProdukText()
     {
         $url = route('produk');
         
@@ -152,14 +174,13 @@ class BotManController extends Controller
         $message .= "• Tambah ke keranjang\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Lihat Semua Produk</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
+        return $message;
     }
 
     /**
-     * Show Artikel page
+     * Get artikel text
      */
-    private function showArtikel(BotMan $bot)
+    private function getArtikelText()
     {
         $url = route('artikel');
         
@@ -175,14 +196,13 @@ class BotManController extends Controller
         $message .= "• Terpopuler\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Baca Artikel</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
+        return $message;
     }
 
     /**
-     * Show Portofolio page
+     * Get portofolio text
      */
-    private function showPortofolio(BotMan $bot)
+    private function getPortofolioText()
     {
         $url = route('portofolio');
         
@@ -194,14 +214,13 @@ class BotManController extends Controller
         $message .= "💼 Berbagai kategori kemasan\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Lihat Portfolio</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
+        return $message;
     }
 
     /**
-     * Show About Us page
+     * Get about text
      */
-    private function showAbout(BotMan $bot)
+    private function getAboutText()
     {
         $url = route('about');
         
@@ -215,14 +234,13 @@ class BotManController extends Controller
         $message .= "📞 Kontak Kami\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Tentang Kami</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
+        return $message;
     }
 
     /**
-     * Show Profile page
+     * Get profile text
      */
-    private function showProfile(BotMan $bot)
+    private function getProfileText()
     {
         $url = route('profile.index');
         
@@ -235,14 +253,13 @@ class BotManController extends Controller
         $message .= "⚠️ **Catatan:** Anda harus login terlebih dahulu\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Buka Profil</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
+        return $message;
     }
 
     /**
-     * Show Konsultasi info
+     * Get konsultasi text
      */
-    private function showKonsultasi(BotMan $bot)
+    private function getKonsultasiText()
     {
         $url = route('home') . '#konsul';
         
@@ -256,14 +273,13 @@ class BotManController extends Controller
         $message .= "⚠️ **Syarat:** Harus login & isi nomor telepon\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Konsultasi Sekarang</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
+        return $message;
     }
 
     /**
-     * Show Kontak info
+     * Get kontak text
      */
-    private function showKontak(BotMan $bot)
+    private function getKontakText()
     {
         $url = route('about') . '#kontak-kami';
         
@@ -278,27 +294,7 @@ class BotManController extends Controller
         $message .= "💼 **LinkedIn:** Sikemas Official\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Kirim Pesan</a>";
         
-        $bot->reply($message);
-        $this->askForMore($bot);
-    }
-
-    /**
-     * Ask if user needs more help
-     */
-    private function askForMore(BotMan $bot)
-    {
-        $bot->reply("\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.");
-    }
-
-    /**
-     * Fallback response
-     */
-    private function fallbackResponse(BotMan $bot)
-    {
-        $message = "🤔 Maaf, saya tidak mengerti perintah tersebut.\n\n";
-        $message .= "Ketik 'menu' untuk melihat semua halaman yang tersedia.";
-        
-        $bot->reply($message);
+        return $message;
     }
 
     /**

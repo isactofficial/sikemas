@@ -32,7 +32,14 @@ Route::get('/', function () {
         ->orderByDesc('created_at')
         ->take(12)
         ->get();
-    return view('index', compact('articles'));
+
+    // Featured products for homepage
+    $featuredProducts = \App\Models\Product::query()
+        ->orderByDesc('created_at')
+        ->take(4)
+        ->get();
+
+    return view('index', compact('articles', 'featuredProducts'));
 })->middleware('track.page:home')->name('home');
 
 
@@ -85,6 +92,11 @@ Route::middleware(['auth'])->group(function () {
 // BotMan Chatbot Routes
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle'])->name('botman.handle');
 Route::get('/botman/test', [BotManController::class, 'test'])->name('botman.test');
+
+// Test Chatbot Page (for debugging)
+Route::get('/test-chatbot', function () {
+    return view('test-chatbot');
+})->name('test.chatbot');
 // ============================================
 // ADMIN ROUTES (Protected)
 // ============================================
@@ -267,7 +279,13 @@ Route::get('/beranda', function () {
         ->orderByDesc('created_at')
         ->take(12)
         ->get();
-    return view('index', compact('articles'));
+
+    $featuredProducts = \App\Models\Product::query()
+        ->orderByDesc('created_at')
+        ->take(4)
+        ->get();
+
+    return view('index', compact('articles', 'featuredProducts'));
 })->middleware('track.page:home')->name('beranda');
 
 use App\Models\Product;

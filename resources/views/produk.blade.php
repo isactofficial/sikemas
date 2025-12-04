@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Produk - SIKEMAS</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-removebg.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
@@ -113,15 +114,23 @@
         border-radius: 15px;
         padding: 15px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        border: 1px solid #eee;
+        border: 1px solid #e5e5e5;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .carousel-slide:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     }
 
     .carousel-slide img {
         width: 100%;
         height: 250px;
         object-fit: cover;
+        object-position: center;
         display: block;
         border-radius: 10px;
+        background-color: #f8f8f8;
     }
 
     /* Animasi scrolling */
@@ -213,21 +222,32 @@
         background: #FFFFFF;
         border-radius: 15px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        border: 1px solid #eee;
+        border: 1px solid #e5e5e5;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
-
-        /* === PERBAIKAN (BAGIAN 1) === */
-        /* Menggunakan Flexbox untuk tata letak kolom */
         display: flex;
         flex-direction: column;
-        height: 100%; /* Memastikan semua card sama tinggi (didukung oleh grid) */
+        height: 100%;
+        position: relative;
     }
 
     .card-produk:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        border-color: #ddd;
+    }
+    
+    .card-produk::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 250px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.02) 100%);
+        pointer-events: none;
+        z-index: 1;
     }
 
     .card-produk.hidden {
@@ -238,7 +258,9 @@
         width: 100%;
         height: 250px;
         object-fit: cover;
+        object-position: center;
         display: block;
+        background-color: #f8f8f8;
     }
 
     .card-produk-content {
@@ -344,45 +366,201 @@
     @media (max-width: 992px) {
         .grid-produk {
             grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
         }
     }
 
-    @media (max-width: 600px) {
-        .grid-produk {grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: stretch;}
-        .card-produk {display: flex; flex-direction: column;}
-        .card-produk img {aspect-ratio: 4 / 3; width: 100%; height: auto; max-height: 170px; object-fit: cover;}
-        .card-produk-content {padding: 14px 12px; display: flex; flex-direction: column; flex: 1;}
-        .card-produk-content h3 {font-size: .95rem; margin: 0 0 6px;}
-        /* Hindari deskripsi mendorong tinggi kartu berlebih di mobile */
-        .card-produk-content .deskripsi {font-size: .78rem; line-height: 1.35; margin: 0 0 10px; flex: 0 0 auto; -webkit-line-clamp: 2;}
-        .card-produk-content .harga {font-size: .95rem; margin: 6px 0 10px;}
-        .btn-keranjang {min-height: 38px; padding: 9px 10px; font-size: .85rem; border-radius: 9px;}
+    @media (max-width: 768px) {
+        .grid-produk {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 600px;
+        }
+
+        .card-produk {
+            border-radius: 12px;
+        }
+
+        .card-produk img {
+            height: 200px;
+        }
+
+        .card-produk-content {
+            padding: 16px;
+        }
+
+        .card-produk-content h3 {
+            font-size: 1.05rem;
+        }
+
+        .card-produk-content .deskripsi {
+            font-size: 0.88rem;
+        }
+
+        .card-produk-content .harga {
+            font-size: 1.1rem;
+        }
+
+        .btn-keranjang {
+            font-size: 0.95rem;
+            padding: 10px 12px;
+        }
 
         .header-produk h2,
         .header-produk-grid h2 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
         }
 
         .filter-produk {
-            gap: 10px;
+            gap: 12px;
         }
 
         .filter-btn {
             font-size: 0.9rem;
-            padding: 8px 15px;
+            padding: 8px 18px;
         }
     }
 
-    /* --- Extra-narrow screens (extreme small widths) --- */
-    @media (max-width: 360px) {
-        .grid-produk { grid-template-columns: 1fr; gap: 12px; }
-        .card-produk { border-radius: 12px; }
-        .card-produk img { max-height: 150px; }
-        .card-produk-content { padding: 12px 10px; }
-        .card-produk-content h3 { font-size: .9rem; }
-        .card-produk-content .deskripsi { font-size: .74rem; -webkit-line-clamp: 2; }
-        .card-produk-content .harga { font-size: .9rem; margin: 6px 0 8px; }
-        .btn-keranjang { min-height: 34px; font-size: .8rem; padding: 8px 10px; }
+    /* --- Mobile: 1 card per row --- */
+    @media (max-width: 600px) {
+        .lihat-produk {
+            padding: 40px 16px 20px 16px;
+        }
+
+        .grid-produk {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 100%;
+            padding: 0 10px;
+        }
+
+        .card-produk {
+            display: flex;
+            flex-direction: column;
+            border-radius: 15px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .card-produk img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .card-produk-content {
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card-produk-content h3 {
+            font-size: 1.1rem;
+            margin: 0 0 10px;
+            -webkit-line-clamp: 2;
+        }
+
+        .card-produk-content .deskripsi {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0 0 12px;
+            -webkit-line-clamp: 3;
+        }
+
+        .card-produk-content .harga {
+            font-size: 1.15rem;
+            margin: 8px 0 12px;
+        }
+
+        .btn-keranjang {
+            min-height: 44px;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            border-radius: 10px;
+        }
+
+        .header-produk h2,
+        .header-produk-grid h2 {
+            font-size: 2rem;
+        }
+
+        .filter-produk {
+            gap: 10px;
+            padding: 0 10px;
+        }
+
+        .filter-btn {
+            font-size: 0.85rem;
+            padding: 8px 16px;
+        }
+
+        .carousel-slide {
+            width: 280px;
+            margin: 0 12px;
+        }
+
+        .carousel-slide img {
+            height: 220px;
+        }
+    }
+
+    /* --- Extra small screens --- */
+    @media (max-width: 400px) {
+        .grid-produk {
+            gap: 16px;
+            padding: 0 5px;
+        }
+
+        .card-produk {
+            border-radius: 12px;
+        }
+
+        .card-produk img {
+            height: 200px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .card-produk-content {
+            padding: 16px 14px;
+        }
+
+        .card-produk-content h3 {
+            font-size: 1rem;
+        }
+
+        .card-produk-content .deskripsi {
+            font-size: 0.85rem;
+            -webkit-line-clamp: 2;
+        }
+
+        .card-produk-content .harga {
+            font-size: 1.05rem;
+            margin: 6px 0 10px;
+        }
+
+        .btn-keranjang {
+            min-height: 42px;
+            font-size: 0.9rem;
+            padding: 10px 12px;
+        }
+
+        .header-produk h2,
+        .header-produk-grid h2 {
+            font-size: 1.8rem;
+        }
+
+        .carousel-slide {
+            width: 260px;
+        }
+
+        .carousel-slide img {
+            height: 200px;
+        }
     }
 
     /* --- STYLING DETAIL PRODUK --- */

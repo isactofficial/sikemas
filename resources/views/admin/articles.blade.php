@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Artikel - Admin</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-removebg.png') }}">
 </head>
 <body>
     @include('layouts.sidebar_admin')

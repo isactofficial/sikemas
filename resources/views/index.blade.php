@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIKEMAS - Protect Your Value</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-removebg.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
@@ -797,9 +798,10 @@
             padding: 0; /* gambar penuh */
             font-family: 'Besley', serif;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+            box-shadow: none; /* remove shadow edge */
             background: none;
             border: none;
+            outline: none; /* prevent focus outline border */
         }
 
         /* .domino-tab span (Teks di dalam card) */
@@ -814,7 +816,7 @@
         /* .domino-tab:hover (Efek saat di-hover) */
         .domino-tab:hover {
             transform: translateY(-6px);
-            box-shadow: 0 10px 20px rgba(0,0,0,.22);
+            box-shadow: none; /* keep clean edge on hover */
         }
 
 
@@ -932,7 +934,7 @@
 
         .domino-tab:active, .domino-tab.active {
             transform: none; /* tetap stabil saat klik */
-            box-shadow: 0 4px 12px rgba(0,0,0,.18);
+            box-shadow: none; /* remove active shadow */
         }
 
         /* Responsive kecil: rapikan ukuran agar tidak terlalu besar */
@@ -1876,28 +1878,13 @@
             <h2 class="section-title">Produk Unggulan Kami</h2>
 
             <div class="products-grid">
-                @if (isset($products) && $products->count() > 0)
-                    @foreach ($products->take(3) as $product)
+                @if (isset($featuredProducts) && $featuredProducts->count() > 0)
+                    @foreach ($featuredProducts as $product)
                         <div class="product-card">
-                            @php
-                                $productImage = null;
-                                if (!empty($product->image)) {
-                                    $productImage = asset('storage/' . $product->image);
-                                } elseif (!empty($product->featured_image)) {
-                                    $productImage = asset('storage/' . $product->featured_image);
-                                } elseif (!empty($product->thumbnail)) {
-                                    $productImage = asset('storage/' . $product->thumbnail);
-                                } else {
-                                    $productImage = asset('assets/img/Rectangle12.png');
-                                }
-                            @endphp
-                            <img src="{{ $productImage }}" alt="{{ $product->name }}" class="product-image"
-                                onerror="this.onerror=null; this.src='{{ asset('assets/img/Rectangle12.png') }}';">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-image">
                             <div class="product-content">
                                 <h3 class="product-title">{{ $product->name }}</h3>
-                                <p class="product-description">
-                                    {{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 100) }}
-                                </p>
+                                <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 110) }}</p>
                                 <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                             </div>
                         </div>

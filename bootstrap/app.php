@@ -18,6 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
 
         ]);
 
+        // Exclude botman route from CSRF verification
+        $middleware->validateCsrfTokens(except: [
+            'botman',
+            'botman/*'
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

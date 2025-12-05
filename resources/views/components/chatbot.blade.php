@@ -546,7 +546,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({
                     driver: 'web',
                     userId: userId,
-                    message: trimmedMessage
+                    message: {
+                        text: trimmedMessage
+                    }
                 })
             });
 

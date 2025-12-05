@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Barryvdh\DomPDF\Facade\Pdf; // <-- DITAMBAHKAN: Import PDF Facade
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CartController extends Controller
 {
@@ -247,12 +247,16 @@ class CartController extends Controller
             // Generate invoice number
             $invoiceNumber = 'INV-' . date('ymd') . '-' . strtoupper(Str::random(6));
 
+            $subtotal = $cart->items->sum('subtotal');
+            $pajak = $subtotal * 0.11; // Pajak 11%
+            $biaya_pengiriman = $request->shipping_cost;
+            $total_keseluruhan = $subtotal + $pajak + $biaya_pengiriman;
             // Create order
             $order = Order::create([
                 'user_id' => $user->id,
                 'invoice_number' => 'INV-'.strtoupper(Str::random(8)),
                 'order_date' => now(),
-                'total_amount' => $cart->total + $request->shipping_cost,
+                'total_amount' => $total_keseluruhan,
                 'shipping_cost' => $request->shipping_cost,
                 'shipping_service' => $request->shipping_service,
                 'status' => 'Diproses',

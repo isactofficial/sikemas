@@ -105,6 +105,11 @@ class BotManController extends Controller
             $responses[] = ['text' => $this->getKontakText(), 'type' => 'text'];
             $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
         }
+        // ===== TUTORIAL PEMESANAN =====
+        elseif (preg_match('/(tutorial|cara pesan|cara order|panduan|how to order)/i', $message)) {
+            $responses[] = ['text' => $this->getTutorialText(), 'type' => 'text'];
+            $responses[] = ['text' => "\n💡 Ada yang bisa saya bantu lagi? Ketik 'menu' untuk melihat semua halaman.", 'type' => 'text'];
+        }
         // ===== TERIMA KASIH =====
         elseif (preg_match('/(terima kasih|thanks|thank you|makasih|thx)/i', $message)) {
             $responses[] = ['text' => '✨ Sama-sama! Senang bisa membantu Anda. 😊', 'type' => 'text'];
@@ -132,7 +137,8 @@ class BotManController extends Controller
         $message .= "ℹ️ **about** - Tentang kami\n";
         $message .= "👤 **profile** - Kelola profil (perlu login)\n\n";
         $message .= "💬 **konsultasi** - Konsultasi gratis\n";
-        $message .= "📞 **kontak** - Hubungi kami";
+        $message .= "📞 **kontak** - Hubungi kami\n";
+        $message .= "📖 **tutorial** - Tutorial cara pemesanan";
         return $message;
     }
 
@@ -293,6 +299,41 @@ class BotManController extends Controller
         $message .= "📱 **Instagram:** @sikemas_official\n";
         $message .= "💼 **LinkedIn:** Sikemas Official\n\n";
         $message .= "👉 <a href='{$url}' target='_blank'>Kirim Pesan</a>";
+        
+        return $message;
+    }
+
+    /**
+     * Get tutorial pemesanan text
+     */
+    private function getTutorialText()
+    {
+        $loginUrl = route('login');
+        $produkUrl = route('produk');
+        
+        $message = "📖 **TUTORIAL CARA PEMESANAN**\n\n";
+        $message .= "Ikuti langkah-langkah berikut untuk memesan produk:\n\n";
+        $message .= "**1️⃣ Pilih Produk**\n";
+        $message .= "   • Kunjungi halaman <a href='{$produkUrl}' target='_blank'>Produk</a>\n";
+        $message .= "   • Browse produk yang tersedia\n";
+        $message .= "   • Klik produk yang Anda inginkan\n\n";
+        $message .= "**2️⃣ Kustomisasi Desain**\n";
+        $message .= "   • Pilih ukuran dan jumlah\n";
+        $message .= "   • Upload desain Anda sendiri, atau\n";
+        $message .= "   • Gunakan fitur edit desain kami\n\n";
+        $message .= "**3️⃣ Tambah ke Keranjang**\n";
+        $message .= "   • Klik tombol 'Tambah ke Keranjang'\n";
+        $message .= "   • Lanjutkan belanja atau checkout\n\n";
+        $message .= "**4️⃣ Checkout**\n";
+        $message .= "   • Review produk di keranjang\n";
+        $message .= "   • Isi alamat pengiriman\n";
+        $message .= "   • Pilih metode pembayaran\n\n";
+        $message .= "**5️⃣ Konfirmasi & Pembayaran**\n";
+        $message .= "   • Konfirmasi pesanan Anda\n";
+        $message .= "   • Lakukan pembayaran\n";
+        $message .= "   • Pesanan akan diproses!\n\n";
+        $message .= "⚠️ **PENTING:** <a href='{$loginUrl}' target='_blank'>Login terlebih dahulu</a> sebelum melakukan checkout untuk melanjutkan pesanan Anda.\n\n";
+        $message .= "💡 **Tips:** Hubungi kami untuk konsultasi GRATIS sebelum memesan!";
         
         return $message;
     }

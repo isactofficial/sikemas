@@ -7,13 +7,18 @@
     <title>SIKEMAS - Protect Your Value</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-removebg.png') }}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         :root {
             /* Mengubah warna background tombol alert */
@@ -326,24 +331,51 @@
             margin: 0;
         }
 
-        /* Responsive khusus untuk bagian Mengapa Memilih Sikemas agar tetap horizontal tanpa scroll */
-        @media (max-width: 600px) {
+        /* Responsive khusus untuk bagian Mengapa Memilih Sikemas */
+        @media (max-width: 768px) {
             .why-us-grid {
-                display: flex;
-                justify-content: center;
-                gap: 1rem;
-                flex-wrap: wrap;
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
                 margin-top: 2.5rem;
             }
+
             .why-us-card {
-                width: 165px;
-                padding: 1.15rem .9rem 1.35rem .9rem;
-                box-shadow: 0 3px 10px rgba(0,0,0,.07);
+                max-width: 400px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem;
             }
-            .why-us-icon {height: 36px; margin-bottom: .6rem;}
-            .why-us-icon img {height: 34px;}
-            .why-us-title {font-size: 13.8px; margin-bottom: .42rem;}
-            .why-us-description {font-size: 11.8px; line-height: 1.4;}
+        }
+
+        @media (max-width: 600px) {
+            .why-us-grid {
+                gap: 1.2rem;
+                margin-top: 2rem;
+            }
+
+            .why-us-card {
+                max-width: 100%;
+                padding: 1.8rem 1.3rem;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, .07);
+            }
+
+            .why-us-icon {
+                height: 42px;
+                margin-bottom: 1rem;
+            }
+
+            .why-us-icon img {
+                height: 38px;
+            }
+
+            .why-us-title {
+                font-size: 18px;
+                margin-bottom: .6rem;
+            }
+
+            .why-us-description {
+                font-size: 14px;
+                line-height: 1.5;
+            }
         }
 
 
@@ -597,27 +629,6 @@
             box-shadow: 0 6px 14px rgba(255, 87, 34, 0.45);
         }
 
-        @media (max-width: 768px) {
-            .start-project {
-                padding: 48px 14px;
-                margin-top: 44px;
-            }
-
-            .start-project h2 {
-                font-size: 26px;
-                margin-bottom: 10px;
-            }
-
-            .start-project p {
-                font-size: 14px;
-                margin-bottom: 18px;
-            }
-
-            .start-project .sp-button {
-                padding: 10px 18px;
-            }
-        }
-
         /* KOMITMEN */
         .commitment-section {
             position: relative;
@@ -694,8 +705,6 @@
             gap: 2rem;
         }
 
-        /* Desktop: keep three cards in one row; mobile overrides below */
-
         .commitment-card {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -749,6 +758,62 @@
             margin: 0;
         }
 
+        /* Responsive untuk Komitmen - Satu card per baris di mobile */
+        @media (max-width: 768px) {
+            .commitment-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .commitment-card {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .commitment-section {
+                padding: 3rem 1.1rem;
+            }
+
+            .commitment-grid {
+                gap: 1.2rem;
+            }
+
+            .commitment-card {
+                max-width: 100%;
+                padding: 1.8rem 1.3rem;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+            }
+
+            .commitment-icon {
+                height: 50px;
+                margin-bottom: 1rem;
+            }
+
+            .commitment-icon img {
+                height: 46px;
+            }
+
+            .commitment-icon.icon-efisiensi {
+                height: 60px;
+            }
+
+            .commitment-icon.icon-efisiensi img {
+                height: 56px;
+            }
+
+            .commitment-title {
+                font-size: 18px;
+                margin-bottom: .6rem;
+            }
+
+            .commitment-description {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+        }
+
         /* KOMITMEN 2*/
 
         .commitment-2-section {
@@ -775,11 +840,10 @@
         .domino-nav {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 1.75rem;
-            padding: 2.5rem 0 2rem;
-            margin: 0 0 1rem 0;
+            align-items: center;
+            gap: 3.5rem;
+            margin-bottom: 0.5rem;
+            padding: 3rem 0;
         }
 
         /* .domino-tab (Ini adalah card utama) */
@@ -791,17 +855,13 @@
             border-radius: 8px;
             color: white;
             cursor: pointer;
-            transition: transform .25s ease, box-shadow .25s ease;
+            transition: transform 0.3s ease;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0; /* gambar penuh */
+            padding: 1rem;
             font-family: 'Besley', serif;
-            overflow: hidden;
-            box-shadow: none; /* remove shadow edge */
-            background: none;
-            border: none;
-            outline: none; /* prevent focus outline border */
         }
 
         /* .domino-tab span (Teks di dalam card) */
@@ -815,8 +875,7 @@
 
         /* .domino-tab:hover (Efek saat di-hover) */
         .domino-tab:hover {
-            transform: translateY(-6px);
-            box-shadow: none; /* keep clean edge on hover */
+            transform: translate(6px, -6px);
         }
 
 
@@ -888,17 +947,19 @@
         /* 1. Atur tombol agar hanya gambar yang terlihat */
         /*  untuk memperbesar ukuran */
         .domino-nav .domino-tab {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
             max-width: 160px;
-            width: 140px; /* konsisten dengan height */
+            width: 80%;
         }
 
         /* 2. Pastikan gambar responsif di dalam tombol */
         .domino-nav .domino-tab img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
             display: block;
-            transition: transform .25s ease;
         }
 
         /* 3. Logika untuk menukar gambar */
@@ -923,24 +984,6 @@
         /* Sembunyikan gambar 'tidak aktif' (biru) */
         .domino-nav .domino-tab.active .img-inactive {
             display: none;
-        }
-
-        /* Duplikat .domino-nav dihapus & disatukan di atas */
-
-        /* Hover efek halus pada gambar tanpa mengubah ukuran keseluruhan */
-        .domino-tab:hover img {
-            transform: scale(1.04);
-        }
-
-        .domino-tab:active, .domino-tab.active {
-            transform: none; /* tetap stabil saat klik */
-            box-shadow: none; /* remove active shadow */
-        }
-
-        /* Responsive kecil: rapikan ukuran agar tidak terlalu besar */
-        @media (max-width: 600px) {
-            .domino-tab { width: 110px; height: 200px; }
-            .domino-nav { gap: 1rem; padding: 1.75rem 0 1.25rem; }
         }
 
         /*CSS ALUR PROSES KAMI*/
@@ -1262,302 +1305,6 @@
 
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-content p {
-                font-size: 1rem;
-            }
-
-            .cta-button {
-                padding: 0.875rem 2rem;
-                font-size: 1rem;
-            }
-
-            .products-section {
-                padding: 3rem 1.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-
-            .why-us-section {
-                padding: 4rem 1.5rem;
-            }
-
-            .section-title-why-us {
-                font-size: 28px;
-            }
-
-            .why-us-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                margin-top: 3rem;
-            }
-
-            .commitment-section {
-                padding: 4rem 1.5rem;
-                background-attachment: scroll;
-            }
-
-            .section-title-commitment {
-                font-size: 28px;
-            }
-
-            .section-description-commitment {
-                font-size: 14px;
-                margin-bottom: 2rem;
-                margin-top: 1.5rem;
-            }
-
-            .commitment-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            /* --- CSS RESPONSIVE KOMITMEN 2  --- */
-            .commitment-2-section {
-                padding: 4rem 1.5rem;
-            }
-
-            .commitment-2-section h2 {
-                font-size: 24px;
-                margin-bottom: 2rem;
-            }
-
-            .domino-nav {
-                flex-wrap: wrap;
-                gap: 1rem;
-                margin-bottom: 3rem;
-                padding: 0;
-            }
-            /* Rework mobile domino cards to tall 3D style + horizontal scroll */
-            .domino-nav {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding: 0.5rem 0 0.5rem;
-                gap: 0.75rem;
-                -webkit-overflow-scrolling: touch;
-            }
-            .domino-nav::-webkit-scrollbar {height: 5px;}
-            .domino-nav::-webkit-scrollbar-thumb {background: rgba(7,65,89,.4); border-radius: 3px;}
-            .domino-tab,
-            .domino-tab:hover,
-            .domino-tab.active {
-                width: 120px;
-                height: 190px;
-                margin: 0;
-                background: none; /* revert to image */
-                box-shadow: none;
-                transform: none;
-                padding: 0;
-            }
-            .domino-tab span {display:none;}
-            .domino-tab img {display:block; filter: drop-shadow(4px 4px 8px rgba(0,0,0,.25));}
-            .domino-tab.active .img-inactive {display:none;}
-            .domino-tab.active .img-active {display:block;}
-            /* Hindari mengecil saat diklik (active state) */
-            .domino-tab:active {transform: none;}
-            .domino-tab.active {transform: none;}
-            .domino-tab img {height:100%; object-fit:cover;}
-
-            .domino-content-wrapper {
-                text-align: center;
-            }
-
-            .domino-content h3 {
-                font-size: 22px;
-            }
-
-            .domino-content p {
-                font-size: 15px;
-                text-align: left;
-            }
-
-            .orange-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .orange-box {
-                font-size: 1rem;
-                min-height: 80px;
-                padding: 1rem;
-            }
-
-            /* --- CSS RESPONSIVE ALUR PROSES --- */
-            .our-process-section {
-                padding: 4rem 1.5rem;
-            }
-
-            .section-title-process {
-                font-size: 28px;
-            }
-
-            .our-process-grid {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-                margin-top: 3rem;
-            }
-
-            .process-image-wrapper img {
-                height: 200px;
-            }
-
-            /* --- CSS RESPONSIVE CUSTOM DESIGN--- */
-            .custom-design-section {
-                padding: 4rem 1.5rem;
-            }
-
-            .section-title-custom-design {
-                font-size: 28px;
-            }
-
-            .custom-design-image-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                margin-top: 3rem;
-            }
-
-            .custom-design-image-item {
-                max-width: 70%;
-                margin: 0 auto;
-            }
-
-            .cta-button-design-new {
-                font-size: 1.1rem;
-                padding: 1rem 1.5rem;
-
-            }
-
-            .cta-button-icon {
-                width: 24px;
-                height: 24px;
-            }
-
-            /* --- CSS RESPONSIVE FREE DESIGN --- */
-            .free-design-section {
-                padding: 4rem 1.5rem;
-                background-attachment: scroll;
-            }
-
-            .free-design-title {
-                font-size: 28px;
-            }
-
-            .free-design-description {
-                font-size: 14px;
-            }
-
-            .free-design-button {
-                padding: 10px 18px;
-            }
-
-        }
-
-        @media (max-width: 480px) {
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-
-            .hero-content p {
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Mobile tuning for product cards */
-        @media (max-width: 640px) {
-            .products-grid {
-                display: flex;
-                flex-wrap: nowrap;
-                gap: 1rem;
-                overflow-x: auto;
-                padding: 0 0 8px 0;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-            }
-            .products-grid::-webkit-scrollbar {
-                height: 6px;
-            }
-            .products-grid::-webkit-scrollbar-thumb {
-                background: #ff5722;
-                border-radius: 3px;
-            }
-            .product-card {
-                flex: 0 0 240px;
-                scroll-snap-align: start;
-                border-radius: 10px;
-            }
-            .product-image {
-                height: 160px;
-            }
-            .product-content {
-                padding: 1rem 1.25rem;
-            }
-            .product-title {
-                font-size: 1.125rem;
-                margin-bottom: 0.5rem;
-            }
-            .product-description {
-                font-size: 0.9rem;
-                margin-bottom: 1rem;
-            }
-            .product-button {
-                padding: 0.6rem 1.25rem;
-                font-size: 0.95rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .product-card {
-                max-width: 260px;
-            }
-            .product-image {
-                height: 130px;
-            }
-            .product-content {
-                padding: 0.9rem 1rem;
-            }
-            .product-title {
-                font-size: 1rem;
-            }
-            .product-description {
-                font-size: 0.88rem;
-            }
-            .product-button {
-                padding: 0.55rem 1rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Responsive: rapihkan tata letak komitmen 2 kolom + kartu ketiga penuh */
-        @media (max-width: 900px) {
-            .commitment-grid {grid-template-columns: repeat(2, 1fr); gap: 1rem 1.2rem;}
-            .commitment-grid .commitment-card:nth-child(3) {grid-column: 1 / -1; justify-self: center; max-width: 440px; margin: .5rem auto 0;}
-        }
-        @media (max-width: 640px) {
-            .commitment-section {padding: 3rem 1.1rem;}
-            .commitment-grid {grid-template-columns: repeat(2, 1fr); gap: .75rem .85rem;}
-            .commitment-grid .commitment-card:nth-child(3) {grid-column: 1 / -1; justify-self: center; max-width: 400px; margin-left: auto; margin-right: auto;}
-            .commitment-card {padding: .95rem .75rem 1rem; min-height: 185px; box-shadow: 0 2px 6px rgba(0,0,0,.12);}
-            .commitment-icon {height: 46px; margin-bottom: .65rem;}
-            .commitment-icon img {height: 40px;}
-            .commitment-icon.icon-efisiensi {height: 52px;}
-            .commitment-icon.icon-efisiensi img {height: 48px;}
-            .commitment-title {font-size: 15.5px; margin-bottom: .35rem;}
-            .commitment-description {font-size: 12.2px; line-height: 1.38; -webkit-line-clamp: 5;}
-        }
-
         /* CSS Untuk Artikel Section dari file Anda */
         .skm-articles {
             background: #F4F7F6;
@@ -1603,13 +1350,29 @@
 
         @media (max-width: 600px) {
             .skm-a-grid {
-                grid-template-columns: repeat(2, 1fr); /* dua kolom di mobile */
+                grid-template-columns: repeat(2, 1fr);
+                /* dua kolom di mobile */
                 gap: 14px;
             }
-            .skm-a-card .thumb { height: 120px; }
-            .skm-a-card .body { padding: 10px 12px 12px; }
-            .skm-a-card .title { font-size: 15px; margin-bottom: 6px; }
-            .skm-a-card .deskripsi { font-size: 13px; line-height: 1.5; margin-bottom: 10px; }
+
+            .skm-a-card .thumb {
+                height: 120px;
+            }
+
+            .skm-a-card .body {
+                padding: 10px 12px 12px;
+            }
+
+            .skm-a-card .title {
+                font-size: 15px;
+                margin-bottom: 6px;
+            }
+
+            .skm-a-card .deskripsi {
+                font-size: 13px;
+                line-height: 1.5;
+                margin-bottom: 10px;
+            }
         }
 
         .skm-a-card {
@@ -1658,10 +1421,6 @@
 
         .skm-a-card .more:hover {
             text-decoration: underline;
-        }
-
-        @media (max-width: 640px) {
-            .skm-articles h2 { font-size: 26px; }
         }
 
         /* CSS Untuk Testimoni Section dari file Anda */
@@ -1725,25 +1484,7 @@
             font-weight: 800;
         }
 
-        @media (max-width: 640px) {
-            .skm-testimonials h2 {
-                font-size: 28px;
-            }
-
-            .skm-t-single {
-                padding: 18px;
-            }
-
-            .skm-t-single .quote {
-                font-size: 16px;
-            }
-
-            .skm-t-single .credit {
-                font-size: 15px;
-            }
-        }
-
-        /* == Mulai Style Responsif domino == */
+        /* == Responsive untuk Commitment 2 (Domino Nav) == */
         @media (max-width: 768px) {
 
             /* 1. Sesuaikan padding container utama */
@@ -1752,59 +1493,452 @@
                 padding-right: 20px;
             }
 
-            /* 2. Perkecil font judul utama dan hapus <br> */
-            #commitment-2-title {
-                font-size: 1.5rem;
-                line-height: 1.3;
+            /* 2. Perkecil font judul utama & kurangi margin bawah */
+            .commitment-2-section h2 {
+                font-size: 20px;
+                line-height: 1.4;
                 text-align: center;
-                margin-bottom: 75px;
+                margin-bottom: 0px;
+                padding: 0px;
             }
 
-
-            /* 3. Atur 'Domino Nav'*/
+            /* 3. Atur 'Domino Nav' - 5 card sejajar tanpa scroll */
             .domino-nav {
                 display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-                padding: 0 10px;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                gap: 6px;
+                padding: 0;
+                margin-bottom: 0px;
+                overflow-x: visible;
             }
 
-            /* 4. Atur lebar TOMBOL 'Domino'*/
+            /* 4. Atur lebar TOMBOL 'Domino' agar semua muat */
             .domino-tab {
-                flex-basis: 30%;
-                max-width: 90px;
+                flex: 1 1 0;
+                min-width: 0;
+                max-width: none;
                 padding: 0;
                 margin: 0;
+                background: none;
+                border: none;
             }
 
-            /* 5. Pastikan gambar mengisi tombol */
+            /* 5. Pastikan gambar mengisi tombol dengan proporsi baik */
             .domino-tab img {
-                max-width: 100%;
+                width: 100%;
                 height: auto;
                 display: block;
+                filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, .15));
             }
 
-            /* 5. Sesuaikan ukuran font konten */
+            /* Sembunyikan text span di mobile */
+            .domino-tab span {
+                display: none;
+            }
+
+            /* 6. Sesuaikan ukuran font konten */
             .domino-content h3 {
-                font-size: 1.3rem;
+                font-size: 22px;
                 text-align: center;
-                margin-top: 60px;
+                margin-top: 20px;
+                margin-bottom: 15px;
             }
 
             .domino-content p {
-                font-size: 0.95rem;
-                line-height: 1.5;
-                text-align: center;
+                font-size: 15px;
+                line-height: 1.6;
+                text-align: left;
+                margin-bottom: 20px;
             }
 
-            /* 6. 'orange-grid' menjadi satu kolom */
+            /* 7. 'orange-grid' menjadi satu kolom */
             .orange-grid {
                 grid-template-columns: 1fr;
-                gap: 10px;
+                gap: 12px;
+            }
+
+            .orange-box {
+                font-size: 14px;
+                min-height: 90px;
+                padding: 12px;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+
+            .cta-button {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+
+            .products-section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .why-us-section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title-why-us {
+                font-size: 26px;
+                margin-bottom: 2rem;
+            }
+
+            .commitment-section {
+                padding: 3rem 1rem;
+                background-attachment: scroll;
+            }
+
+            .section-title-commitment {
+                font-size: 26px;
+                margin-bottom: 1rem;
+            }
+
+            .section-description-commitment {
+                font-size: 14px;
+                margin: 1rem auto 2rem;
+                padding: 0 10px;
+                line-height: 1.6;
+            }
+
+            /* --- CSS RESPONSIVE KOMITMEN 2  --- */
+            .commitment-2-section {
+                padding: 3rem 1rem;
+            }
+
+            .domino-content-wrapper {
+                padding: 0 10px;
+            }
+
+            .domino-content h3 {
+                font-size: 20px;
+                margin-bottom: 12px;
+            }
+
+            .domino-content p {
+                font-size: 14px;
+                text-align: left;
+                line-height: 1.6;
+                margin-bottom: 18px;
+            }
+
+            .orange-box {
+                font-size: 13px;
+                min-height: 85px;
+                padding: 12px;
+                line-height: 1.5;
+            }
+
+            /* --- CSS RESPONSIVE ALUR PROSES --- */
+            .our-process-section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title-process {
+                font-size: 26px;
+                margin-bottom: 2rem;
+            }
+
+            .our-process-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+                margin-top: 2.5rem;
+            }
+
+            .process-image-wrapper img {
+                height: 200px;
+            }
+
+            .process-step-number {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+                margin-top: -28px;
+            }
+
+            .process-step-title {
+                font-size: 18px;
+                margin-bottom: 0.5rem;
+            }
+
+            .process-step-description {
+                font-size: 14px;
+            }
+
+            /* --- CSS RESPONSIVE CUSTOM DESIGN--- */
+            .custom-design-section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title-custom-design {
+                font-size: 26px;
+                margin-bottom: 2rem;
+            }
+
+            .custom-design-image-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-top: 2.5rem;
+            }
+
+            .custom-design-image-item {
+                max-width: 85%;
+                margin: 0 auto;
+            }
+
+            .custom-design-cta {
+                margin-top: 2.5rem;
+            }
+
+            .cta-button-design-new {
+                font-size: 1rem;
+                padding: 0.875rem 1.75rem;
+            }
+
+            .cta-button-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            /* --- CSS RESPONSIVE FREE DESIGN --- */
+            .free-design-section {
+                padding: 4rem 1rem;
+                background-attachment: scroll;
+            }
+
+            .free-design-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: -0.5rem;
+            }
+
+            .free-design-title {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .free-design-description {
+                font-size: 14px;
+                padding: 0 10px;
+                margin-bottom: 2rem;
+            }
+
+            .free-design-button {
+                padding: 0.875rem 1.75rem;
+                font-size: 1rem;
+            }
+
+            /* Artikel Section Mobile */
+            .skm-articles {
+                padding: 3rem 1rem 3.5rem;
+            }
+
+            .skm-articles h2 {
+                font-size: 26px;
+                margin-bottom: 20px;
+            }
+
+            .skm-a-grid {
+                margin-top: 20px;
+            }
+
+            /* Testimoni Section Mobile */
+            .skm-testimonials {
+                padding: 3rem 1rem 3.5rem;
+            }
+
+            .skm-testimonials h2 {
+                font-size: 26px;
+                margin-bottom: 20px;
+            }
+
+            .skm-t-single {
+                padding: 20px 18px;
+            }
+
+            .skm-t-single .quote {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .skm-t-single .credit {
+                font-size: 14px;
+            }
+
+            /* Start Project CTA Mobile */
+            .start-project {
+                padding: 3rem 1rem;
+                margin-top: 40px;
+            }
+
+            .start-project h2 {
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+
+            .start-project p {
+                font-size: 14px;
+                margin-bottom: 20px;
+                padding: 0 10px;
+            }
+
+            .start-project .sp-button {
+                padding: 0.875rem 1.75rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Mobile tuning for product cards */
+        @media (max-width: 640px) {
+            .products-grid {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 1rem;
+                overflow-x: auto;
+                padding: 0 0 8px 0;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .products-grid::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            .products-grid::-webkit-scrollbar-thumb {
+                background: #ff5722;
+                border-radius: 3px;
+            }
+
+            .product-card {
+                flex: 0 0 240px;
+                scroll-snap-align: start;
+                border-radius: 10px;
+            }
+
+            .product-image {
+                height: 160px;
+            }
+
+            .product-content {
+                padding: 1rem 1.25rem;
+            }
+
+            .product-title {
+                font-size: 1.125rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .product-description {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .product-button {
+                padding: 0.6rem 1.25rem;
+                font-size: 0.95rem;
+            }
+
+            .skm-articles h2,
+            .skm-testimonials h2 {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 0.9rem;
+                padding: 0 15px;
+            }
+
+            .cta-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .section-title-why-us,
+            .section-title-commitment,
+            .section-title-process,
+            .section-title-custom-design {
+                font-size: 22px;
+            }
+
+            .commitment-2-section h2 {
+                font-size: 18px;
+            }
+
+            .free-design-title {
+                font-size: 1.8rem;
+            }
+
+            .skm-articles h2,
+            .skm-testimonials h2 {
+                font-size: 20px;
+            }
+
+            .start-project h2 {
+                font-size: 20px;
+            }
+
+            .btn-lihat-semua-produk,
+            .btn-lihat-semua-artikel {
+                padding: 12px 32px;
+                font-size: 14px;
+            }
+
+            .product-card {
+                max-width: 260px;
+            }
+
+            .product-image {
+                height: 130px;
+            }
+
+            .product-content {
+                padding: 0.9rem 1rem;
+            }
+
+            .product-title {
+                font-size: 1rem;
+            }
+
+            .product-description {
+                font-size: 0.88rem;
+            }
+
+            .product-button {
+                padding: 0.55rem 1rem;
+                font-size: 0.9rem;
             }
         }
     </style>
+
 </head>
 
 <body>
@@ -1830,19 +1964,26 @@
         <img src="{{ asset('assets/img/Section.png') }}" alt="Background" class="hero-background">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Protect Your Value</h1>
-            <p>Menjadi partner sejarah pertumbuhan bisnis anda dengan menyediakan proteksi yang dapat menciptakan
-                ekosistem bisnis yang berkelanjutan</p>
-            <a href="{{ url('/produk') }}" class="cta-button">Lihat Produk Kami</a>
+            <h1 data-aos="fade-down" data-aos-duration="1000">Protect Your Value</h1>
+
+            <p data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+                Menjadi partner sejarah pertumbuhan bisnis anda dengan menyediakan proteksi yang dapat menciptakan
+                ekosistem bisnis yang berkelanjutan
+            </p>
+
+            <a href="{{ url('/produk') }}" class="cta-button" data-aos="fade-up" data-aos-delay="400"
+                data-aos-duration="1000">
+                Lihat Produk Kami
+            </a>
         </div>
     </section>
 
     <section class="why-us-section" aria-labelledby="why-us-title">
         <div class="why-us-container">
-            <h2 class="section-title-why-us" id="why-us-title">Mengapa Memilih Sikemas?</h2>
+            <h2 class="section-title-why-us" id="why-us-title" data-aos="fade-up">Mengapa Memilih Sikemas?</h2>
             <div class="why-us-grid">
 
-                <div class="why-us-card">
+                <div class="why-us-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="why-us-icon">
                         <img src="{{ asset('assets/img/Symbol13.svg') }}" alt="">
                     </div>
@@ -1851,7 +1992,7 @@
                     </p>
                 </div>
 
-                <div class="why-us-card">
+                <div class="why-us-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="why-us-icon">
                         <img src="{{ asset('assets/img/Symbol14.svg') }}" alt="">
                     </div>
@@ -1860,7 +2001,7 @@
                         jadi.</p>
                 </div>
 
-                <div class="why-us-card">
+                <div class="why-us-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="why-us-icon">
                         <img src="{{ asset('assets/img/Container5.svg') }}" alt="">
                     </div>
@@ -1875,22 +2016,24 @@
 
     <section class="products-section">
         <div class="products-container">
-            <h2 class="section-title">Produk Unggulan Kami</h2>
+            <h2 class="section-title" data-aos="fade-up">Produk Unggulan Kami</h2>
 
             <div class="products-grid">
                 @if (isset($featuredProducts) && $featuredProducts->count() > 0)
                     @foreach ($featuredProducts as $product)
-                        <div class="product-card">
+                        <div class="product-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 150 }}">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-image">
                             <div class="product-content">
                                 <h3 class="product-title">{{ $product->name }}</h3>
-                                <p class="product-description">{{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 110) }}</p>
+                                <p class="product-description">
+                                    {{ Str::limit(strip_tags($product->description ?? 'Produk berkualitas dari Sikemas'), 110) }}
+                                </p>
                                 <a href="{{ route('produk') }}" class="product-button">Pesan Sekarang</a>
                             </div>
                         </div>
                     @endforeach
                 @else
-                    <div class="product-card">
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="100">
                         <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kotak Kemasan Khusus"
                             class="product-image">
                         <div class="product-content">
@@ -1901,7 +2044,7 @@
                         </div>
                     </div>
 
-                    <div class="product-card">
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="250">
                         <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Karton Bergelombang"
                             class="product-image">
                         <div class="product-content">
@@ -1912,7 +2055,7 @@
                         </div>
                     </div>
 
-                    <div class="product-card">
+                    <div class="product-card" data-aos="fade-up" data-aos-delay="400">
                         <img src="{{ asset('assets/img/Rectangle12.png') }}" alt="Kemasan Ramah Lingkungan"
                             class="product-image">
                         <div class="product-content">
@@ -1925,8 +2068,7 @@
                 @endif
             </div>
 
-            <!-- Tombol Lihat Semua Produk -->
-            <div style="text-align: center; margin-top: 40px;">
+            <div style="text-align: center; margin-top: 40px;" data-aos="zoom-in" data-aos-delay="300">
                 <a href="{{ route('produk') }}" class="btn-lihat-semua-produk">Lihat Semua Produk</a>
             </div>
         </div>
@@ -1935,15 +2077,18 @@
     <section class="commitment-section" aria-labelledby="commitment-title-id">
         <div class="commitment-overlay"></div>
         <div class="commitment-container">
-            <h2 class="section-title-commitment" id="commitment-title-id">Komitmen Terhadap Bisnis Berkelanjutan</h2>
-            <p class="section-description-commitment">
-                Kami percaya bahwa kemasan yang baik tidak only melindungi produk, tetapi juga planet kita.
-                Sikemas berkomitmen untuk menggunakan bahan baku yang bertanggung jawab dan proses produksi
-                yang efisien untuk mengurangi dampak lingkungan.
-            </p>
+            <div data-aos="fade-up">
+                <h2 class="section-title-commitment" id="commitment-title-id">Komitmen Terhadap Bisnis Berkelanjutan
+                </h2>
+                <p class="section-description-commitment">
+                    Kami percaya bahwa kemasan yang baik tidak only melindungi produk, tetapi juga planet kita.
+                    Sikemas berkomitmen untuk menggunakan bahan baku yang bertanggung jawab dan proses produksi
+                    yang efisien untuk mengurangi dampak lingkungan.
+                </p>
+            </div>
             <div class="commitment-grid">
 
-                <div class="commitment-card">
+                <div class="commitment-card" data-aos="flip-left" data-aos-delay="200">
                     <div class="commitment-icon">
                         <img src="{{ asset('assets/img/ContainerR.png') }}" alt="Bahan Berkualitas">
                     </div>
@@ -1952,7 +2097,7 @@
                         lobortis justo non condimentum efficitur.</p>
                 </div>
 
-                <div class="commitment-card">
+                <div class="commitment-card" data-aos="flip-left" data-aos-delay="400">
                     <div class="commitment-icon">
                         <img src="{{ asset('assets/img/ContainerT.png') }}" alt="Bisnis Berkelanjutan">
                     </div>
@@ -1961,7 +2106,7 @@
                         lobortis justo non condimentum efficitur.</p>
                 </div>
 
-                <div class="commitment-card">
+                <div class="commitment-card" data-aos="flip-left" data-aos-delay="600">
                     <div class="commitment-icon icon-efisiensi">
                         <img src="{{ asset('assets/img/icon.png') }}" alt="Efisiensi Biaya">
                     </div>
@@ -1976,11 +2121,11 @@
 
     <section class="commitment-2-section" aria-labelledby="commitment-2-title">
         <div class="commitment-2-container">
-            <h2 id="commitment-2-title">Berkarya dengan hati untuk dedikasi menjadi partner membangun<br>bisnis yang
-                berkelanjutan</h2>
+            <h2 id="commitment-2-title" data-aos="fade-down" data-aos-duration="1000">
+                Berkarya dengan hati untuk dedikasi menjadi partner membangun<br>bisnis yang berkelanjutan
+            </h2>
 
-            <nav class="domino-nav" aria-label="Komitmen Kami">
-
+            <nav class="domino-nav" aria-label="Komitmen Kami" data-aos="fade-up" data-aos-delay="200">
                 <button class="domino-tab active" data-target="content-eco">
                     <img src="/assets/KomSect/EcoB.png" alt="Eco Solutions" class="img-inactive">
                     <img src="/assets/KomSect/EcoKlik.png" alt="Eco Solutions" class="img-active">
@@ -2005,10 +2150,9 @@
                     <img src="/assets/KomSect/InnovationsB.png" alt="Innovations" class="img-inactive">
                     <img src="/assets/KomSect/InnovationsKlik.png" alt="Innovations" class="img-active">
                 </button>
-
             </nav>
 
-            <div class="domino-content-wrapper">
+            <div class="domino-content-wrapper" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
 
                 <div class="domino-content active" id="content-eco">
                     <h3>The world Need Sustainable Packaging</h3>
@@ -2081,10 +2225,10 @@
 
     <section class="our-process-section" aria-labelledby="process-title">
         <div class="our-process-container">
-            <h2 class="section-title-process" id="process-title">Alur Proses Kami</h2>
+            <h2 class="section-title-process" id="process-title" data-aos="fade-down">Alur Proses Kami</h2>
             <div class="our-process-grid">
 
-                <div class="our-process-step">
+                <div class="our-process-step" data-aos="fade-up" data-aos-delay="0">
                     <div class="process-image-wrapper">
                         <img src="{{ asset('assets/img/alur1.png') }}" alt="Konsultasi dan Desain">
                     </div>
@@ -2094,7 +2238,7 @@
                         lobortis justo</p>
                 </div>
 
-                <div class="our-process-step">
+                <div class="our-process-step" data-aos="fade-up" data-aos-delay="150">
                     <div class="process-image-wrapper">
                         <img src="{{ asset('assets/img/alur2.png') }}" alt="Pemilihan Material">
                     </div>
@@ -2104,7 +2248,7 @@
                         lobortis justo</p>
                 </div>
 
-                <div class="our-process-step">
+                <div class="our-process-step" data-aos="fade-up" data-aos-delay="300">
                     <div class="process-image-wrapper">
                         <img src="{{ asset('assets/img/alur3.png') }}" alt="Purchase / Dealing">
                     </div>
@@ -2114,7 +2258,7 @@
                         lobortis justo</p>
                 </div>
 
-                <div class="our-process-step">
+                <div class="our-process-step" data-aos="fade-up" data-aos-delay="450">
                     <div class="process-image-wrapper">
                         <img src="{{ asset('assets/img/alur4.png') }}" alt="Produksi & Kontrol Kualitas">
                     </div>
@@ -2124,7 +2268,7 @@
                         lobortis justo</p>
                 </div>
 
-                <div class="our-process-step">
+                <div class="our-process-step" data-aos="fade-up" data-aos-delay="600">
                     <div class="process-image-wrapper">
                         <img src="{{ asset('assets/img/alur5.png') }}" alt="Pengiriman">
                     </div>
@@ -2140,18 +2284,21 @@
 
     <section class="custom-design-section" aria-labelledby="custom-design-title">
         <div class="custom-design-container">
-            <h2 class="section-title-custom-design" id="custom-design-title">Custom Desain Anda Sendiri</h2>
+            <h2 class="section-title-custom-design" id="custom-design-title" data-aos="zoom-in-up">Custom Desain Anda
+                Sendiri</h2>
 
             <div class="custom-design-image-grid">
                 <img src="{{ asset('assets/img/custom1.png') }}" alt="Contoh Desain Box 1"
-                    class="custom-design-image-item">
+                    class="custom-design-image-item" data-aos="zoom-in" data-aos-delay="100">
+
                 <img src="{{ asset('assets/img/custom2.png') }}" alt="Contoh Desain Box 2"
-                    class="custom-design-image-item">
+                    class="custom-design-image-item" data-aos="zoom-in" data-aos-delay="300">
+
                 <img src="{{ asset('assets/img/custom3.png') }}" alt="Contoh Desain Box 3"
-                    class="custom-design-image-item">
+                    class="custom-design-image-item" data-aos="zoom-in" data-aos-delay="500">
             </div>
 
-            <div class="custom-design-cta">
+            <div class="custom-design-cta" data-aos="fade-up" data-aos-delay="600" data-aos-offset="50">
                 <a href="{{ url('/edit-design') }}" class="cta-button-design-new">
                     Buat Desain Sendiri Sekarang
                 </a>
@@ -2162,49 +2309,58 @@
     <section class="free-design-section" aria-labelledby="free-design-title">
         <div class="free-design-overlay"></div>
         <div class="free-design-container">
-            <p class="free-design-subtitle">konsultasi</p>
-            <h2 class="free-design-title" id="free-design-title">DESAIN GRATIS</h2>
-            <p class="free-design-description">Kami siap membuat ide desainmu menjadi nyata. Konsultasikan sekarang
-                juga secara gratis!</p>
+            <p class="free-design-subtitle" data-aos="fade-down" data-aos-delay="100">konsultasi</p>
 
-            {{-- JIKA PENGGUNA BELUM LOGIN (GUEST) --}}
-            @guest
-                <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button"
-                    aria-label="Konsultasi Gratis Sekarang (Login diperlukan)">
-                    Konsultasi Gratis Sekarang
-                </a>
-            @endguest
+            <h2 class="free-design-title" id="free-design-title" data-aos="zoom-in" data-aos-delay="200"
+                data-aos-duration="1200">
+                DESAIN GRATIS
+            </h2>
 
-            {{-- JIKA PENGGUNA SUDAH LOGIN --}}
-            @auth
-                {{-- Cek jika user punya konsultasi aktif --}}
-                @if (Auth::user()->hasActiveConsultation())
-                    {{-- Tampilkan tombol nonaktif --}}
-                    <button class="free-design-button disabled" disabled
-                        title="Anda sudah memiliki permintaan konsultasi aktif. Satu pengguna hanya bisa melakukan 1 kali konsultasi sampai sesi konsultasi berakhir.">
-                        Menunggu Sesi Konsultasi
-                    </button>
-                @else
-                    {{-- Tombol aktif. Gunakan ID "request-consultation-button" untuk AJAX --}}
-                    <button type="button" class="free-design-button" id="request-consultation-button"
-                        aria-label="Konsultasi Gratis Sekarang"
-                        data-phone-filled="{{ Auth::user()->phone ? 'true' : 'false' }}"
-                        data-profile-url="{{ route('profile.index') }}">
+            <p class="free-design-description" data-aos="fade-up" data-aos-delay="300">
+                Kami siap membuat ide desainmu menjadi nyata. Konsultasikan sekarang juga secara gratis!
+            </p>
+
+            <div data-aos="flip-up" data-aos-delay="500" data-aos-duration="1000">
+                {{-- JIKA PENGGUNA BELUM LOGIN (GUEST) --}}
+                @guest
+                    <a href="{{ route('login') }}" class="free-design-button" id="login-prompt-button"
+                        aria-label="Konsultasi Gratis Sekarang (Login diperlukan)">
                         Konsultasi Gratis Sekarang
-                    </button>
-                @endif
-            @endauth
+                    </a>
+                @endguest
+
+                {{-- JIKA PENGGUNA SUDAH LOGIN --}}
+                @auth
+                    {{-- Cek jika user punya konsultasi aktif --}}
+                    @if (Auth::user()->hasActiveConsultation())
+                        {{-- Tampilkan tombol nonaktif --}}
+                        <button class="free-design-button disabled" disabled
+                            title="Anda sudah memiliki permintaan konsultasi aktif. Satu pengguna hanya bisa melakukan 1 kali konsultasi sampai sesi konsultasi berakhir.">
+                            Menunggu Sesi Konsultasi
+                        </button>
+                    @else
+                        {{-- Tombol aktif --}}
+                        <button type="button" class="free-design-button" id="request-consultation-button"
+                            aria-label="Konsultasi Gratis Sekarang"
+                            data-phone-filled="{{ Auth::user()->phone ? 'true' : 'false' }}"
+                            data-profile-url="{{ route('profile.index') }}">
+                            Konsultasi Gratis Sekarang
+                        </button>
+                    @endif
+                @endauth
+            </div>
 
         </div>
     </section>
 
     <section class="skm-articles" aria-labelledby="articles-title">
         <div class="skm-a-wrap">
-            <h2 id="articles-title">Artikel &amp; Berita</h2>
+            <h2 id="articles-title" data-aos="fade-down" data-aos-duration="1000">Artikel &amp; Berita</h2>
+
             <div class="skm-a-grid">
                 @if (isset($articles) && $articles->count() > 0)
                     @foreach ($articles->take(3) as $article)
-                        <article class="skm-a-card">
+                        <article class="skm-a-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 150 }}">
                             <div class="thumb">
                                 @php
                                     // Cek berbagai kemungkinan field gambar
@@ -2231,7 +2387,7 @@
                         </article>
                     @endforeach
                 @else
-                    <article class="skm-a-card">
+                    <article class="skm-a-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="thumb">
                             <img src="{{ asset('assets/img/Article-image.png') }}"
                                 alt="Trend Kemasan Ramah Lingkungan">
@@ -2244,7 +2400,8 @@
                                 aria-label="Baca selengkapnya Trend Kemasan Ramah Lingkungan">Baca Selengkapnya</a>
                         </div>
                     </article>
-                    <article class="skm-a-card">
+
+                    <article class="skm-a-card" data-aos="fade-up" data-aos-delay="250">
                         <div class="thumb">
                             <img src="{{ asset('assets/img/Article-image.png') }}"
                                 alt="Pentingnya Kemasan yang Tepat">
@@ -2257,7 +2414,8 @@
                                 aria-label="Baca selengkapnya Pentingnya Kemasan yang Tepat">Baca Selengkapnya</a>
                         </div>
                     </article>
-                    <article class="skm-a-card">
+
+                    <article class="skm-a-card" data-aos="fade-up" data-aos-delay="400">
                         <div class="thumb">
                             <img src="{{ asset('assets/img/Article-image.png') }}" alt="Proses Produksi Kami">
                         </div>
@@ -2272,8 +2430,8 @@
                 @endif
             </div>
 
-            <!-- Tombol Lihat Semua Artikel -->
-            <div style="text-align: center; margin-top: 40px;">
+            <div style="text-align: center; margin-top: 40px;" data-aos="zoom-in" data-aos-delay="300"
+                data-aos-offset="50">
                 <a href="{{ route('artikel') }}" class="btn-lihat-semua-artikel">Lihat Semua Artikel</a>
             </div>
         </div>
@@ -2281,8 +2439,9 @@
 
     <section class="skm-testimonials" aria-labelledby="testi-title">
         <div class="skm-t-wrap">
-            <h2 id="testi-title">Apa Kata Klien Kami</h2>
-            <div class="skm-t-single">
+            <h2 id="testi-title" data-aos="fade-down" data-aos-duration="800">Apa Kata Klien Kami</h2>
+
+            <div class="skm-t-single" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="1000">
                 <blockquote class="quote">
                     “Sikemas selalu memberikan kemasan yang kokoh dan tepat waktu. Hasilnya tidak pernah mengecewakan.”
                 </blockquote>
@@ -2291,18 +2450,39 @@
         </div>
     </section>
 
-    @include('sections.faq')
+    <div data-aos="fade-up" data-aos-duration="1000">
+        @include('sections.faq')
+    </div>
 
     <section class="start-project" aria-labelledby="sp-title">
         <div class="sp-container">
-            <h2 id="sp-title">Siap memulai proyek Anda?</h2>
-            <p>Hubungi kami hari ini untuk konsultasi gratis dan wujudkan kemasan impian Anda.</p>
-            <a href="{{ url('/about') }}#kontak-kami" class="sp-button" aria-label="Hubungi Kami">Hubungi Kami</a>
+            <h2 id="sp-title" data-aos="fade-down">Siap memulai proyek Anda?</h2>
+
+            <p data-aos="fade-up" data-aos-delay="200">
+                Hubungi kami hari ini untuk konsultasi gratis dan wujudkan kemasan impian Anda.
+            </p>
+
+            <a href="{{ url('/about') }}#kontak-kami" class="sp-button" aria-label="Hubungi Kami"
+                data-aos="flip-up" data-aos-delay="400" data-aos-duration="1000">
+                Hubungi Kami
+            </a>
         </div>
     </section>
 
+
     @include('layouts.footer')
 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+
+            offset: 100,
+            duration: 800,
+            easing: 'ease-in-out',
+            once: false,
+            mirror: true,
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 

@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ $article->title }} - Sikemas</title>
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-removebg.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-2-removebg.png') }}">
+    <script src="{{ asset('js/dynamic-favicon.js') }}" defer></script>
     <style>
     :root { --skm-blue:#0E4B63; --skm-blue-2:#0B3D52; --skm-accent:#F28C28; --skm-gray:#475B63; --skm-bg:#F6FAFB; --skm-teal:#23C8B8; }
         body.skm-page { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans",sans-serif; color:#0F2A34; background:#fff; }

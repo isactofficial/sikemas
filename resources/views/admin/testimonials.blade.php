@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Testimoni - Admin</title>
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-removebg.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-2-removebg.png') }}">
+    <script src="{{ asset('js/dynamic-favicon.js') }}" defer></script>
 </head>
 <body>
     @include('layouts.sidebar_admin')

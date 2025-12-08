@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
-        <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-removebg.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-2-removebg.png') }}">
+        <script src="{{ asset('js/dynamic-favicon.js') }}" defer></script>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

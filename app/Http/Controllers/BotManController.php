@@ -60,6 +60,7 @@ class BotManController extends Controller
         if (preg_match('/(start|halo|hi|hello|hai|bantuan|help)/i', $message)) {
             $responses[] = ['text' => "👋 Halo! Selamat datang di SIKEMAS Assistant.", 'type' => 'text'];
             $responses[] = ['text' => "Ketik 'menu' untuk melihat semua halaman yang tersedia.", 'type' => 'text'];
+            $responses[] = ['text' => "Ketik 'tutorial' untuk melihat tutorial cara pemesanan.", 'type' => 'text'];
         }
         // ===== MENU UTAMA =====
         elseif (preg_match('/(menu)/i', $message)) {
@@ -135,10 +136,10 @@ class BotManController extends Controller
         $message .= "📰 **artikel** - Baca artikel terbaru\n";
         $message .= "🎨 **portofolio** - Lihat portfolio\n";
         $message .= "ℹ️ **about** - Tentang kami\n";
-        $message .= "👤 **profile** - Kelola profil (perlu login)\n\n";
+        $message .= "👤 **profile** - Kelola profil (perlu login)\n";
+        $message .= "📖 **tutorial** - Tutorial cara pemesanan\n\n";
         $message .= "💬 **konsultasi** - Konsultasi gratis\n";
-        $message .= "📞 **kontak** - Hubungi kami\n";
-        $message .= "📖 **tutorial** - Tutorial cara pemesanan";
+        $message .= "📞 **kontak** - Hubungi kami";
         return $message;
     }
 

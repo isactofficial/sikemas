@@ -6,6 +6,7 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
         <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-2-removebg.png') }}">
+        <script src="{{ asset('js/dynamic-favicon.js') }}" defer></script>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

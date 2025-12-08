@@ -6,6 +6,9 @@
     <title>{{ $article->title }} - Sikemas</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-2-removebg.png') }}">
     <script src="{{ asset('js/dynamic-favicon.js') }}" defer></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <style>
     :root { --skm-blue:#0E4B63; --skm-blue-2:#0B3D52; --skm-accent:#F28C28; --skm-gray:#475B63; --skm-bg:#F6FAFB; --skm-teal:#23C8B8; }
         body.skm-page { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans",sans-serif; color:#0F2A34; background:#fff; }
@@ -42,7 +45,7 @@
         .skm-login-note{ text-align:center; color:#6B8791; font-size:13px }
         .skm-login-note a{ color:var(--skm-accent); font-weight:800; text-decoration:none }
         .skm-login-note a:hover{ text-decoration:underline }
-        @media(max-width:640px){ 
+        @media(max-width:640px){
             .skm-content h2{ padding-left:12px }
             .skm-content h2::before{ width:4px; top:0.25em; bottom:0.25em }
         }
@@ -51,7 +54,7 @@
 <body class="skm-page">
 @include('layouts.navbar')
 
-<header class="skm-hero" role="banner">
+<header class="skm-hero" role="banner" data-aos="fade-down" data-aos-duration="1000">
     <div class="skm-hero-inner">
         <a href="{{ route('artikel') }}" class="skm-back" aria-label="Kembali ke daftar artikel">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -100,15 +103,15 @@
 </header>
 
 <main class="skm-wrap">
-    <figure class="skm-cover">
+    <figure class="skm-cover" data-aos="zoom-in" data-aos-duration="1000">
         <img src="{{ $article->thumbnail_url }}" alt="Gambar artikel: {{ $article->title }}" />
     </figure>
 
-    <article class="skm-content">
+    <article class="skm-content" data-aos="fade-up" data-aos-duration="800">
     @forelse($article->contents as $block)
             @if($block->content_type === 'heading')
                 <hr class="skm-hr"/>
-                <h2>{{ $block->content }}</h2>
+                <h2 data-aos="fade-right">{{ $block->content }}</h2>
             @else
                 @php
                     $raw = (string) $block->content;
@@ -116,7 +119,7 @@
                 @endphp
                 @if($isNumbered)
                     <hr class="skm-hr"/>
-                    <h2>{{ $raw }}</h2>
+                    <h2 data-aos="fade-right">{{ $raw }}</h2>
                 @else
                     <p>{!! nl2br(e($raw)) !!}</p>
                 @endif
@@ -131,7 +134,7 @@
     </article>
 
     @php($comments = $article->comments)
-    <section class="skm-comments" aria-labelledby="comments-title">
+    <section class="skm-comments" aria-labelledby="comments-title" data-aos="fade-up" data-aos-offset="100">
         <h3 id="comments-title">Komentar ({{ $comments->count() }})</h3>
 
         @auth
@@ -159,7 +162,7 @@
         @else
             <ul style="list-style:none; padding:0; margin:0">
                 @foreach($comments as $c)
-                    <li style="border-top:1px solid #E6EEF1; padding:12px 0">
+                    <li style="border-top:1px solid #E6EEF1; padding:12px 0" data-aos="fade-up" data-aos-offset="50">
                         <div style="display:flex; gap:10px; align-items:flex-start">
                             <img src="{{ optional($c->user)->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode(optional($c->user)->name ?? 'U').'&size=64&background=074159&color=fff&bold=true' }}" alt="avatar" style="width:36px; height:36px; border-radius:50%; object-fit:cover"/>
                             <div style="flex:1">
@@ -177,10 +180,8 @@
                                                 aria-label="{{ $commentLiked ? 'Batal suka komentar' : 'Suka komentar' }}"
                                                 style="display:inline-flex; align-items:center; gap:6px; {{ $commentLiked ? 'background:#F28C28; border:1px solid #F28C28; color:#fff;' : 'background:transparent; border:1px solid #E6EEF1; color:#0E4B63;' }} padding:4px 10px; border-radius:999px; cursor:pointer; transition:.2s">
                                             @if($commentLiked)
-                                                <!-- Filled heart/thumb icon -->
                                                 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 3 12.28 3 8.5 3 6 5 4 7.5 4c1.74 0 3.41 1.01 4.5 2.09C13.59 5.01 15.26 4 17 4c2.5 0 4.5 2 4.5 4.5 0 3.78-2.4 6.86-7.55 11.54L12 21.35z"/></svg>
                                             @else
-                                                <!-- Outline thumb icon -->
                                                 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M2 21h4V9H2v12zM22 10c0-1.1-.9-2-2-2h-5.31l.95-4.57.03-.32a1 1 0 0 0-.29-.7L14 2 7.59 8.41C7.22 8.78 7 9.3 7 9.83V19c0 1.1.9 2 2 2h7c.82 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.21.14-.43.14-.66V10z"/></svg>
                                             @endif
                                             <span>{{ (int) $c->likes_count }}</span>
@@ -262,6 +263,14 @@
         @endif
     </section>
 </main>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800, 
+    once: false,
+    mirror: true
+  });
+</script>
 
 @include('layouts.footer')
 </body>

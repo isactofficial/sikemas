@@ -2125,39 +2125,38 @@
                 Berkarya dengan hati untuk dedikasi menjadi partner membangun<br>bisnis yang berkelanjutan
             </h2>
 
-            <nav class="domino-nav" aria-label="Komitmen Kami" data-aos="fade-up" data-aos-delay="200">
-                <button class="domino-tab active" data-target="content-eco">
-                    <img src="/assets/KomSect/EcoB.png" alt="Eco Solutions" class="img-inactive">
-                    <img src="/assets/KomSect/EcoKlik.png" alt="Eco Solutions" class="img-active">
-                </button>
+            <div class="domino-static-row" data-aos="fade-up" data-aos-delay="200"
+                style="display: flex; justify-content: center; gap: 10px; margin-bottom: 30px;">
+                <div class="domino-img-item">
+                    <img src="/assets/KomSect/EcoKlik.png" alt="Eco Solutions"
+                        style="max-width: 100%; height: auto;">
+                </div>
 
-                <button class="domino-tab" data-target="content-guidance">
-                    <img src="/assets/KomSect/GuidenceB.png" alt="Guidance" class="img-inactive">
-                    <img src="/assets/KomSect/GuidenceKlik.png" alt="Guidance" class="img-active">
-                </button>
+                <div class="domino-img-item">
+                    <img src="/assets/KomSect/GuidenceB.png" alt="Guidance" style="max-width: 100%; height: auto;">
+                </div>
 
-                <button class="domino-tab" data-target="content-quality">
-                    <img src="/assets/KomSect/QB.png" alt="Quality & Delivery" class="img-inactive">
-                    <img src="/assets/KomSect/QKlik.png" alt="Quality & Delivery" class="img-active">
-                </button>
+                <div class="domino-img-item">
+                    <img src="/assets/KomSect/QB.png" alt="Quality & Delivery"
+                        style="max-width: 100%; height: auto;">
+                </div>
 
-                <button class="domino-tab" data-target="content-transparency">
-                    <img src="/assets/KomSect/TransparencyB.png" alt="Transparency" class="img-inactive">
-                    <img src="/assets/KomSect/TKlik.png" alt="Transparency" class="img-active">
-                </button>
+                <div class="domino-img-item">
+                    <img src="/assets/KomSect/TransparencyB.png" alt="Transparency"
+                        style="max-width: 100%; height: auto;">
+                </div>
 
-                <button class="domino-tab" data-target="content-innovations">
-                    <img src="/assets/KomSect/InnovationsB.png" alt="Innovations" class="img-inactive">
-                    <img src="/assets/KomSect/InnovationsKlik.png" alt="Innovations" class="img-active">
-                </button>
-            </nav>
+                <div class="domino-img-item">
+                    <img src="/assets/KomSect/InnovationsB.png" alt="Innovations"
+                        style="max-width: 100%; height: auto;">
+                </div>
+            </div>
 
             <div class="domino-content-wrapper" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
-
-                <div class="domino-content active" id="content-eco">
+                <div class="domino-content active" id="content-eco" style="display: block;">
                     <h3>The world Need Sustainable Packaging</h3>
                     <p>Meskipun banyak produsen menawarkan harga yang terkesan ekonomis, kualitas produk yang dihasilkan
-                        sering kali Anda tidak optimal. Pilihan yang tampak murah di awal justru dapat menimbulkan
+                        sering kali tidak optimal. Pilihan yang tampak murah di awal justru dapat menimbulkan
                         kerugian jangka panjang bagi bisnis Anda.</p>
                     <div class="orange-grid">
                         <div class="orange-box">Solusi paling sirkular di setiap kategori.</div>
@@ -2166,59 +2165,6 @@
                         <div class="orange-box">Solusi untuk merek D2C sangat bervariasi</div>
                     </div>
                 </div>
-
-                <div class="domino-content" id="content-guidance">
-                    <h3>Guidance & Support</h3>
-                    <p>Kami memandu Anda melalui setiap langkah, dari konsep hingga kenyataan. Tim ahli kami siap
-                        membantu Anda menemukan solusi kemasan terbaik untuk kebutuhan spesifik Anda, memastikan Anda
-                        membuat pilihan yang tepat.</p>
-                    <div class="orange-grid">
-                        <div class="orange-box">Konsultasi Desain Gratis</div>
-                        <div class="orange-box">Dukungan Teknis Ahli</div>
-                        <div class="orange-box">Pemilihan Material Terbaik</div>
-                        <div class="orange-box">Prototyping Cepat</div>
-                    </div>
-                </div>
-
-                <div class="domino-content" id="content-quality">
-                    <h3>Quality & Delivery</h3>
-                    <p>Kualitas adalah janji kami. Kami menggunakan material terbaik dan proses produksi yang ketat
-                        untuk memastikan setiap kemasan kokoh dan sempurna. Pengiriman tepat waktu adalah prioritas kami
-                        agar bisnis Anda terus berjalan lancar.</p>
-                    <div class="orange-grid">
-                        <div class="orange-box">Kontrol Kualitas Berlapis</div>
-                        <div class="orange-box">Jaminan Tepat Waktu</div>
-                        <div class="orange-box">Material Premium Teruji</div>
-                        <div class="orange-box">Garansi Produk</div>
-                    </div>
-                </div>
-
-                <div class="domino-content" id="content-transparency">
-                    <h3>Transparency</h3>
-                    <p>Kami percaya pada kemitraan yang jujur. Anda akan mendapatkan informasi yang jelas dan terbuka
-                        mengenai harga, material, dan proses produksi. Tidak ada biaya tersembunyi, hanya komitmen tulus
-                        untuk kesuksesan Anda.</p>
-                    <div class="orange-grid">
-                        <div class="orange-box">Harga Jujur Tanpa Biaya Tersembunyi</div>
-                        <div class="orange-box">Pelacakan Proses Produksi</div>
-                        <div class="orange-box">Spesifikasi Material Jelas</div>
-                        <div class="orange-box">Komunikasi Proaktif</div>
-                    </div>
-                </div>
-
-                <div class="domino-content" id="content-innovations">
-                    <h3>Innovations</h3>
-                    <p>Dunia terus berubah, begitu pula kami. Sikemas terus berinovasi dalam teknologi dan desain untuk
-                        memberikan Anda solusi kemasan yang tidak only fungsional tetapi juga modern dan terdepan di
-                        pasar.</p>
-                    <div class="orange-grid">
-                        <div class="orange-box">Teknologi Cetak Terbaru</div>
-                        <div class="orange-box">Desain Kemasan Pintar (Smart Packaging)</div>
-                        <div class="orange-box">Riset Material Baru</div>
-                        <div class="orange-box">Solusi Otomatisasi Kemasan</div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>

@@ -28,27 +28,33 @@
             padding: 0;
         }
 
-        .skm-container {
+        .skm-search-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
         .skm-search-header {
-            padding: 40px 0;
-            border-bottom: 2px solid #e0e0e0;
-            margin-bottom: 30px;
+            padding: clamp(12px, 2vw, 20px) 0 16px; /* rapat & responsif */
+            border-bottom: 1px solid #e7ecee;
+            margin-bottom: clamp(12px, 2vw, 20px);
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
         }
         
         .skm-search-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+            line-height: 1.2;
+            margin: 0 0 8px 0;
             color: var(--skm-blue);
+            letter-spacing: .2px;
         }
 
         .skm-search-header p {
-            font-size: 1.1rem;
-            color: #555;
+            font-size: clamp(.95rem, 1.2vw, 1.05rem);
+            color: #566;
+            margin: 0;
         }
 
         .skm-search-results-section {
@@ -140,12 +146,16 @@
         }
 
         @media (max-width: 768px) {
-            .skm-container {
+            .skm-search-container {
                 padding: 20px 15px;
             }
-            .skm-search-header h1 {
-                font-size: 2rem;
+            .skm-search-header {
+                padding: 14px 0 12px;
+                border-bottom-width: 1px;
+                margin-bottom: 14px;
             }
+            .skm-search-header h1 { font-size: 1.7rem; }
+            .skm-search-header p { font-size: .98rem; }
             .skm-result-item {
                 flex-direction: column;
                 align-items: center;
@@ -161,12 +171,29 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* Force stacked layout (top-to-bottom) for this page */
+        .search-results-page .skm-search-container {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px;
+            padding-top: 0;
+        }
+        .search-results-page .skm-search-container > * {
+            width: 100% !important;
+        }
+        .search-results-page .skm-search-header,
+        .search-results-page .skm-search-results-section,
+        .search-results-page .skm-summary {
+            float: none !important;
+            clear: both;
+        }
     </style>
 </head>
-<body>
+<body class="search-results-page">
     @include('layouts.navbar') 
 
-    <div class="skm-container">
+    <div class="skm-search-container">
         <header class="skm-search-header">
             <h1>Hasil Pencarian</h1>
             <p>Menampilkan hasil untuk kata kunci: <strong>"{{ $query }}"</strong></p>

@@ -72,16 +72,9 @@
         .skm-alert.success { background: #D4EDDA; color: #155724; border-color: #C3E6CB; }
 
         /* RESPONSIVE & MOBILE */
-        .skm-mobile-toggle-btn { display: none; position: fixed; top: 15px; left: 15px; z-index: 1100; background: var(--skm-blue); color: #fff; border: none; width: 40px; height: 40px; border-radius: 8px; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .skm-sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; opacity: 0; transition: opacity 0.3s ease; }
-        .skm-sidebar-overlay.active { display: block; opacity: 1; }
-
         @media(max-width:1024px){ .skm-admin-main{ margin-left:0; padding:20px; } .skm-header, .skm-controls-card{ padding:20px; } }
         @media(max-width:767px){
-            .skm-mobile-toggle-btn { display: flex; }
             .skm-admin-main{ margin-left: 0; margin-top: 60px; padding: 12px; }
-            #skmSidebarWrapper { position: fixed; top: 0; left: -280px; height: 100vh; width: 260px; z-index: 1200; background: #fff; transition: left 0.3s ease; box-shadow: 4px 0 15px rgba(0,0,0,0.1); overflow-y: auto; }
-            #skmSidebarWrapper.is-open { left: 0; }
             .skm-table thead { display: none; }
             .skm-table, .skm-table tbody, .skm-table tr { display: block; width: 100%; }
             .skm-table tr { margin-bottom: 16px; border: 1px solid #E5E7EB; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; }
@@ -99,12 +92,7 @@
 </head>
 <body>
 
-    <div class="skm-sidebar-overlay" id="skmOverlay"></div>
-    <button class="skm-mobile-toggle-btn" id="skmMobileToggle"><i class="fas fa-bars"></i></button>
-
-    <div id="skmSidebarWrapper">
-        @include('layouts.sidebar_admin')
-    </div>
+    @include('layouts.sidebar_admin')
 
     <main class="skm-admin-main">
         @if(session('success'))
@@ -217,31 +205,6 @@
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('skmMobileToggle');
-            const overlay = document.getElementById('skmOverlay');
-            const sidebarWrapper = document.getElementById('skmSidebarWrapper');
-
-            function toggleSidebar() {
-                sidebarWrapper.classList.toggle('is-open');
-                overlay.classList.toggle('active');
-            }
-
-            if(toggleBtn) {
-                toggleBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleSidebar();
-                });
-            }
-
-            if(overlay) {
-                overlay.addEventListener('click', function() {
-                    sidebarWrapper.classList.remove('is-open');
-                    overlay.classList.remove('active');
-                });
-            }
-        });
-
         function toggleMessage(id, btn) {
             const preview = document.getElementById('msg-preview-' + id);
             preview.classList.toggle('expanded');

@@ -14,7 +14,6 @@
         <p>Halaman placeholder untuk manajemen testimoni.</p>
     </main>
     <style>
-        .skm-admin-main{ padding:24px; }
         .skm-admin-main h1{ color:#074159; font-weight:800; font-size:22px; margin:6px 0 8px; }
         .skm-admin-main p{ color:#425B66; }
     </style>

@@ -294,6 +294,8 @@
     .skm-admin-main {
         margin-left: 240px;
         padding: 24px;
+        position: relative;
+        z-index: 1;
     }
 
     @media (max-width: 1023px) {
@@ -391,6 +393,7 @@
 
         .skm-sidebar.is-open {
             transform: translateX(0);
+            z-index: 1050;
         }
 
         .skm-sidebar-toggle {

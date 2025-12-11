@@ -123,12 +123,14 @@
 			z-index: 9998;
 			opacity: 0;
 			visibility: hidden;
+			pointer-events: none;
 			transition: all 0.3s ease;
 		}
 
 		.delete-modal-overlay.active {
 			opacity: 1;
 			visibility: visible;
+			pointer-events: auto;
 		}
 
 		.delete-modal {
@@ -143,12 +145,14 @@
 			width: 90%;
 			max-width: 500px;
 			opacity: 0;
+			pointer-events: none;
 			transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 		}
 
 		.delete-modal.active {
 			transform: translate(-50%, -50%) scale(1);
 			opacity: 1;
+			pointer-events: auto;
 		}
 
 		.delete-modal-header {

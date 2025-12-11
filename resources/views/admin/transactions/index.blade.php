@@ -21,6 +21,8 @@
             --skm-accent: #ff5722;
             --skm-bg: #F4F7F6;
         }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
         .skm-admin-main { box-sizing: border-box; margin: 0; padding: 0; }
         .skm-admin-main { font-family: 'Besley', system-ui, sans-serif; background: var(--skm-bg); min-height: 100vh; }
 
@@ -241,12 +243,14 @@
             z-index: 9998;
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
             transition: all 0.3s ease;
         }
 
         .delete-modal-overlay.active {
             opacity: 1;
             visibility: visible;
+            pointer-events: auto;
         }
 
         .delete-modal {
@@ -261,12 +265,14 @@
             width: 90%;
             max-width: 500px;
             opacity: 0;
+            pointer-events: none;
             transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         .delete-modal.active {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
+            pointer-events: auto;
         }
 
         .delete-modal-header {
@@ -430,19 +436,25 @@
             }
 
             .skm-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
                 text-align: right;
                 padding: 12px 16px;
-                position: relative;
                 border-bottom: 1px solid #E5E7EB !important;
+                word-break: break-word;
+                gap: 12px;
+                box-sizing: border-box;
             }
 
             .skm-table td:before {
                 content: attr(data-label);
-                position: absolute;
-                left: 16px;
+                flex-shrink: 0;
+                width: 35%;
+                text-align: left;
                 font-weight: 700;
                 color: #23C8B8;
-                font-size: 12px;
+                font-size: 11px;
                 text-transform: uppercase;
                 white-space: nowrap;
             }
@@ -450,12 +462,12 @@
             .skm-table td:last-child {
                 padding: 16px;
                 background: #F9FAFB;
-                text-align: center;
+                justify-content: center;
             }
             .skm-table td:last-child:before { display: none; }
-            .skm-action-btns { justify-content: center; gap: 20px; }
-            .skm-icon-btn { width: 44px; height: 44px; }
-            .skm-icon-btn i { font-size: 20px; }
+            .skm-action-btns { justify-content: center; gap: 16px; }
+            .skm-icon-btn { width: 40px; height: 40px; }
+            .skm-icon-btn i { font-size: 18px; }
 
             .skm-pagination { flex-direction: column; gap: 12px; padding: 16px; }
             .skm-pagination .skm-page-summary { font-size: 12px; text-align: center; }
@@ -468,6 +480,11 @@
                 height: 28px;
             }
             .skm-alert { font-size: 13px; padding: 10px 12px; }
+
+            .status-badge {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
 
             .delete-modal {
                 width: 95%;
@@ -502,20 +519,64 @@
             .delete-modal-btn {
                 width: 100%;
             }
+
+            .skm-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .skm-table-header-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .skm-filters {
+                width: 100%;
+            }
+
+            .skm-filters select {
+                flex: 1;
+            }
         }
 
         @media (max-width: 480px) {
             .skm-admin-main { padding: 8px; }
             .skm-header { padding: 12px; }
-            .skm-header h1 { font-size: 20px; }
+            .skm-header h1 { font-size: 18px; }
+            .skm-header p { font-size: 12px; }
             .skm-controls-card {
                 padding: 12px;
                 padding-top: 0;
             }
-            .skm-action-btns { gap: 16px; }
-            .skm-icon-btn { width: 40px; height: 40px; }
-            .skm-icon-btn i { font-size: 18px; }
+            .skm-action-btns { gap: 12px; }
+            .skm-icon-btn { width: 36px; height: 36px; }
+            .skm-icon-btn i { font-size: 16px; }
             .skm-pagination { padding: 12px; }
+
+            .skm-table td {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .skm-table td:before {
+                font-size: 10px;
+                width: 30%;
+            }
+
+            .status-badge {
+                font-size: 9px;
+                padding: 2px 6px;
+            }
+
+            .skm-table-title {
+                font-size: 16px;
+            }
+
+            .skm-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
         }
 
         @media (max-width: 1024px){

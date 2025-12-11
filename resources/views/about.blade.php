@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -982,18 +983,32 @@
             }
 
             .business-line-cards {
-                grid-template-columns: repeat(2, 1fr); /* dua kolom di mobile */
+                grid-template-columns: repeat(2, 1fr);
+                /* dua kolom di mobile */
                 gap: 16px;
                 max-width: 1000px;
                 margin: 0 auto;
             }
-            .business-line-card h3 { font-size: 1.25rem; margin-bottom: 10px; }
-            .business-line-card p { font-size: 0.9rem; }
-            .business-line-card .card-image { aspect-ratio: 4/3; }
+
+            .business-line-card h3 {
+                font-size: 1.25rem;
+                margin-bottom: 10px;
+            }
+
+            .business-line-card p {
+                font-size: 0.9rem;
+            }
+
+            .business-line-card .card-image {
+                aspect-ratio: 4/3;
+            }
+
             /* Pusatkan kartu "Karton Bergelombang" (kartu ke-3) di baris sendiri */
-            .business-line-cards .business-line-card:nth-child(3){
-                grid-column: 1 / -1; /* span dua kolom */
-                max-width: 340px; /* batasi agar tampak center */
+            .business-line-cards .business-line-card:nth-child(3) {
+                grid-column: 1 / -1;
+                /* span dua kolom */
+                max-width: 340px;
+                /* batasi agar tampak center */
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -1122,7 +1137,7 @@
 
     <section class="portfolio-section">
         <div class="portfolio-wrapper">
-            <div class="portfolio-text">
+            <div class="portfolio-text" data-aos="fade-right" data-aos-duration="1000">
                 <h1>Tentang Kami</h1>
                 <p>
                     Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
@@ -1136,7 +1151,7 @@
                 </p>
             </div>
 
-            <div class="portfolio-image-container">
+            <div class="portfolio-image-container" data-aos="fade-left" data-aos-duration="1000">
                 <img src="{{ asset('assets/img/kardus.png') }}" alt="Produksi Kemasan Karton SIKEMAS"
                     class="portfolio-image"
                     onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
@@ -1146,12 +1161,12 @@
 
     <section class="profile-section">
         <div class="profile-wrapper">
-            <div class="profile-image-container">
+            <div class="profile-image-container" data-aos="fade-right" data-aos-duration="1000">
                 <img src="{{ asset('assets/img/pabrik.png') }}" alt="Profil Perusahaan SIKEMAS" class="profile-image"
                     onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
             </div>
 
-            <div class="profile-text">
+            <div class="profile-text" data-aos="fade-left" data-aos-duration="1000">
                 <h1>Profil Perusahaan</h1>
                 <p>
                     Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
@@ -1169,12 +1184,12 @@
 
     <section class="history-section">
         <div class="history-wrapper">
-            <h1 class="history-section-title">Sejarah Kami</h1>
+            <h1 class="history-section-title" data-aos="fade-down">Sejarah Kami</h1>
 
             <div class="history-timeline">
 
                 <div class="history-item">
-                    <div class="history-text">
+                    <div class="history-text" data-aos="fade-right">
                         <h3>2xxx - Awal Mula</h3>
                         <p>
                             Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
@@ -1185,20 +1200,20 @@
                             venenatis, ipsum eget fringilla sodales, est lectus commodo purus...
                         </p>
                     </div>
-                    <div class="history-dot"></div>
-                    <div class="history-image-container">
+                    <div class="history-dot" data-aos="zoom-in"></div>
+                    <div class="history-image-container" data-aos="fade-left">
                         <img src="{{ asset('assets/img/awalperusahaan.png') }}" alt="Awal Mula Perusahaan SIKEMAS"
                             onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
                 </div>
 
                 <div class="history-item">
-                    <div class="history-image-container">
+                    <div class="history-image-container" data-aos="fade-right">
                         <img src="{{ asset('assets/img/ekspansibisnis.png') }}" alt="Ekspansi Bisnis SIKEMAS"
                             onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
-                    <div class="history-dot"></div>
-                    <div class="history-text">
+                    <div class="history-dot" data-aos="zoom-in"></div>
+                    <div class="history-text" data-aos="fade-left">
                         <h3>2xxx - Ekspansi Bisnis</h3>
                         <p>
                             Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
@@ -1212,7 +1227,7 @@
                 </div>
 
                 <div class="history-item">
-                    <div class="history-text">
+                    <div class="history-text" data-aos="fade-right">
                         <h3>2xxx - Inovasi Berkelanjutan</h3>
                         <p>
                             Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
@@ -1223,8 +1238,8 @@
                             venenatis, ipsum eget fringilla sodales, est lectus commodo purus...
                         </p>
                     </div>
-                    <div class="history-dot"></div>
-                    <div class="history-image-container">
+                    <div class="history-dot" data-aos="zoom-in"></div>
+                    <div class="history-image-container" data-aos="fade-left">
                         <img src="{{ asset('assets/img/inovasi.png') }}" alt="Inovasi Berkelanjutan SIKEMAS"
                             onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
@@ -1236,11 +1251,11 @@
 
     <section class="business-line-section">
         <div class="business-line-wrapper">
-            <h1 class="business-line-title">Lini Bisnis</h1>
+            <h1 class="business-line-title" data-aos="fade-up">Lini Bisnis</h1>
 
             <div class="business-line-cards">
 
-                <div class="business-line-card">
+                <div class="business-line-card" data-aos="fade-up" data-aos-delay="100">
                     <img src="{{ asset('assets/img/Container.png') }}" alt="Solusi Produk Khusus" class="card-image">
                     <div class="card-content">
                         <h3>Solusi Produk Khusus</h3>
@@ -1249,7 +1264,7 @@
                     </div>
                 </div>
 
-                <div class="business-line-card">
+                <div class="business-line-card" data-aos="fade-up" data-aos-delay="200">
                     <img src="{{ asset('assets/img/karton_banyak.png') }}" alt="Kemasan Ramah Lingkungan"
                         class="card-image">
                     <div class="card-content">
@@ -1258,8 +1273,9 @@
                     </div>
                 </div>
 
-                <div class="business-line-card">
-                    <img src="{{ asset('assets/img/karton_buka.png') }}" alt="Karton Bergelombang" class="card-image">
+                <div class="business-line-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ asset('assets/img/karton_buka.png') }}" alt="Karton Bergelombang"
+                        class="card-image">
                     <div class="card-content">
                         <h3>Karton Bergelombang</h3>
                         <p>Produksi karton bergelombang dengan kekuatan dan ketahanan optimal untuk pengiriman aman.</p>
@@ -1274,24 +1290,24 @@
         <div class="values-faq-wrapper">
 
             <div class="values-container">
-                <h1 class="values-section-title">Nilai Perusahaan</h1>
+                <h1 class="values-section-title" data-aos="fade-down">Nilai Perusahaan</h1>
                 <div class="values-cards">
 
-                    <div class="value-card">
+                    <div class="value-card" data-aos="zoom-in" data-aos-delay="100">
                         <img src="{{ asset('assets/img/symbol13.svg') }}" alt="Mengutamakan Pelanggan"
                             class="value-icon"
                             onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                         <h3>Mengutamakan Pelanggan</h3>
                     </div>
 
-                    <div class="value-card">
+                    <div class="value-card" data-aos="zoom-in" data-aos-delay="200">
                         <img src="{{ asset('assets/img/symbol14.svg') }}" alt="Keselamatan dan Lingkungan"
                             class="value-icon"
                             onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                         <h3>Keselamatan dan Lingkungan</h3>
                     </div>
 
-                    <div class="value-card">
+                    <div class="value-card" data-aos="zoom-in" data-aos-delay="300">
                         <img src="{{ asset('assets/img/container5.svg') }}" alt="Sigap, bersemangat, dan dinamis"
                             class="value-icon"
                             onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
@@ -1301,20 +1317,23 @@
                 </div>
             </div>
 
-            @include('sections.faq')
+            <div data-aos="fade-up" data-aos-delay="100">
+                @include('sections.faq')
+            </div>
 
         </div>
     </section>
 
     <section class="contact-section" id="kontak-kami">
-    <div class="contact-wrapper">
-        <div class="contact-header">
-            <h1 class="contact-section-title">Mari Terhubung dengan Sikemas</h1>
-                <p>Punya pertanyaan, ide kolaborasi, atau ingin berbagi cerita? Tim profesional kami siap melayani Anda.</p>
+        <div class="contact-wrapper">
+            <div class="contact-header" data-aos="fade-down">
+                <h1 class="contact-section-title">Mari Terhubung dengan Sikemas</h1>
+                <p>Punya pertanyaan, ide kolaborasi, atau ingin berbagi cerita? Tim profesional kami siap melayani Anda.
+                </p>
             </div>
 
             <div class="contact-card">
-                <div class="contact-form">
+                <div class="contact-form" data-aos="fade-right">
                     <h2>Kirim Pesan Kepada Kami</h2>
 
                     @if (session('success'))
@@ -1386,7 +1405,7 @@
                     </form>
                 </div>
 
-                <div class="contact-info">
+                <div class="contact-info" data-aos="fade-left">
                     <h2>Lokasi Kami</h2>
                     <div class="info-list">
                         <div class="info-item">
@@ -1436,9 +1455,9 @@
 
     <section class="maps-section">
         <div class="maps-wrapper">
-            <h1 class="maps-section-title">Temukan Kami di Google Maps</h1>
+            <h1 class="maps-section-title" data-aos="fade-down">Temukan Kami di Google Maps</h1>
 
-            <div class="maps-container">
+            <div class="maps-container" data-aos="zoom-in" data-aos-duration="1200">
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.8649581816!2d106.7628853!3d-6.281135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f0f9b6113b9b%3A0x66f03d8d3e110430!2sJl.%20Kartini%20No.121%2C%20Rempoa%2C%20Kec.%20Ciputat%20Tim.%2C%20Kota%20Tangerang%20Selatan%2C%20Banten%2015412!5e0!3m2!1sen!2sid!4v1678888888888!5m2!1sen!2sid"
                     allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
@@ -1446,7 +1465,14 @@
             </div>
         </div>
     </section>
-
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: false, 
+            mirror: true,
+            duration: 1000,
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

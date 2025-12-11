@@ -21,6 +21,8 @@
             --skm-accent: #ff5722;
             --skm-bg: #F4F7F6;
         }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
         .skm-admin-main { box-sizing: border-box; margin: 0; padding: 0; }
         .skm-admin-main { font-family: 'Besley', system-ui, sans-serif; background: var(--skm-bg); min-height: 100vh; }
 
@@ -241,12 +243,14 @@
             z-index: 9998;
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
             transition: all 0.3s ease;
         }
 
         .delete-modal-overlay.active {
             opacity: 1;
             visibility: visible;
+            pointer-events: auto;
         }
 
         .delete-modal {
@@ -261,12 +265,14 @@
             width: 90%;
             max-width: 500px;
             opacity: 0;
+            pointer-events: none;
             transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         .delete-modal.active {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
+            pointer-events: auto;
         }
 
         .delete-modal-header {
@@ -438,6 +444,7 @@
                 border-bottom: 1px solid #E5E7EB !important;
                 word-break: break-word;
                 gap: 12px;
+                box-sizing: border-box;
             }
 
             .skm-table td:before {

@@ -1,8 +1,8 @@
 <?php
 
-// ========================================
+// ========================================\
 // File: app/Models/UserAddress.php
-// ========================================
+// ========================================\
 
 namespace App\Models;
 
@@ -28,6 +28,14 @@ class UserAddress extends Model
         'is_primary' => 'boolean',
     ];
 
+    // ==========================================================
+    // PERBAIKAN: Tambahkan baris ini
+    // Ini "memaksa" accessor 'full_address' untuk selalu
+    // ikut serta saat model ini diubah ke JSON (misal: di response()->json())
+    // ==========================================================
+    protected $appends = ['full_address'];
+
+
     /**
      * Get the user that owns the address
      */
@@ -38,6 +46,7 @@ class UserAddress extends Model
     
     /**
      * Get full formatted address
+     * (Accessor ini sudah ada sebelumnya dan sudah benar)
      */
     public function getFullAddressAttribute()
     {
@@ -53,6 +62,7 @@ class UserAddress extends Model
         
         $parts[] = $this->country;
         
-        return implode(', ', $parts);
+        // implode akan menggabungkan string dengan ", "
+        return implode(', ', array_filter($parts)); // array_filter untuk jaga-jaga jika ada yg null
     }
 }

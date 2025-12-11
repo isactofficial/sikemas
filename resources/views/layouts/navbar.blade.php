@@ -1,11 +1,9 @@
 <nav class="skm-navbar" role="navigation" aria-label="Main Navigation">
     <div class="skm-container">
-        <!-- Left: Brand (Logo SIKEMAS) -->
         <a href="{{ url('/') }}" class="skm-logo" aria-label="SIKEMAS Home">
             <img src="{{ asset('assets/img/Rectangle.png') }}" alt="SIKEMAS Logo" loading="lazy">
         </a>
 
-        <!-- Center: Menu -->
         <button id="navbar-hamburger" class="skm-nav-toggle" type="button" aria-expanded="false" aria-controls="navbar-mobile-menu">
             <span class="skm-bar" aria-hidden="true"></span>
             <span class="skm-bar" aria-hidden="true"></span>
@@ -26,21 +24,52 @@
                 @endguest
             </ul>
 
-            <!-- Mobile-only user dropdown -->
             <div class="skm-mobile-user-wrapper">
+                {{-- **START: SEARCH MOBILE BARU** --}}
+                <a href="{{ route('search') }}" class="skm-mobile-link skm-mobile-search">
+                    <i class="fas fa-search"></i> Cari
+                </a>
+                {{-- **END: SEARCH MOBILE BARU** --}}
+
+                {{-- **HTML TRANSLATE MOBILE** --}}
+                <div class="skm-mobile-link translate-mobile-wrapper">
+                    <div id="google_translate_element_mobile"></div>
+                </div>
+
                 @auth
                     <div class="skm-mobile-user-info">
                         <span>{{ Auth::user()->name }}</span>
                         <small>{{ Auth::user()->email }}</small>
                     </div>
+                    @php
+                        // Deteksi admin untuk menu mobile
+                        $__isAdmin_m = false;
+                        try {
+                            $__um = Auth::user();
+                            if (isset($__um->role) && strtolower((string) $__um->role) === 'admin') {
+                                $__isAdmin_m = true;
+                            } elseif (isset($__um->is_admin) && (bool) $__um->is_admin) {
+                                $__isAdmin_m = true;
+                            } else {
+                                $listm = env('ADMIN_EMAILS');
+                                if ($listm) {
+                                    $emailsm = array_filter(array_map('trim', explode(',', $listm)));
+                                    $__isAdmin_m = in_array(strtolower($__um->email), array_map('strtolower', $emailsm), true);
+                                }
+                            }
+                        } catch (\Throwable $e) { $__isAdmin_m = false; }
+                    @endphp
+                    @if ($__isAdmin_m)
+                        <a href="{{ route('admin.index') }}" class="skm-mobile-link">Halaman Admin</a>
+                    @endif
                     <a href="{{ route('cart.index') }}" class="skm-mobile-link">
                         <i class="fas fa-shopping-cart"></i> Keranjang Belanja
                     </a>
                     <a href="{{ route('profile.index') }}" class="skm-mobile-link">Profil Saya</a>
-                    <a href="{{ route('logout') }}" class="skm-mobile-link" 
-                       onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
-                        Logout
-                    </a>
+                        <a href="{{ route('logout') }}" class="skm-mobile-link" 
+                           onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
+                            Logout
+                        </a>
                     <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
@@ -51,10 +80,19 @@
             </div>
         </div>
 
-        <!-- Right: Cart Icon + User icon with dropdown (Desktop) -->
         <div class="skm-right-icons">
-            <!-- Cart Icon (Only show when logged in) -->
-            @auth
+            {{-- **START: SEARCH BAR DESKTOP BARU** --}}
+            <form action="{{ route('search') }}" method="GET" class="skm-search-form" id="skm-search-form" role="search">
+                <input type="search" name="q" placeholder="Cari artikel, produk..." class="skm-search-input" id="skm-search-input">
+                <button type="button" class="skm-search-toggle" id="skm-search-toggle" aria-label="Buka Kolom Pencarian">
+                    <svg class="skm-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 21L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+            {{-- **END: SEARCH BAR DESKTOP BARU** --}}
+
             <a href="{{ route('cart.index') }}" class="skm-cart-link" aria-label="Keranjang Belanja">
                 <svg class="skm-cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 2L7 7H21L19 2H9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -64,9 +102,10 @@
                 </svg>
                 <span class="skm-cart-badge" data-cart-count style="display:none;">0</span>
             </a>
-            @endauth
             
-            <!-- User Dropdown -->
+            {{-- **HTML TRANSLATE DESKTOP** --}}
+            <div id="google_translate_element_desktop"></div>
+            
             <div class="skm-user-dropdown">
                 <button class="skm-user" aria-label="Akun" id="user-menu-button">
                     <svg class="skm-user-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -76,7 +115,6 @@
                     </svg>
                 </button>
                 
-                <!-- Dropdown Menu -->
                 <div class="skm-dropdown-menu" id="user-dropdown">
                     @auth
                         <div class="skm-dropdown-header">
@@ -84,6 +122,27 @@
                             <small>{{ Auth::user()->email }}</small>
                         </div>
                         <a href="{{ route('profile.index') }}" class="skm-dropdown-item">Profil Saya</a>
+                        @php
+                            // Deteksi admin untuk menampilkan link "Halaman Admin" tepat di bawah Profil Saya
+                            $__isAdmin_d = false;
+                            try {
+                                $__ud = Auth::user();
+                                if (isset($__ud->role) && strtolower((string) $__ud->role) === 'admin') {
+                                    $__isAdmin_d = true;
+                                } elseif (isset($__ud->is_admin) && (bool) $__ud->is_admin) {
+                                    $__isAdmin_d = true;
+                                } else {
+                                    $listd = env('ADMIN_EMAILS');
+                                    if ($listd) {
+                                        $emailsd = array_filter(array_map('trim', explode(',', $listd)));
+                                        $__isAdmin_d = in_array(strtolower($__ud->email), array_map('strtolower', $emailsd), true);
+                                    }
+                                }
+                            } catch (\Throwable $e) { $__isAdmin_d = false; }
+                        @endphp
+                        @if ($__isAdmin_d)
+                            <a href="{{ route('admin.index') }}" class="skm-dropdown-item">Halaman Admin</a>
+                        @endif
                         <a href="{{ route('cart.index') }}" class="skm-dropdown-item">
                             <i class="fas fa-shopping-cart"></i> Keranjang Belanja
                         </a>
@@ -96,7 +155,7 @@
                             @csrf
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="skm-dropdown-item">Login</a>
+                        <a href="{{ route('login') }}" class="skm-dropdown-item skm-dropdown-login">Login</a>
                         <a href="{{ route('register') }}" class="skm-dropdown-item skm-dropdown-register">Daftar</a>
                     @endauth
                 </div>
@@ -122,33 +181,32 @@
             background: #ffffff; 
             border-bottom: 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            height: 80px;                 /* Samakan tinggi dengan index */
-            display: flex;                /* Vertically center contents */
+            height: 80px;
+            display: flex;
             align-items: center;
         }
         
         .skm-container { 
-            max-width: 1400px;            /* Samakan lebar kontainer */
+            max-width: 1400px;
             margin: 0 auto; 
-            padding: 1rem 3rem;           /* = 16px 48px, sesuai index */
-            display: flex;                /* Selaraskan dengan index */
+            padding: 1rem 3rem;
+            display: flex;
             align-items: center; 
-            gap: 16px; 
+            gap: 15px; /* Mengurangi gap sedikit karena ada search bar baru */
             width: 100%;
         }
         
         .skm-logo img { height: 50px; width: auto; display: block; }
         
         /* Right group (menu + user) */
-    .skm-right { display: flex; align-items: center; gap: 2rem; margin-left: auto; }
-        /* Menu aligned inside right group */
+        .skm-right { display: flex; align-items: center; gap: 2rem; margin-left: auto; }
         .skm-menu { margin: 0; }
 
         .skm-navbar .skm-links { 
             list-style: none; 
             display: flex; 
             align-items: center; 
-            gap: 2rem;                 /* Samakan jarak item menu dengan index */
+            gap: 2rem;
             margin: 0; 
             padding: 0; 
             box-sizing: border-box;
@@ -156,8 +214,8 @@
         .skm-navbar .skm-links a { 
             text-decoration: none; 
             color: var(--skm-link); 
-            font-weight: 500;          /* Samakan ketebalan font dengan index */
-            font-size: 1rem;           /* Samakan ukuran teks dengan index */
+            font-weight: 500;
+            font-size: 1rem;
             letter-spacing: 0.2px;
             position: relative;
             transition: color 0.25s ease, transform 0.18s ease, text-shadow 0.18s ease;
@@ -194,6 +252,79 @@
             align-items: center;
             gap: 15px;
         }
+
+        /* --- START: CSS BARU UNTUK SEARCH BAR DESKTOP --- */
+        .skm-search-form {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 32px;
+            width: 32px; /* Awalnya hanya selebar ikon */
+            transition: width 0.3s ease;
+        }
+
+        .skm-search-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: var(--skm-link);
+            transition: color 0.2s, background 0.2s;
+            position: absolute;
+            right: 0;
+            z-index: 10;
+        }
+        
+        .skm-search-toggle:hover {
+            background-color: #f0f0f0;
+        }
+
+        .skm-search-input {
+            width: 0;
+            padding: 0;
+            border: 1px solid transparent;
+            border-radius: 16px;
+            height: 32px;
+            font-size: 14px;
+            background: #f8f8f8;
+            transition: width 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            color: var(--skm-link);
+        }
+
+        /* State when active (expanded) */
+        .skm-search-form.active {
+            width: 200px; /* Lebar total form saat aktif */
+        }
+        
+        .skm-search-form.active .skm-search-input {
+            width: 100%; /* Penuhi lebar form */
+            padding: 0 40px 0 15px; /* Padding untuk teks, dan ruang untuk ikon submit/toggle */
+            border-color: #ddd;
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .skm-search-form.active .skm-search-toggle {
+            color: white;
+            background-color: var(--skm-link);
+            border-radius: 0 16px 16px 0;
+            width: 40px;
+            height: 32px;
+        }
+        
+        .skm-search-form.active .skm-search-toggle:hover {
+            background-color: var(--skm-link-hover);
+        }
+        /* --- END: CSS BARU UNTUK SEARCH BAR DESKTOP --- */
+
 
         /* Cart Icon */
         .skm-cart-link {
@@ -249,7 +380,7 @@
             background: transparent;
             border: none;
             padding: 0;
-            line-height: 1; /* keep svg perfectly centered */
+            line-height: 1;
             cursor: pointer;
             transition: background 0.2s ease;
         }
@@ -287,6 +418,7 @@
             font-size: 12px;
         }
 
+        /* Item dropdown biasa */
         .skm-dropdown-item {
             display: block;
             padding: 0.75rem 1rem;
@@ -311,6 +443,22 @@
             margin: 0.5rem 0;
         }
 
+        /* CSS Login/Daftar di Dropdown (rata tengah) - Sesuai permintaan sebelumnya */
+        .skm-dropdown-login {
+            margin: 0.5rem 1rem; 
+            padding: 0.75rem 1rem;
+            text-align: center; 
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid var(--skm-link);
+            color: var(--skm-link) !important;
+            background-color: transparent;
+        }
+        .skm-dropdown-login:hover {
+            background-color: var(--skm-link) !important;
+            color: white !important;
+        }
+
         .skm-dropdown-register {
             margin: 0.5rem 1rem;
             padding: 0.75rem 1rem;
@@ -323,6 +471,8 @@
         .skm-dropdown-register:hover {
             background-color: #e64a19 !important;
         }
+        /* --- AKHIR CSS MODIFIKASI LOGIN/DAFTAR --- */
+
 
         /* Mobile user section - hidden by default */
         .skm-mobile-user-wrapper { display: none; }
@@ -403,14 +553,13 @@
                 text-align: center; 
                 border-bottom: 1px solid #E6EEF0; 
             }
-            /* tone down transform on mobile to reduce layout jump */
             .skm-navbar .skm-links a:hover,
             .skm-navbar .skm-links a:focus-visible,
             .skm-navbar .skm-links a.touch-hover { transform: scale(1.02); }
             .skm-navbar .skm-links a::after { bottom: 0; }
             .skm-navbar .skm-links li:last-child a { border-bottom: 0; }
             
-            /* Hide desktop cart and user dropdown */
+            /* Hide desktop search, cart and user dropdown */
             .skm-right-icons { display: none; }
             
             /* Show mobile user section */
@@ -449,10 +598,6 @@
                 background: #f5f5f5;
             }
             
-            .skm-mobile-link i {
-                margin-right: 8px;
-            }
-            
             .skm-mobile-register {
                 background-color: #ff5722;
                 color: white !important;
@@ -463,7 +608,108 @@
             }
             
             .skm-menu:not(.active) { display: none; }
+
+            /* Mobile Translate Fix */
+            .translate-mobile-wrapper {
+                padding: 0;
+                text-align: left;
+                border-bottom: 0;
+            }
+
+            #google_translate_element_mobile {
+                display: block !important;
+                text-align: center;
+                padding: 16px 20px;
+                background: #fff;
+                border-bottom: 1px solid #E6EEF0; 
+            }
         }
+        /* --- END: Responsive --- */
+
+
+        /* --- START: Google Translate CSS --- */
+        #google_translate_element_mobile {
+            display: none !important;
+        }
+        
+        @media (max-width: 900px) {
+            #google_translate_element_desktop {
+                display: none !important;
+            }
+        }
+        
+        #google_translate_element_desktop,
+        #google_translate_element_mobile {
+            display: inline-block;
+        }
+
+        .goog-te-gadget {
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 0 !important;
+            white-space: nowrap;
+        }
+
+        .goog-te-gadget .goog-te-combo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 20px !important;
+            padding: 8px 16px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            font-family: 'Poppins', sans-serif !important;
+            cursor: pointer !important;
+            outline: none !important;
+            min-width: 120px !important;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .goog-te-gadget .goog-te-combo:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .goog-te-gadget .goog-te-combo:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
+        }
+
+        .goog-te-gadget-simple .goog-te-menu-value span:first-child {
+            display: none;
+        }
+
+        .goog-te-gadget-simple .goog-te-menu-value:before {
+            content: '🌐 Language';
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+
+        body {
+            top: 0 !important;
+        }
+
+        .skiptranslate>iframe {
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+        }
+
+        .home-page .navbar .goog-te-gadget .goog-te-combo {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        .home-page .navbar .goog-te-gadget .goog-te-combo:hover {
+            background: rgba(255, 255, 255, 0.25) !important;
+        }
+        /* --- END: Google Translate CSS --- */
     </style>
 
     <script>
@@ -477,6 +723,35 @@
                     mobileMenu.classList.toggle('active');
                     const expanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
                     hamburgerButton.setAttribute('aria-expanded', String(!expanded));
+                });
+
+                // Helper to close the mobile menu
+                function closeMobileMenu() {
+                    if (mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        hamburgerButton.setAttribute('aria-expanded', 'false');
+                    }
+                }
+
+                // Close when clicking outside menu/hamburger
+                document.addEventListener('click', function (e) {
+                    const clickInside = mobileMenu.contains(e.target);
+                    const clickHamburger = hamburgerButton.contains(e.target);
+                    if (!clickInside && !clickHamburger) {
+                        closeMobileMenu();
+                    }
+                });
+
+                // Close on Escape key
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        closeMobileMenu();
+                    }
+                });
+
+                // Close after choosing a link
+                mobileMenu.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', closeMobileMenu);
                 });
             }
 
@@ -497,6 +772,52 @@
                     }
                 });
             }
+
+            // --- START: SEARCH BAR DESKTOP LOGIC BARU ---
+            const searchForm = document.getElementById('skm-search-form');
+            const searchInput = document.getElementById('skm-search-input');
+            const searchToggle = document.getElementById('skm-search-toggle');
+
+            if (searchForm && searchInput && searchToggle) {
+                // Function to expand the search bar
+                function expandSearch() {
+                    searchForm.classList.add('active');
+                    searchInput.focus();
+                    searchToggle.setAttribute('type', 'submit'); // Ganti menjadi submit saat expanded
+                    searchToggle.setAttribute('aria-label', 'Cari');
+                }
+
+                // Function to collapse the search bar
+                function collapseSearch() {
+                    // Hanya collapse jika input kosong
+                    if (searchInput.value.trim() === '') {
+                        searchForm.classList.remove('active');
+                        searchToggle.setAttribute('type', 'button'); // Kembalikan menjadi button
+                        searchToggle.setAttribute('aria-label', 'Buka Kolom Pencarian');
+                    }
+                }
+
+                // Event listener for the icon click
+                searchToggle.addEventListener('click', function(e) {
+                    // Jika belum aktif, expand. Jika sudah aktif, biarkan submit form.
+                    if (!searchForm.classList.contains('active')) {
+                        e.preventDefault(); // Cegah submit saat expand
+                        expandSearch();
+                    }
+                });
+                
+                // Event listener for focusout (blur)
+                searchInput.addEventListener('blur', collapseSearch);
+
+                // Handle form submission when input is empty (prevents submission and collapses)
+                searchForm.addEventListener('submit', function(e) {
+                    if (searchInput.value.trim() === '') {
+                        e.preventDefault();
+                        collapseSearch();
+                    }
+                });
+            }
+            // --- END: SEARCH BAR DESKTOP LOGIC BARU ---
             
             // Load cart count on page load
             @auth
@@ -512,6 +833,47 @@
             .catch(error => {
                 console.error('Error loading cart count:', error);
             });
+
+            // After login: merge guest cart from localStorage (if any)
+            try {
+                const guestItemsRaw = localStorage.getItem('skm_guest_cart');
+                if (guestItemsRaw) {
+                    const guestItems = JSON.parse(guestItemsRaw);
+                    if (Array.isArray(guestItems) && guestItems.length > 0) {
+                        // Prefer meta CSRF, fallback to logout form hidden _token
+                        let csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+                        if (!csrf) {
+                            const tokenInput = document.querySelector('#logout-form input[name="_token"], #logout-form-mobile input[name="_token"]');
+                            if (tokenInput) csrf = tokenInput.value;
+                        }
+                        fetch('{{ route('cart.merge') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrf
+                            },
+                            body: JSON.stringify({ items: guestItems })
+                        })
+                        .then(r => r.json())
+                        .then(d => {
+                            // Clear local guest cart on success
+                            try { localStorage.removeItem('skm_guest_cart'); } catch (e) {}
+                            if (typeof updateCartBadge === 'function' && typeof d.cart_count !== 'undefined') {
+                                updateCartBadge(d.cart_count);
+                            }
+                        })
+                        .catch(err => console.error('Merge guest cart failed:', err));
+                    }
+                }
+            } catch (e) { /* no-op */ }
+            @else
+            // Guest: show cart count from localStorage (can add items before login)
+            try {
+                const items = JSON.parse(localStorage.getItem('skm_guest_cart') || '[]');
+                const count = Array.isArray(items) ? items.reduce((s, it) => s + (parseInt(it.quantity)||0), 0) : 0;
+                updateCartBadge(count);
+            } catch (e) { updateCartBadge(0); }
             @endauth
             
             // Function to update cart badge
@@ -543,6 +905,76 @@
                     a.addEventListener('click', removeTouch);
                 });
             }
+            
+            // --- START: Google Translate Scripts (DARI FILE BARU) ---
+            
+            // Inisialisasi GTranslate untuk ID Desktop dan Mobile
+            function googleTranslateElementInit() {
+                // Inisialisasi Desktop
+                new google.translate.TranslateElement({
+                    pageLanguage: 'id',
+                    includedLanguages: 'id,en',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element_desktop');
+
+                // Inisialisasi Mobile
+                new google.translate.TranslateElement({
+                    pageLanguage: 'id',
+                    includedLanguages: 'id,en',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element_mobile');
+            }
+
+            // Load Google Translate Script
+            (function() {
+                var gtScript = document.createElement('script');
+                gtScript.type = 'text/javascript';
+                gtScript.async = true;
+                gtScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+
+                gtScript.onload = function() {
+                    console.log('Google Translate loaded successfully');
+                    // Tambahkan fungsi init ke window agar bisa dipanggil oleh GTranslate
+                    window.googleTranslateElementInit = googleTranslateElementInit; 
+                };
+
+                gtScript.onerror = function() {
+                    console.error('Failed to load Google Translate');
+                };
+
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(gtScript, s);
+            })();
+
+            // Clean up Google Translate UI after load
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    // Hide banner
+                    var banner = document.querySelector('.goog-te-banner-frame');
+                    if (banner) {
+                        banner.style.display = 'none';
+                    }
+
+                    // Reset body position
+                    document.body.style.top = '0px';
+                    document.body.style.position = 'static';
+
+                    // Hide notification iframe
+                    var skiptranslate = document.querySelector('.skiptranslate');
+                    if (skiptranslate) {
+                        var iframe = skiptranslate.querySelector('iframe');
+                        if (iframe) {
+                            iframe.style.visibility = 'hidden';
+                            iframe.style.height = '0px';
+                            iframe.style.width = '0px';
+                        }
+                    }
+                }, 2000);
+            });
+            // --- END: Google Translate Scripts ---
+
         });
     </script>
 </nav>

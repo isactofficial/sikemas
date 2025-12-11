@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('consultations', function (Blueprint $table) {
+        Schema::create('free_consultations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'scheduled', 'completed', 'cancelled'])->default('pending');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('consultations');
+        Schema::dropIfExists('free_consultations');
     }
 };

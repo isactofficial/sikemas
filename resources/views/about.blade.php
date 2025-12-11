@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>About - SIKEMAS</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-2-removebg.png') }}">
+    <script src="{{ asset('js/dynamic-favicon.js') }}" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -80,11 +86,13 @@
 
         /* Profile Section (NEW) - Sesuai Gambar Baru */
         .profile-section {
-            background-color: #ffffff; /* Sesuai permintaan background putih */
+            background-color: #ffffff;
+            /* Sesuai permintaan background putih */
             display: flex;
             align-items: center;
             padding: 80px 20px;
-            min-height: 90vh; /* Agar ada jarak dan tidak terlalu nempel */
+            min-height: 90vh;
+            /* Agar ada jarak dan tidak terlalu nempel */
         }
 
         .profile-wrapper {
@@ -93,7 +101,7 @@
             width: 100%;
             display: grid;
             /* Layout: Gambar (kiri) 1fr | Teks (kanan) 1.2fr */
-            grid-template-columns: 1fr 1.2fr; 
+            grid-template-columns: 1fr 1.2fr;
             gap: 60px;
             align-items: center;
         }
@@ -101,21 +109,26 @@
         /* Left Side - Image (NEW) */
         .profile-image-container {
             display: flex;
-            justify-content: flex-start; /* Gambar di kiri */
+            justify-content: flex-start;
+            /* Gambar di kiri */
             align-items: center;
         }
 
         .profile-image {
             width: 100%;
-            max-width: 650px; /* Samakan dengan style .portfolio-image */
+            max-width: 650px;
+            /* Samakan dengan style .portfolio-image */
             height: auto;
-            border-radius: 20px; /* Samakan dengan style .portfolio-image */
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); /* Samakan dengan style .portfolio-image */
+            border-radius: 20px;
+            /* Samakan dengan style .portfolio-image */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            /* Samakan dengan style .portfolio-image */
         }
 
         /* Right Side - Text Content (NEW) */
         .profile-text {
-            padding-left: 40px; /* Teks di kanan, beri padding kiri */
+            padding-left: 40px;
+            /* Teks di kanan, beri padding kiri */
         }
 
         .profile-text h1 {
@@ -132,10 +145,11 @@
             color: #425B66;
             text-align: justify;
         }
-        
+
         /* History Section (NEW) - Sesuai Gambar Timeline */
         .history-section {
-            background-color: #F4F7F6; /* Sesuai permintaan */
+            background-color: #F4F7F6;
+            /* Sesuai permintaan */
             padding: 80px 20px;
         }
 
@@ -151,8 +165,10 @@
             color: #074159;
             text-align: center;
             margin-bottom: 80px;
-            position: relative; /* Ditambahkan */
-            padding-bottom: 20px; /* Ditambahkan */
+            position: relative;
+            /* Ditambahkan */
+            padding-bottom: 20px;
+            /* Ditambahkan */
         }
 
         /* Garis Oranye di bawah Judul - SESUAI PERMINTAAN */
@@ -162,9 +178,11 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px; /* Lebar garis */
+            width: 100px;
+            /* Lebar garis */
             height: 4px;
-            background-color: #FF6600; /* Warna oranye */
+            background-color: #FF6600;
+            /* Warna oranye */
         }
 
 
@@ -183,7 +201,8 @@
             bottom: 20px;
             left: 50%;
             width: 3px;
-            background-color: #074159; /* Warna garis */
+            background-color: #074159;
+            /* Warna garis */
             transform: translateX(-50%);
             z-index: 1;
         }
@@ -194,21 +213,25 @@
             gap: 60px;
             align-items: center;
             position: relative;
-            z-index: 2; /* Di atas garis */
+            z-index: 2;
+            /* Di atas garis */
         }
-        
+
         /* Titik oranye di tengah */
         .history-dot {
             width: 22px;
             height: 22px;
-            background-color: #FF6600; /* Warna oranye */
+            background-color: #FF6600;
+            /* Warna oranye */
             border-radius: 50%;
-            border: 4px solid #F4F7F6; /* Border warna bg untuk 'memotong' garis */
+            border: 4px solid #F4F7F6;
+            /* Border warna bg untuk 'memotong' garis */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 3; /* Di atas segalanya */
+            z-index: 3;
+            /* Di atas segalanya */
         }
 
         /* Garis Horizontal - SESUAI PERMINTAAN */
@@ -216,23 +239,31 @@
             content: '';
             position: absolute;
             top: 50%;
-            height: 3px; /* Samakan dengan tebal garis vertikal */
-            background-color: #074159; /* Warna garis */
+            height: 3px;
+            /* Samakan dengan tebal garis vertikal */
+            background-color: #074159;
+            /* Warna garis */
             transform: translateY(-50%);
-            width: 30px; /* Lebar = setengah dari 'gap' (60px / 2) */
-            z-index: 2; /* Di bawah titik, di atas garis vertikal */
+            width: 30px;
+            /* Lebar = setengah dari 'gap' (60px / 2) */
+            z-index: 2;
+            /* Di bawah titik, di atas garis vertikal */
         }
 
         /* Item Ganjil (Teks Kiri): Garis ke Kiri */
         .history-item:nth-child(odd) .history-dot::before {
-            right: 100%; /* Mulai dari tepi kiri titik */
-            margin-right: 4px; /* Jarak kecil (sesuai border titik) */
+            right: 100%;
+            /* Mulai dari tepi kiri titik */
+            margin-right: 4px;
+            /* Jarak kecil (sesuai border titik) */
         }
 
         /* Item Genap (Teks Kanan): Garis ke Kanan */
         .history-item:nth-child(even) .history-dot::before {
-            left: 100%; /* Mulai dari tepi kanan titik */
-            margin-left: 4px; /* Jarak kecil (sesuai border titik) */
+            left: 100%;
+            /* Mulai dari tepi kanan titik */
+            margin-left: 4px;
+            /* Jarak kecil (sesuai border titik) */
         }
 
 
@@ -254,7 +285,7 @@
             width: 100%;
             height: auto;
             border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
         }
 
         /* Layout Berselang-seling */
@@ -263,9 +294,11 @@
             grid-column: 1;
             text-align: right;
         }
+
         .history-item:nth-child(odd) .history-image-container {
             grid-column: 2;
         }
+
         .history-item:nth-child(odd) .history-text h3 {
             text-align: right;
         }
@@ -274,10 +307,12 @@
         .history-item:nth-child(even) .history-image-container {
             grid-column: 1;
         }
+
         .history-item:nth-child(even) .history-text {
             grid-column: 2;
             text-align: left;
         }
+
         .history-item:nth-child(even) .history-text h3 {
             text-align: left;
         }
@@ -365,7 +400,8 @@
 
         /* === Values & FAQ Section (NEW) === */
         .values-faq-section {
-            background-color: #F4F7F6; /* Sesuai permintaan */
+            background-color: #F4F7F6;
+            /* Sesuai permintaan */
             padding: 80px 20px;
         }
 
@@ -377,13 +413,15 @@
 
         /* Values Part */
         .values-container {
-            margin-bottom: 100px; /* Jarak ke FAQ */
+            margin-bottom: 100px;
+            /* Jarak ke FAQ */
         }
 
         .values-section-title {
             font-size: 3.5rem;
             font-weight: 700;
-            color: #074159; /* Teks gelap */
+            color: #074159;
+            /* Teks gelap */
             text-align: center;
             margin-bottom: 80px;
             position: relative;
@@ -398,7 +436,8 @@
             transform: translateX(-50%);
             width: 100px;
             height: 4px;
-            background-color: #FF6600; /* Warna oranye */
+            background-color: #FF6600;
+            /* Warna oranye */
         }
 
         .values-cards {
@@ -411,12 +450,13 @@
             background-color: #ffffff;
             padding: 40px 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
             text-align: center;
         }
 
         .value-icon {
-            height: 50px; /* Ukuran ikon */
+            height: 50px;
+            /* Ukuran ikon */
             object-fit: contain;
             margin-bottom: 1.5rem;
         }
@@ -431,7 +471,8 @@
         .faq-section-title {
             font-size: 3.5rem;
             font-weight: 700;
-            color: #074159; /* Teks gelap */
+            color: #074159;
+            /* Teks gelap */
             text-align: center;
             margin-bottom: 80px;
             position: relative;
@@ -446,11 +487,13 @@
             transform: translateX(-50%);
             width: 100px;
             height: 4px;
-            background-color: #FF6600; /* Warna oranye */
+            background-color: #FF6600;
+            /* Warna oranye */
         }
 
         .faq-list {
-            max-width: 900px; /* FAQ list lebih sempit */
+            max-width: 900px;
+            /* FAQ list lebih sempit */
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -460,18 +503,21 @@
         .faq-item {
             background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
-            border: 2px solid transparent; /* Border transparan */
+            border: 2px solid transparent;
+            /* Border transparan */
         }
-        
+
         /* State Aktif (sesuai gambar) */
         .faq-item.active {
-            border-color: #FF6600; /* Border oranye */
+            border-color: #FF6600;
+            /* Border oranye */
         }
-        
+
         .faq-item.active .faq-question {
-            color: #FF6600; /* Teks pertanyaan jadi oranye */
+            color: #FF6600;
+            /* Teks pertanyaan jadi oranye */
         }
 
         .faq-question {
@@ -499,7 +545,8 @@
         }
 
         .faq-item.active .faq-toggle {
-            transform: rotate(45deg); /* Opsi 1: rotate */
+            transform: rotate(45deg);
+            /* Opsi 1: rotate */
             /* content: '−'; Opsi 2: ganti teks (diurus JS) */
         }
 
@@ -508,17 +555,19 @@
             color: #425B66;
             line-height: 1.7;
             font-size: 0.95rem;
-            display: none; /* Default tersembunyi */
+            display: none;
+            /* Default tersembunyi */
         }
-        
+
         /* State Aktif (tampilkan jawaban) */
         .faq-item.active .faq-answer {
             display: block;
         }
-        
+
         /* === Contact Section (NEW) === */
         .contact-section {
-            background-color: #ffffff; /* Diubah menjadi putih sesuai permintaan */
+            background-color: #ffffff;
+            /* Diubah menjadi putih sesuai permintaan */
             padding: 80px 20px;
         }
 
@@ -549,9 +598,10 @@
         }
 
         .contact-card {
-            background-color: #ffffff; /* Kartu putih sesuai gambar */
+            background-color: #ffffff;
+            /* Kartu putih sesuai gambar */
             border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1); 
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
             padding: 50px 60px;
             display: grid;
             grid-template-columns: 1.2fr 1fr;
@@ -566,9 +616,10 @@
             color: #074159;
             margin-bottom: 30px;
         }
-        
+
         .contact-info .info-title-secondary {
-            margin-top: 40px; /* Jarak antara "Lokasi" dan "Terhubung" */
+            margin-top: 40px;
+            /* Jarak antara "Lokasi" dan "Terhubung" */
         }
 
         .form-row {
@@ -601,7 +652,7 @@
             font-size: 1rem;
             color: #425B66;
         }
-        
+
         .form-group input[type="text"]::placeholder,
         .form-group input[type="email"]::placeholder,
         .form-group textarea::placeholder {
@@ -623,9 +674,12 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            display: flex; /* Diubah dari inline-flex */
-            width: 100%; /* Ditambahkan agar full-width */
-            justify-content: center; /* Ditambahkan untuk menengahkan konten tombol */
+            display: flex;
+            /* Diubah dari inline-flex */
+            width: 100%;
+            /* Ditambahkan agar full-width */
+            justify-content: center;
+            /* Ditambahkan untuk menengahkan konten tombol */
             align-items: center;
             gap: 10px;
             transition: background-color 0.3s ease;
@@ -640,7 +694,7 @@
             height: 18px;
             object-fit: contain;
         }
-        
+
         /* Contact Info Side */
         .info-list {
             display: flex;
@@ -658,12 +712,13 @@
             width: 24px;
             height: 24px;
             object-fit: contain;
-            margin-top: 5px; /* Align icon with first line of text */
+            margin-top: 5px;
+            /* Align icon with first line of text */
             flex-shrink: 0;
         }
 
         .info-text h3 {
-            font-size: 1.15rem; 
+            font-size: 1.15rem;
             font-weight: 700;
             color: #074159;
             margin-bottom: 5px;
@@ -678,7 +733,8 @@
 
         /* === Maps Section (NEW) === */
         .maps-section {
-            background-color: #F4F7F6; /* Sesuai permintaan */
+            background-color: #F4F7F6;
+            /* Sesuai permintaan */
             padding: 80px 20px;
         }
 
@@ -691,9 +747,11 @@
         .maps-section-title {
             font-size: 3.5rem;
             font-weight: 700;
-            color: #074159; /* Teks gelap */
+            color: #074159;
+            /* Teks gelap */
             text-align: center;
-            margin-bottom: 80px; /* Jarak dari judul ke map */
+            margin-bottom: 80px;
+            /* Jarak dari judul ke map */
             position: relative;
             padding-bottom: 20px;
         }
@@ -706,19 +764,24 @@
             transform: translateX(-50%);
             width: 100px;
             height: 4px;
-            background-color: #FF6600; /* Warna oranye */
+            background-color: #FF6600;
+            /* Warna oranye */
         }
-        
+
         .maps-container {
             width: 100%;
-            border-radius: 15px; /* Samakan dengan gambar-gambar lain */
-            overflow: hidden; /* Penting untuk border-radius di iframe */
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12); /* Samakan dengan history image */
+            border-radius: 15px;
+            /* Samakan dengan gambar-gambar lain */
+            overflow: hidden;
+            /* Penting untuk border-radius di iframe */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            /* Samakan dengan history image */
         }
-        
+
         .maps-container iframe {
             width: 100%;
-            height: 500px; /* Ketinggian default */
+            height: 500px;
+            /* Ketinggian default */
             border: 0;
         }
 
@@ -726,7 +789,8 @@
         /* Responsive Design */
         @media (max-width: 1024px) {
             .portfolio-wrapper {
-                grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column;
                 gap: 40px;
                 padding: 40px 20px;
             }
@@ -734,18 +798,23 @@
             .portfolio-text {
                 padding-right: 0;
                 text-align: center;
+                display: contents;
             }
 
             .portfolio-text h1 {
                 font-size: 2.5rem;
-            }
-
-            .portfolio-text p {
-                text-align: center;
+                order: 1;
             }
 
             .portfolio-image-container {
                 justify-content: center;
+                order: 2;
+            }
+
+            .portfolio-text p {
+                text-align: center;
+                order: 3;
+                margin-top: 20px;
             }
 
             .portfolio-image {
@@ -754,7 +823,8 @@
 
             /* Responsive for New Profile Section */
             .profile-wrapper {
-                grid-template-columns: 1fr; /* Stack di mobile */
+                display: flex;
+                flex-direction: column;
                 gap: 40px;
                 padding: 40px 20px;
             }
@@ -762,18 +832,23 @@
             .profile-text {
                 padding-left: 0;
                 text-align: center;
+                display: contents;/
             }
 
             .profile-text h1 {
                 font-size: 2.5rem;
+                order: 1;
+            }
+
+            .profile-image-container {
+                justify-content: center;
+                order: 2;
             }
 
             .profile-text p {
                 text-align: center;
-            }
-
-            .profile-image-container {
-                justify-content: center; /* Gambar di tengah */
+                order: 3;
+                margin-top: 20px;
             }
 
             .profile-image {
@@ -789,6 +864,7 @@
             .business-line-title {
                 font-size: 2.5rem;
             }
+
             .business-line-cards {
                 grid-template-columns: 1fr;
                 gap: 30px;
@@ -799,8 +875,10 @@
             .faq-section-title {
                 font-size: 2.5rem;
             }
+
             .values-cards {
-                grid-template-columns: 1fr; /* Stack di tablet */
+                grid-template-columns: 1fr;
+                /* Stack di tablet */
                 gap: 30px;
             }
 
@@ -808,6 +886,7 @@
             .contact-section-title {
                 font-size: 2.5rem;
             }
+
             .contact-card {
                 grid-template-columns: 1fr;
                 gap: 50px;
@@ -857,50 +936,81 @@
 
             /* Responsive for History Section */
             .history-timeline::before {
-                display: none; /* Sembunyikan garis tengah di mobile */
+                display: none;
             }
+
             .history-dot {
-                display: none; /* Sembunyikan titik di mobile */
+                display: none;
             }
+
             .history-dot::before {
-                display: none; /* Sembunyikan garis horizontal di mobile */
+                display: none;
             }
 
             .history-item {
-                grid-template-columns: 1fr; /* Stack */
-                gap: 30px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
             }
 
-            /* Atur ulang urutan agar selalu: Gambar (atas), Teks (bawah) */
-            .history-item:nth-child(odd) .history-image-container,
-            .history-item:nth-child(even) .history-image-container {
-                grid-column: 1;
-                grid-row: 1; /* Gambar di baris 1 */
+            /* Urutan di mobile: h3 (Judul) dulu, Gambar, lalu p (Isi) */
+            .history-item .history-text {
+                display: contents;
+                /* <-- UBAH INI */
             }
 
-            .history-item:nth-child(odd) .history-text,
-            .history-item:nth-child(even) .history-text {
-                grid-column: 1;
-                grid-row: 2; /* Teks di baris 2 */
-                text-align: left; /* Ratakan kiri semua */
-            }
-
-            .history-item:nth-child(odd) .history-text h3,
-            .history-item:nth-child(even) .history-text h3 {
-                text-align: left; /* Ratakan kiri semua */
+            .history-item .history-text h3 {
+                order: 1;
+                text-align: left;
                 font-size: 1.5rem;
+                margin-bottom: 0;
             }
 
-             .history-text p {
-                text-align: justify; /* Teks paragraf tetap justify */
+            .history-item .history-image-container {
+                order: 2;
+            }
+
+            .history-item .history-text p {
+                order: 3;
+                text-align: justify;
+                margin-top: 20px;
+                /* Anda mungkin perlu menghapus ini jika 'gap' sudah cukup */
             }
 
             /* Responsive for Business Line Section */
             .business-line-title {
                 font-size: 2rem;
             }
+
             .business-line-cards {
-                gap: 20px;
+                grid-template-columns: repeat(2, 1fr);
+                /* dua kolom di mobile */
+                gap: 16px;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .business-line-card h3 {
+                font-size: 1.25rem;
+                margin-bottom: 10px;
+            }
+
+            .business-line-card p {
+                font-size: 0.9rem;
+            }
+
+            .business-line-card .card-image {
+                aspect-ratio: 4/3;
+            }
+
+            /* Pusatkan kartu "Karton Bergelombang" (kartu ke-3) di baris sendiri */
+            .business-line-cards .business-line-card:nth-child(3) {
+                grid-column: 1 / -1;
+                /* span dua kolom */
+                max-width: 340px;
+                /* batasi agar tampak center */
+                margin-left: auto;
+                margin-right: auto;
             }
 
             /* Responsive for Values/FAQ Section */
@@ -908,6 +1018,7 @@
             .faq-section-title {
                 font-size: 2rem;
             }
+
             .value-card h3 {
                 font-size: 1.3rem;
             }
@@ -916,33 +1027,42 @@
             .contact-section {
                 padding: 60px 20px;
             }
+
             .contact-section-title {
                 font-size: 2rem;
             }
+
             .contact-header p {
                 font-size: 0.95rem;
             }
+
             .contact-card {
                 padding: 30px;
             }
+
             .contact-form h2,
             .contact-info h2 {
                 font-size: 2rem;
             }
+
             .form-row {
                 grid-template-columns: 1fr;
-                gap: 0; /* Biarkan margin-bottom .form-group yg bekerja */
+                gap: 0;
+                /* Biarkan margin-bottom .form-group yg bekerja */
             }
 
             /* Responsive for Maps Section */
             .maps-section {
                 padding: 60px 20px;
             }
+
             .maps-section-title {
                 font-size: 2rem;
             }
+
             .maps-container iframe {
-                height: 400px; /* Kurangi tinggi di mobile */
+                height: 400px;
+                /* Kurangi tinggi di mobile */
             }
         }
 
@@ -986,12 +1106,15 @@
             .contact-section-title {
                 font-size: 1.75rem;
             }
+
             .contact-header p {
                 font-size: 0.9rem;
             }
+
             .contact-card {
                 padding: 25px 20px;
             }
+
             .contact-form h2,
             .contact-info h2 {
                 font-size: 1.75rem;
@@ -1001,53 +1124,58 @@
             .maps-section-title {
                 font-size: 1.75rem;
             }
+
             .maps-container iframe {
                 height: 350px;
             }
         }
     </style>
 </head>
+
 <body>
     @include('layouts.navbar')
 
     <section class="portfolio-section">
         <div class="portfolio-wrapper">
-            <div class="portfolio-text">
+            <div class="portfolio-text" data-aos="fade-right" data-aos-duration="1000">
                 <h1>Tentang Kami</h1>
                 <p>
-                    Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare. 
-                    Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula 
-                    tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus 
-                    pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper 
-                    pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas 
-                    venenatis, ipsum eget fringilla sodales, est lectus commodo purus, eget 
-                    sollicitudin magna turpis vitae nunc. Suspendisse mattis, dui sed condimentum 
+                    Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
+                    Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula
+                    tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus
+                    pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper
+                    pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas
+                    venenatis, ipsum eget fringilla sodales, est lectus commodo purus, eget
+                    sollicitudin magna turpis vitae nunc. Suspendisse mattis, dui sed condimentum
                     pretium, sapien mauris efficitu
                 </p>
             </div>
 
-            <div class="portfolio-image-container">
-                <img src="{{ asset('assets/img/kardus.png') }}" alt="Produksi Kemasan Karton SIKEMAS" class="portfolio-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+            <div class="portfolio-image-container" data-aos="fade-left" data-aos-duration="1000">
+                <img src="{{ asset('assets/img/kardus.png') }}" alt="Produksi Kemasan Karton SIKEMAS"
+                    class="portfolio-image"
+                    onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
             </div>
         </div>
     </section>
 
     <section class="profile-section">
         <div class="profile-wrapper">
-            <div class="profile-image-container">
-                <img src="{{ asset('assets/img/pabrik.png') }}" alt="Profil Perusahaan SIKEMAS" class="profile-image" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+            <div class="profile-image-container" data-aos="fade-right" data-aos-duration="1000">
+                <img src="{{ asset('assets/img/pabrik.png') }}" alt="Profil Perusahaan SIKEMAS" class="profile-image"
+                    onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
             </div>
-            
-            <div class="profile-text">
+
+            <div class="profile-text" data-aos="fade-left" data-aos-duration="1000">
                 <h1>Profil Perusahaan</h1>
                 <p>
-                    Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare. 
-                    Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula 
-                    tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus 
-                    pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper 
-                    pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas 
-                    venenatis, ipsum eget fringilla sodales, est lectus commodo purus, eget 
-                    sollicitudin magna turpis vitae nunc. Suspendisse mattis, dui sed condimentum 
+                    Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
+                    Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula
+                    tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus
+                    pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper
+                    pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas
+                    venenatis, ipsum eget fringilla sodales, est lectus commodo purus, eget
+                    sollicitudin magna turpis vitae nunc. Suspendisse mattis, dui sed condimentum
                     pretium, sapien mauris efficitu
                 </p>
             </div>
@@ -1056,61 +1184,64 @@
 
     <section class="history-section">
         <div class="history-wrapper">
-            <h1 class="history-section-title">Sejarah Kami</h1>
+            <h1 class="history-section-title" data-aos="fade-down">Sejarah Kami</h1>
 
             <div class="history-timeline">
-                
+
                 <div class="history-item">
-                    <div class="history-text">
+                    <div class="history-text" data-aos="fade-right">
                         <h3>2xxx - Awal Mula</h3>
                         <p>
-                            Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare. 
-                            Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula 
-                            tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus 
-                            pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper 
-                            pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas 
+                            Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
+                            Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula
+                            tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus
+                            pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper
+                            pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas
                             venenatis, ipsum eget fringilla sodales, est lectus commodo purus...
                         </p>
                     </div>
-                    <div class="history-dot"></div>
-                    <div class="history-image-container">
-                        <img src="{{ asset('assets/img/awalperusahaan.png') }}" alt="Awal Mula Perusahaan SIKEMAS" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                    <div class="history-dot" data-aos="zoom-in"></div>
+                    <div class="history-image-container" data-aos="fade-left">
+                        <img src="{{ asset('assets/img/awalperusahaan.png') }}" alt="Awal Mula Perusahaan SIKEMAS"
+                            onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
                 </div>
 
                 <div class="history-item">
-                    <div class="history-image-container">
-                        <img src="{{ asset('assets/img/ekspansibisnis.png') }}" alt="Ekspansi Bisnis SIKEMAS" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                    <div class="history-image-container" data-aos="fade-right">
+                        <img src="{{ asset('assets/img/ekspansibisnis.png') }}" alt="Ekspansi Bisnis SIKEMAS"
+                            onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
-                    <div class="history-dot"></div>
-                    <div class="history-text">
+                    <div class="history-dot" data-aos="zoom-in"></div>
+                    <div class="history-text" data-aos="fade-left">
                         <h3>2xxx - Ekspansi Bisnis</h3>
                         <p>
-                            Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare. 
-                            Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula 
-                            tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus 
-                            pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper 
-                            pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas 
+                            Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
+                            Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula
+                            tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus
+                            pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper
+                            pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas
                             venenatis, ipsum eget fringilla sodales, est lectus commodo purus...
                         </p>
                     </div>
                 </div>
 
                 <div class="history-item">
-                    <div class="history-text">
+                    <div class="history-text" data-aos="fade-right">
                         <h3>2xxx - Inovasi Berkelanjutan</h3>
                         <p>
-                            Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare. 
-                            Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula 
-                            tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus 
-                            pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper 
-                            pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas 
+                            Pellentesque a imperdiet leo. Vivamus non augue vel justo commodo ornare.
+                            Ut a enim maximus, congue lectus ut, tincidunt est. In laoreet vehicula
+                            tincidunt. Curabitur non facilisis quam. Aliquam gravida purus sed tellus
+                            pulvinar, eu accumsan orci tincidunt. Duis sagittis, diam ultricies semper
+                            pharetra, metus sem mattis nulla, nec vestibulum leo lorem ut leo. Maecenas
                             venenatis, ipsum eget fringilla sodales, est lectus commodo purus...
                         </p>
                     </div>
-                    <div class="history-dot"></div>
-                    <div class="history-image-container">
-                        <img src="{{ asset('assets/img/inovasi.png') }}" alt="Inovasi Berkelanjutan SIKEMAS" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                    <div class="history-dot" data-aos="zoom-in"></div>
+                    <div class="history-image-container" data-aos="fade-left">
+                        <img src="{{ asset('assets/img/inovasi.png') }}" alt="Inovasi Berkelanjutan SIKEMAS"
+                            onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                     </div>
                 </div>
 
@@ -1120,28 +1251,31 @@
 
     <section class="business-line-section">
         <div class="business-line-wrapper">
-            <h1 class="business-line-title">Lini Bisnis</h1>
+            <h1 class="business-line-title" data-aos="fade-up">Lini Bisnis</h1>
 
             <div class="business-line-cards">
-                
-                <div class="business-line-card">
+
+                <div class="business-line-card" data-aos="fade-up" data-aos-delay="100">
                     <img src="{{ asset('assets/img/Container.png') }}" alt="Solusi Produk Khusus" class="card-image">
                     <div class="card-content">
                         <h3>Solusi Produk Khusus</h3>
-                        <p>Kami menyediakan kemasan yang dirancang secara unik untuk menonjolkan keunggulan produk Anda.</p>
+                        <p>Kami menyediakan kemasan yang dirancang secara unik untuk menonjolkan keunggulan produk Anda.
+                        </p>
                     </div>
                 </div>
 
-                <div class="business-line-card">
-                    <img src="{{ asset('assets/img/karton_banyak.png') }}" alt="Kemasan Ramah Lingkungan" class="card-image">
+                <div class="business-line-card" data-aos="fade-up" data-aos-delay="200">
+                    <img src="{{ asset('assets/img/karton_banyak.png') }}" alt="Kemasan Ramah Lingkungan"
+                        class="card-image">
                     <div class="card-content">
                         <h3>Kemasan Ramah Lingkungan</h3>
                         <p>Komitmen kami pada keberlanjutan dengan menyediakan kemasan dari bahan daur ulang.</p>
                     </div>
                 </div>
 
-                <div class="business-line-card">
-                    <img src="{{ asset('assets/img/karton_buka.png') }}" alt="Karton Bergelombang" class="card-image">
+                <div class="business-line-card" data-aos="fade-up" data-aos-delay="300">
+                    <img src="{{ asset('assets/img/karton_buka.png') }}" alt="Karton Bergelombang"
+                        class="card-image">
                     <div class="card-content">
                         <h3>Karton Bergelombang</h3>
                         <p>Produksi karton bergelombang dengan kekuatan dan ketahanan optimal untuk pengiriman aman.</p>
@@ -1156,80 +1290,133 @@
         <div class="values-faq-wrapper">
 
             <div class="values-container">
-                <h1 class="values-section-title">Nilai Perusahaan</h1>
+                <h1 class="values-section-title" data-aos="fade-down">Nilai Perusahaan</h1>
                 <div class="values-cards">
-                    
-                    <div class="value-card">
-                        <img src="{{ asset('assets/img/symbol13.svg') }}" alt="Mengutamakan Pelanggan" class="value-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+
+                    <div class="value-card" data-aos="zoom-in" data-aos-delay="100">
+                        <img src="{{ asset('assets/img/symbol13.svg') }}" alt="Mengutamakan Pelanggan"
+                            class="value-icon"
+                            onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                         <h3>Mengutamakan Pelanggan</h3>
                     </div>
 
-                    <div class="value-card">
-                        <img src="{{ asset('assets/img/symbol14.svg') }}" alt="Keselamatan dan Lingkungan" class="value-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                    <div class="value-card" data-aos="zoom-in" data-aos-delay="200">
+                        <img src="{{ asset('assets/img/symbol14.svg') }}" alt="Keselamatan dan Lingkungan"
+                            class="value-icon"
+                            onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                         <h3>Keselamatan dan Lingkungan</h3>
                     </div>
 
-                    <div class="value-card">
-                        <img src="{{ asset('assets/img/container5.svg') }}" alt="Sigap, bersemangat, dan dinamis" class="value-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                    <div class="value-card" data-aos="zoom-in" data-aos-delay="300">
+                        <img src="{{ asset('assets/img/container5.svg') }}" alt="Sigap, bersemangat, dan dinamis"
+                            class="value-icon"
+                            onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
                         <h3>Sigap, bersemangat, dan dinamis</h3>
                     </div>
 
                 </div>
             </div>
 
-            @include('sections.faq')
+            <div data-aos="fade-up" data-aos-delay="100">
+                @include('sections.faq')
+            </div>
 
         </div>
     </section>
 
-    <section class="contact-section">
+    <section class="contact-section" id="kontak-kami">
         <div class="contact-wrapper">
-            <div class="contact-header">
+            <div class="contact-header" data-aos="fade-down">
                 <h1 class="contact-section-title">Mari Terhubung dengan Sikemas</h1>
-                <p>Punya pertanyaan, ide kolaborasi, atau ingin berbagi cerita? Tim profesional kami siap melayani Anda.</p>
+                <p>Punya pertanyaan, ide kolaborasi, atau ingin berbagi cerita? Tim profesional kami siap melayani Anda.
+                </p>
             </div>
 
             <div class="contact-card">
-                <div class="contact-form">
+                <div class="contact-form" data-aos="fade-right">
                     <h2>Kirim Pesan Kepada Kami</h2>
-                    <form action="#" method="POST">
+
+                    @if (session('success'))
+                        <div class="alert alert-success"
+                            style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('contact.store') }}" method="POST">
+
+                        @csrf
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nama">Nama Anda</label>
-                                <input type="text" id="nama" name="nama" placeholder="Nama Anda">
+
+                                @auth
+                                    <input type="text" id="nama" name="nama"
+                                        value="{{ old('nama', auth()->user()->name) }}">
+                                @else
+                                    <input type="text" id="nama" name="nama" placeholder="Nama Anda"
+                                        value="{{ old('nama') }}">
+                                @endauth
+
+                                @error('nama')
+                                    <span class="error-message"
+                                        style="color: red; font-size: 0.9em;">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" placeholder="email@contoh.com">
+
+                                @auth
+                                    <input type="email" id="email" name="email"
+                                        value="{{ old('email', auth()->user()->email) }}">
+                                @else
+                                    <input type="email" id="email" name="email" placeholder="email@contoh.com"
+                                        value="{{ old('email') }}">
+                                @endauth
+
+                                @error('email')
+                                    <span class="error-message"
+                                        style="color: red; font-size: 0.9em;">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="subjek">Subjek</label>
-                            <input type="text" id="subjek" name="subjek" placeholder="Subjek Pesan">
+                            <input type="text" id="subjek" name="subjek" placeholder="Subjek Pesan"
+                                value="{{ old('subjek') }}">
+                            @error('subjek')
+                                <span class="error-message"
+                                    style="color: red; font-size: 0.9em;">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="pesan">Pesan Anda</label>
-                            <textarea id="pesan" name="pesan" rows="6" placeholder="Tulis pesan Anda di sini..."></textarea>
+                            <textarea id="pesan" name="pesan" rows="6" placeholder="Tulis pesan Anda di sini...">{{ old('pesan') }}</textarea>
+                            @error('pesan')
+                                <span class="error-message"
+                                    style="color: red; font-size: 0.9em;">{{ $message }}</span>
+                            @enderror
                         </div>
                         <button type="submit" class="submit-btn">
                             <span>Kirim Pesan</span>
-                            <img src="{{ asset('assets/img/pesan.svg') }}" alt="Kirim" class="btn-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                            <img src="{{ asset('assets/img/pesan.svg') }}" alt="Kirim" class="btn-icon">
                         </button>
                     </form>
                 </div>
 
-                <div class="contact-info">
+                <div class="contact-info" data-aos="fade-left">
                     <h2>Lokasi Kami</h2>
                     <div class="info-list">
                         <div class="info-item">
-                            <img src="{{ asset('assets/img/kantor.svg') }}" alt="Lokasi" class="info-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                            <img src="{{ asset('assets/img/kantor.svg') }}" alt="Lokasi" class="info-icon">
                             <div class="info-text">
                                 <h3>Kantor Pusat Sikemas</h3>
                                 <p>Jl. Kartini, Rempoa, No. 121, Jakarta, Indonesia 12345</p>
                             </div>
                         </div>
                         <div class="info-item">
-                            <img src="{{ asset('assets/img/telp.svg') }}" alt="Telepon" class="info-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                            <img src="{{ asset('assets/img/telp.svg') }}" alt="Telepon" class="info-icon">
                             <div class="info-text">
                                 <h3>Telepon</h3>
                                 <p>+62 21 8765 4321</p>
@@ -1239,22 +1426,22 @@
 
                     <h2 class="info-title-secondary">Terhubung dengan Kami</h2>
                     <div class="info-list">
-                         <div class="info-item">
-                            <img src="{{ asset('assets/img/ig.svg') }}" alt="Instagram" class="info-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                        <div class="info-item">
+                            <img src="{{ asset('assets/img/ig.svg') }}" alt="Instagram" class="info-icon">
                             <div class="info-text">
                                 <h3>Instagram</h3>
                                 <p>@sikemas_official</p>
                             </div>
                         </div>
-                         <div class="info-item">
-                            <img src="{{ asset('assets/img/link.svg') }}" alt="LinkedIn" class="info-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                        <div class="info-item">
+                            <img src="{{ asset('assets/img/link.svg') }}" alt="LinkedIn" class="info-icon">
                             <div class="info-text">
                                 <h3>LinkedIn</h3>
                                 <p>Sikemas Official</p>
                             </div>
                         </div>
-                         <div class="info-item">
-                            <img src="{{ asset('assets/img/email.svg') }}" alt="Email" class="info-icon" onerror="console.error('Gambar tidak ditemukan:', this.src); this.style.border='2px dashed red';">
+                        <div class="info-item">
+                            <img src="{{ asset('assets/img/email.svg') }}" alt="Email" class="info-icon">
                             <div class="info-text">
                                 <h3>Email</h3>
                                 <p>info@sikemas.com</p>
@@ -1268,19 +1455,24 @@
 
     <section class="maps-section">
         <div class="maps-wrapper">
-            <h1 class="maps-section-title">Temukan Kami di Google Maps</h1>
-            
-            <div class="maps-container">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.8649581816!2d106.7628853!3d-6.281135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f0f9b6113b9b%3A0x66f03d8d3e110430!2sJl.%20Kartini%20No.121%2C%20Rempoa%2C%20Kec.%20Ciputat%20Tim.%2C%20Kota%20Tangerang%20Selatan%2C%20Banten%2015412!5e0!3m2!1sen!2sid!4v1678888888888!5m2!1sen!2sid" 
-                    allowfullscreen="" 
-                    loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade">
+            <h1 class="maps-section-title" data-aos="fade-down">Temukan Kami di Google Maps</h1>
+
+            <div class="maps-container" data-aos="zoom-in" data-aos-duration="1200">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.8649581816!2d106.7628853!3d-6.281135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f0f9b6113b9b%3A0x66f03d8d3e110430!2sJl.%20Kartini%20No.121%2C%20Rempoa%2C%20Kec.%20Ciputat%20Tim.%2C%20Kota%20Tangerang%20Selatan%2C%20Banten%2015412!5e0!3m2!1sen!2sid!4v1678888888888!5m2!1sen!2sid"
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
         </div>
     </section>
-
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: false, 
+            mirror: true,
+            duration: 1000,
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1310,7 +1502,8 @@
                     } else {
                         // Jika tidak aktif, buka
                         item.classList.add('active');
-                        toggle.textContent = '−'; // Ganti jadi minus (atau biarkan CSS 'transform: rotate' bekerja)
+                        toggle.textContent =
+                            '−'; // Ganti jadi minus (atau biarkan CSS 'transform: rotate' bekerja)
                     }
                 });
             });
@@ -1318,14 +1511,16 @@
             // Set item pertama agar sesuai dengan gambar (tanda 'minus' jika 'active')
             // CSS sudah menangani 'display: block', kita hanya perlu atur icon toggle
             document.querySelectorAll('.faq-item.active .faq-toggle').forEach(toggle => {
-                 toggle.textContent = '−';
-                 // Jika Anda lebih suka icon '+' berputar, hapus baris ini dan baris 1122, 
-                 // lalu uncomment 'transform: rotate(45deg);' di CSS
+                toggle.textContent = '−';
+                // Jika Anda lebih suka icon '+' berputar, hapus baris ini dan baris 1122,
+                // lalu uncomment 'transform: rotate(45deg);' di CSS
             });
         });
     </script>
 
     @include('layouts.footer')
+    @include('components.chatbot')
 
 </body>
+
 </html>

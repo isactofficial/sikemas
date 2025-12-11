@@ -13,8 +13,9 @@ class Order extends Model
         'invoice_number',
         'order_date',
         'total_amount',
+        'shipping_cost',
         'status',
-        'payment_status',    // <-- TAMBAHKAN INI
+        'payment_status',
         'shipping_status',
         'payment_method',
         'shipping_address_id',

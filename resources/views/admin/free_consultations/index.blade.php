@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Konsultasi Gratis - Admin</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-sikemas-2-removebg.png') }}">
+    <script src="{{ asset('js/dynamic-favicon.js') }}" defer></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -203,19 +205,21 @@
                 box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             }
             .skm-table td {
-                display: block;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
                 width: 100%;
                 border-bottom: 1px solid #E5E7EB;
                 padding: 12px 16px;
                 text-align: right;
-                position: relative;
+                box-sizing: border-box;
+                word-break: break-word;
             }
             .skm-table td:last-child { border-bottom: none; }
             .skm-table td:before {
                 content: attr(data-label);
-                position: absolute;
-                left: 16px;
-                width: 50%;
+                flex-shrink: 0;
+                width: 40%;
                 padding-right: 10px;
                 font-weight: 700;
                 text-align: left;
@@ -223,10 +227,25 @@
                 white-space: nowrap;
             }
 
+            /* User info di mobile */
+            .skm-user-info {
+                text-align: right;
+                word-break: break-word;
+                max-width: 60%;
+            }
+            .skm-user-info span:first-child {
+                font-size: 0.95rem;
+            }
+            .skm-user-info span:last-child {
+                font-size: 0.8rem;
+                word-break: break-all;
+            }
+
             .skm-table td:last-child {
                 padding: 16px;
                 background: #F9FAFB;
                 text-align: center;
+                justify-content: center;
             }
             .skm-table td:last-child:before { display: none; }
 
@@ -237,6 +256,13 @@
             }
             .skm-icon-btn { width: 44px; height: 44px; }
             .skm-icon-btn i { font-size: 20px; }
+
+            /* Badge ukuran lebih kecil di mobile */
+            .skm-badge {
+                font-size: 0.75rem;
+                padding: 4px 10px;
+                white-space: nowrap;
+            }
 
             .skm-pagination { flex-direction: column; gap: 12px; padding: 16px; }
             .skm-pagination .skm-page-summary { font-size: 12px; text-align: center; }
@@ -254,11 +280,34 @@
         @media (max-width: 480px) {
             .skm-admin-main { padding: 8px; }
             .skm-header { padding: 12px; }
-            .skm-header h1 { font-size: 20px; }
+            .skm-header h1 { font-size: 18px; }
+            .skm-header p { font-size: 12px; }
+
+            .skm-table td {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+            .skm-table td:before {
+                font-size: 0.8rem;
+                width: 35%;
+            }
+
+            .skm-user-info span:first-child {
+                font-size: 0.85rem;
+            }
+            .skm-user-info span:last-child {
+                font-size: 0.75rem;
+            }
+
             .skm-table td:last-child div { gap: 16px; }
             .skm-icon-btn { width: 40px; height: 40px; }
             .skm-icon-btn i { font-size: 18px; }
             .skm-pagination { padding: 12px; }
+
+            .skm-badge {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+            }
         }
 
         @media (max-width: 1024px){

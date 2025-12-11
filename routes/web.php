@@ -12,41 +12,75 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Admin\FreeConsultationController;
-
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\BotManController;
+use App\Http\Controllers\ArticlePublicController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\SearchController; // <<< [TAMBAHAN: Import SearchController]
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\UserAddressController;
+use App\Http\Controllers\LocationController;
 // ============================================
 // HOME ROUTE
 // ============================================
 use App\Models\Article;
-use App\Models\Product;
-
 Route::get('/', function () {
-    $products = Product::latest()->take(3)->get();
     $articles = Article::published()
         ->orderByDesc('published_at')
         ->orderByDesc('created_at')
-        ->take(3)
+        ->take(12)
         ->get();
-    return view('index', compact('products', 'articles'));
+
+    // Featured products for homepage
+    $featuredProducts = \App\Models\Product::query()
+        ->orderByDesc('created_at')
+        ->take(4)
+        ->get();
+
+    return view('index', compact('articles', 'featuredProducts'));
 })->middleware('track.page:home')->name('home');
+
+
+Route::post('/contact/store', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/edit-design', function () {
     return view('edit-design');
 })->name('edit.design');
+
+// ============================================
+// SEARCH ROUTE
+// ============================================
+Route::get('/search', [SearchController::class, 'index'])->name('search'); // <<< [TAMBAHAN: Route Pencarian]
+
 // ============================================
 // GOOGLE OAUTH ROUTES
 // ============================================
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
+// Cart (public index for guest, actions protected)
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+
 Route::middleware(['auth'])->group(function () {
-    // Cart Management
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    // Cart Management (mutations require auth)
     Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'updateItem'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
-    Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+    // Merge guest cart (localStorage) after login
+    Route::post('/cart/merge', [CartController::class, 'mergeGuestCart'])->name('cart.merge');
 
     Route::post('/consultation/request', [ConsultationController::class, 'store'])->name('consultation.request');
+
+    // 1. Mengambil daftar kota untuk dropdown "Kota Tujuan"
+    Route::get('/api/cities', [CartController::class, 'getCities'])->name('api.cities');
+
+    Route::get('/cart/address/{id}', [CartController::class, 'getAddressDetail'])->name('cart.address.detail');
+
+    // 2. Cek ongkos kirim (Menggunakan fixed origin dari Controller)
+    Route::post('/api/check-ongkir', [CartController::class, 'checkOngkir'])->name('api.checkOngkir');
 
     // Checkout
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
@@ -55,101 +89,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/invoice/{id}', [CartController::class, 'showInvoice'])->name('invoice.show');
 });
 
-// ============================================
-// AUTH ROUTES (Public)
-// ============================================
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::get('/forgot-password', function () {
-        return view('auth.forgot-password');
-    })->name('password.request');
-});
+// BotMan Chatbot Routes
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle'])->name('botman.handle');
+Route::get('/botman/test', [BotManController::class, 'test'])->name('botman.test');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-
-// ============================================
-// PROTECTED ROUTES (Require Authentication)
-// ============================================
-Route::middleware(['auth'])->group(function () {
-
-    // ======== SURVEY ROUTES ========
-    Route::get('/survey', [SurveyController::class, 'show'])->name('survey');
-    Route::post('/survey/submit', [SurveyController::class, 'submit'])->name('survey.submit');
-
-    // ======== PROFILE ROUTES ========
-    Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'show'])->name('index');
-        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::post('/update', [ProfileController::class, 'update'])->name('update');
-
-        // Address Management
-        Route::get('/address/create', [ProfileController::class, 'createAddress'])->name('address.create');
-        Route::post('/address', [ProfileController::class, 'storeAddress'])->name('address.store');
-        Route::get('/address/{id}/edit', [ProfileController::class, 'editAddress'])->name('address.edit');
-        Route::put('/address/{id}', [ProfileController::class, 'updateAddress'])->name('address.update');
-        Route::delete('/address/{id}', [ProfileController::class, 'deleteAddress'])->name('address.delete');
-
-        // Orders
-        Route::get('/orders', [ProfileController::class, 'getOrders'])->name('orders');
-    });
-});
-
-// ============================================
-// PUBLIC PAGES
-// ============================================
-Route::get('/beranda', function () {
-    $products = Product::latest()->take(3)->get();
-    $articles = Article::published()
-        ->orderByDesc('published_at')
-        ->orderByDesc('created_at')
-        ->take(3)
-        ->get();
-    return view('index', compact('products', 'articles'));
-})->middleware('track.page:home')->name('beranda');
-
-
-Route::get('/produk', function () {
-    $products = Product::query()
-        ->orderByDesc('created_at')
-        ->get();
-    return view('produk', compact('products'));
-})->middleware('track.page:produk')->name('produk');
-
-use App\Http\Controllers\ArticlePublicController;
-use App\Http\Controllers\CommentController;
-
-Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
-Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
-
-// =====================
-// COMMENTS (auth only)
-// =====================
-Route::middleware(['auth'])->group(function () {
-    Route::post('/artikel/{article}/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::post('/comments/{comment}/replies', [CommentController::class, 'reply'])->name('comments.reply');
-    Route::post('/comments/{comment}/like', [CommentController::class, 'likeComment'])->name('comments.like');
-    Route::post('/replies/{reply}/like', [CommentController::class, 'likeReply'])->name('replies.like');
-});
-
-use App\Models\Testimony;
-
-Route::get('/portofolio', function () {
-    $testimonies = Testimony::orderByDesc('created_at')->get();
-    return view('portofolio', compact('testimonies'));
-})->middleware('track.page:portofolio')->name('portofolio');
-
-Route::get('/about', function () {
-    return view('about');
-})->middleware('track.page:about')->name('about');
-
+// Test Chatbot Page (for debugging)
+Route::get('/test-chatbot', function () {
+    return view('test-chatbot');
+})->name('test.chatbot');
 // ============================================
 // ADMIN ROUTES (Protected)
 // ============================================
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
     Route::get('/', function () {
         $metrics = [
             'articles'     => \App\Models\Article::count(),
@@ -208,7 +161,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     })->name('index');
 
     // Article Management - CRUD (RESOURCE ROUTE)
-    Route::resource('articles', ArticleController::class);
+    Route::patch('/articles/{article}/status', [ArticleController::class, 'updateStatus'])
+             ->name('articles.updateStatus');
+    Route::resource('articles', ArticleController::class)->names('articles');
 
     // Products CRUD
     Route::resource('products', ProductController::class)->names('products');
@@ -217,11 +172,178 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('testimonials', TestimonyController::class)->names('testimonials');
 
     // Transactions CRUD
-    Route::resource('transactions', TransactionController::class)->except([
-        'create', 'store' // Biasanya admin tidak 'membuat' order, tapi 'mengelola'
-    ]);
+    Route::resource('transactions', TransactionController::class)->names('transactions');
+
+
+    // Route AJAX dipindahkan ke dalam grup admin agar aman
+    // dan namanya otomatis menjadi 'admin.users.addresses'
+    Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+        ->name('users.addresses');
+
     // Free Consultations CRUD (Admin)
     Route::resource('free-consultations', FreeConsultationController::class)
         ->only(['index', 'edit', 'update','destroy'])
         ->names('free-consultations');
+
+    // Route Manajemen Pesan
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
+    // Route untuk mengubah status baca/belum
+    Route::patch('/admin/messages/{id}/toggle-read', [MessageController::class, 'toggleRead'])
+        ->name('messages.toggleRead');
+
+    // Route AJAX dipindahkan ke dalam grup admin agar aman
+    // dan namanya otomatis menjadi 'admin.users.addresses'
+    Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+        ->name('users.addresses');
 });
+
+
+
+// ============================================
+// AUTH ROUTES (Public)
+// ============================================
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/forgot-password', function () {
+        return view('auth.forgot-password');
+    })->name('password.request');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// ============================================
+// PROTECTED ROUTES (Require Authentication)
+// ============================================
+Route::middleware(['auth'])->group(function () {
+
+    // ======== SURVEY ROUTES ========
+    Route::get('/survey', [SurveyController::class, 'show'])->name('survey');
+    Route::post('/survey/submit', [SurveyController::class, 'submit'])->name('survey.submit');
+
+    // ======== PROFILE ROUTES ========
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('index');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+
+        // Address Management
+        Route::get('/address/create', [ProfileController::class, 'createAddress'])->name('address.create');
+        Route::post('/address', [ProfileController::class, 'storeAddress'])->name('address.store');
+        Route::get('/address/{id}/edit', [ProfileController::class, 'editAddress'])->name('address.edit');
+        Route::put('/address/{id}', [ProfileController::class, 'updateAddress'])->name('address.update');
+        Route::delete('/address/{id}', [ProfileController::class, 'deleteAddress'])->name('address.delete');
+        // Route untuk menyimpan alamat
+        Route::post('/profile/address', [UserAddressController::class, 'store'])
+            ->name('profile.address.store');
+
+        // Route untuk update alamat
+        Route::put('/profile/address/{id}', [UserAddressController::class, 'update'])
+            ->name('profile.address.update');
+
+        // Orders
+        Route::get('/orders', [ProfileController::class, 'getOrders'])->name('orders');
+    });
+});
+
+// Testing error pages (hapus setelah testing)
+Route::get('/test-error-419', function () {
+    abort(419);
+});
+
+Route::get('/test-error-429', function () {
+    abort(429);
+});
+
+Route::get('/test-error-500', function () {
+    abort(500);
+});
+
+Route::get('/test-error-502', function () {
+    abort(502);
+});
+
+Route::get('/test-error-503', function () {
+    abort(503);
+});
+
+// ============================================
+// PUBLIC PAGES
+// ============================================
+Route::get('/beranda', function () {
+    $articles = Article::published()
+        ->orderByDesc('published_at')
+        ->orderByDesc('created_at')
+        ->take(12)
+        ->get();
+
+    $featuredProducts = \App\Models\Product::query()
+        ->orderByDesc('created_at')
+        ->take(4)
+        ->get();
+
+    return view('index', compact('articles', 'featuredProducts'));
+})->middleware('track.page:home')->name('beranda');
+
+use App\Models\Product;
+Route::get('/produk', function () {
+    $products = Product::query()
+        ->orderByDesc('created_at')
+        ->get();
+    return view('produk', compact('products'));
+})->middleware('track.page:produk')->name('produk');
+
+// Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
+// Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
+
+Route::get('/artikel', [ArticlePublicController::class, 'index'])->middleware('track.page:article')->name('artikel');
+Route::get('/artikel/{slug}', [ArticlePublicController::class, 'show'])->name('detail_artikel');
+
+
+// =====================
+// COMMENTS (auth only)
+// =====================
+Route::middleware(['auth'])->group(function () {
+    Route::post('/artikel/{article}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/comments/{comment}/replies', [CommentController::class, 'reply'])->name('comments.reply');
+    Route::post('/comments/{comment}/like', [CommentController::class, 'likeComment'])->name('comments.like');
+    Route::post('/replies/{reply}/like', [CommentController::class, 'likeReply'])->name('replies.like');
+    Route::delete('/replies/{reply}', [CommentController::class, 'destroyReply'])->name('replies.destroy');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+});
+
+use App\Models\Testimony;
+
+Route::get('/portofolio', function () {
+    $testimonies = Testimony::orderByDesc('created_at')->get();
+    return view('portofolio', compact('testimonies'));
+})->middleware('track.page:portofolio')->name('portofolio');
+
+Route::get('/about', function () {
+    return view('about');
+})->middleware('track.page:about')->name('about');
+
+// Route untuk submit rating
+Route::post('/submit-rating', [RatingController::class, 'store'])
+     ->middleware('auth:web') // Pastikan menggunakan guard 'web' atau 'auth' saja
+     ->name('submit.rating');
+
+// Transactions CRUD
+Route::resource('transactions', TransactionController::class);
+
+// AJAX endpoint for getting user addresses
+Route::get('users/{userId}/addresses', [TransactionController::class, 'getUserAddresses'])
+    ->name('users.addresses');
+
+Route::get('/test/413', function () {
+    abort(413); // 413 - Payload Too Large
+});
+
+Route::get('/test/429', function () {
+    abort(429); // 429 - Too Many Requests
+});
+
+Route::get('/api/cities', [LocationController::class, 'searchCities'])->name('api.cities');
